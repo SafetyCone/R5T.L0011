@@ -1,4 +1,6 @@
 R5T.L0011 - Microsoft.CodeAnalysis (Roslyn) library Nuget package version selector.
 
-Goals
+Nuget package selected:
+
+* Microsoft.CodeAnalysis, Version 3.9.0
 
