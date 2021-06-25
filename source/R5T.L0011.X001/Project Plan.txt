@@ -1,0 +1,1 @@
+R5T.L0011.X001 - Microsoft.CodeAnalysis (Roslyn) basic extensions. (No dependencies on any other library.)

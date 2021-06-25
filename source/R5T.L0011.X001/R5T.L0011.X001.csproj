@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\R5T.L0011\R5T.L0011.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Code\Classes\" />
+    <Folder Include="Code\Interfaces\" />
+  </ItemGroup>
+
+</Project>
