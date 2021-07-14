@@ -31,6 +31,14 @@ namespace System
             return output;
         }
 
+        public static BaseTypeSyntax BaseType(this ISyntaxFactory syntaxFactory, string typeName)
+        {
+            var type = syntaxFactory.Type(typeName);
+
+            var output = SyntaxFactory.SimpleBaseType(type);
+            return output;
+        }
+
         public static BlockSyntax Block(this ISyntaxFactory _)
         {
             var output = SyntaxFactory.Block();
