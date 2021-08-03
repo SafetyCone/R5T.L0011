@@ -1,13 +1,9 @@
 ﻿using System;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.L0011.T001;
-using R5T.L0011.T002;
-
-using CSharpSyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 
 namespace System

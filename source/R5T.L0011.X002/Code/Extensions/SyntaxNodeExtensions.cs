@@ -5,8 +5,6 @@ using R5T.L0011.T001;
 
 using Microsoft.CodeAnalysis;
 
-using CSharpSyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-
 
 namespace System
 {
@@ -16,6 +14,14 @@ namespace System
 
 
         public static TSyntaxNode AddLineStart<TSyntaxNode>(this TSyntaxNode syntaxNode,
+            SyntaxTriviaList leadingWhitespace)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxNode.AddLeadingLeadingTrivia(leadingWhitespace.ToArray());
+            return output;
+        }
+
+        public static TSyntaxNode AddLineStart2<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {
@@ -32,6 +38,14 @@ namespace System
         }
 
         public static TSyntaxNode InsertLineStart<TSyntaxNode>(this TSyntaxNode syntaxNode,
+            SyntaxTriviaList indentation)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxNode.AddTrailingLeadingTrivia(indentation.ToArray());
+            return output;
+        }
+
+        public static TSyntaxNode InsertLineStart2<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {
@@ -81,26 +95,13 @@ namespace System
         }
 
         public static TSyntaxNode WrapWithRegion<TSyntaxNode>(this TSyntaxNode syntaxNode,
-            SyntaxTriviaList leadingWhitespace,
+            SyntaxTriviaList indentation,
             string regionName)
             where TSyntaxNode : SyntaxNode
         {
-            //var region = CSharpSyntaxFactory.RegionDirectiveTrivia(true)
-            //    .AddLineStart(leadingWhitespace)
-            //    .AppendBlankLine(leadingWhitespace);
+            var region = SyntaxFactory.Region(indentation, regionName);
 
-            //var endRegion = CSharpSyntaxFactory.EndRegionDirectiveTrivia(true)
-            //    .AddLineStart(leadingWhitespace)
-            //    .PrependBlankLine(leadingWhitespace);
-
-            //var output = syntaxNode
-            //    .AddLeadingLeadingTrivia(SyntaxFactory.Trivia(region))
-            //    .AddTrailingTrailingTrivia(SyntaxFactory.Trivia(endRegion))
-            //    ;
-
-            var region = SyntaxFactory.Region(leadingWhitespace, regionName);
-
-            var endRegion = SyntaxFactory.EndRegion(leadingWhitespace);
+            var endRegion = SyntaxFactory.EndRegion(indentation);
 
             var output = syntaxNode
                 .AddLeadingLeadingTrivia(region)

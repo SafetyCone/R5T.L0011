@@ -41,7 +41,7 @@ namespace System
             SyntaxTriviaList leadingWhitespace)
         {
             var output = syntaxFactory.DocumentationCommentExterior()
-                .AddLineStart(leadingWhitespace);
+                .AddLineStart2(leadingWhitespace);
 
             return output;
         }

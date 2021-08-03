@@ -50,5 +50,18 @@ namespace System
 
             return semanticModel;
         }
+
+        public static async Task<INamedTypeSymbol[]> GetNamedTypeSymbols<T>(this Document document,
+            IEnumerable<T> typeDeclarations)
+            where T : TypeDeclarationSyntax
+        {
+            var semanticModel = await document.GetSemanticModel();
+
+            var typeSymbols = typeDeclarations
+                .Select(x => semanticModel.GetDeclaredSymbol(x))
+                .ToArray();
+
+            return typeSymbols;
+        }
     }
 }

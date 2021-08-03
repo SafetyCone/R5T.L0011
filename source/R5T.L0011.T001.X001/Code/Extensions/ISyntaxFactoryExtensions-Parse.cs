@@ -76,6 +76,15 @@ namespace System
             return output;
         }
 
+        //public static TypeParameterConstraintClauseSyntax ParseConstraint(this ISyntaxFactory _,
+        //    string text)
+        //{
+        //    var temp = SyntaxFactory.ParseSyntaxTree(text);
+
+        //    var output = SyntaxFactory.ParseSyntaxTree(text).GetRoot() as TypeParameterConstraintClauseSyntax;
+        //    return output;
+        //}
+
         public static ReturnStatementSyntax ParseReturnStatement(this ISyntaxFactory _,
             string text)
         {

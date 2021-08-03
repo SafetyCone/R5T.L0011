@@ -29,5 +29,14 @@ namespace System
 
             return @class;
         }
+
+        public static IEnumerable<InterfaceDeclarationSyntax> GetInterfaces(this CompilationUnitSyntax compilationUnit)
+        {
+            var intefaces = compilationUnit.DescendantNodes()
+                .OfType<InterfaceDeclarationSyntax>()
+                ;
+
+            return intefaces;
+        }
     }
 }

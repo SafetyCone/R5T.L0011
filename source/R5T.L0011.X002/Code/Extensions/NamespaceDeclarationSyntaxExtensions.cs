@@ -26,8 +26,8 @@ namespace System
                 .ApplyMemberSignatureModel(signatureModel)
                 .NormalizeWhitespace()
                 .WithLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace())
-                .WithOpenBraceToken(SyntaxFactory.OpenBrace(leadingWhitespace, false))
-                .WithCloseBraceToken(SyntaxFactory.CloseBrace(leadingWhitespace))
+                .WithOpenBraceToken(SyntaxFactory.OpenBrace2(leadingWhitespace, false))
+                .WithCloseBraceToken(SyntaxFactory.CloseBrace2(leadingWhitespace))
                 .ModifyWith(indentedLeadingWhitespace, modifier)
                 ;
 
@@ -56,8 +56,8 @@ namespace System
                 .ApplyMemberSignatureModel(signatureModel)
                 .NormalizeWhitespace()
                 .WithLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace())
-                .WithOpenBraceToken(SyntaxFactory.OpenBrace(leadingWhitespace, false))
-                .WithCloseBraceToken(SyntaxFactory.CloseBrace(leadingWhitespace))
+                .WithOpenBraceToken(SyntaxFactory.OpenBrace2(leadingWhitespace, false))
+                .WithCloseBraceToken(SyntaxFactory.CloseBrace2(leadingWhitespace))
                 .ModifyWith(indentedLeadingWhitespace, modifier)
                 ;
 
@@ -76,19 +76,22 @@ namespace System
         }
 
         public static NamespaceDeclarationSyntax WithCloseBrace(this NamespaceDeclarationSyntax namespaceDeclarationSyntax,
-            SyntaxTriviaList leadingWhitespace, bool appendNewLine = false)
+            SyntaxTriviaList indentation)
         {
             var output = namespaceDeclarationSyntax
-                .WithCloseBraceToken(SyntaxFactory.CloseBrace(leadingWhitespace, appendNewLine));
+                .WithCloseBraceToken(SyntaxFactory.CloseBrace(indentation));
 
             return output;
         }
 
         public static NamespaceDeclarationSyntax WithOpenBrace(this NamespaceDeclarationSyntax namespaceDeclarationSyntax,
-            SyntaxTriviaList leadingWhitespace, bool prependNewLine = true)
+            SyntaxTriviaList indentation)
         {
+            // Obnoxiously, the namespace adds its own new line.
+            var actualIndentation = indentation.RemoveLeadingNewLine();
+
             var output = namespaceDeclarationSyntax
-                .WithOpenBraceToken(SyntaxFactory.OpenBrace(leadingWhitespace, prependNewLine));
+                .WithOpenBraceToken(SyntaxFactory.OpenBrace(actualIndentation));
 
             return output;
         }

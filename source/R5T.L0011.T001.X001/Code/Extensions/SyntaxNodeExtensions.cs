@@ -15,6 +15,16 @@ namespace System
         private static ISyntaxFactory SyntaxFactory { get; } = R5T.L0011.T001.SyntaxFactory.Instance;
 
 
+        public static TSyntaxNode WithIndentation<TSyntaxNode>(this TSyntaxNode syntaxNode, SyntaxTriviaList indentation)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxNode
+                .WithLeadingTrivia(indentation)
+                ;
+
+            return output;
+        }
+
         public static TSyntaxNode WithLineLeadingWhitespace<TSyntaxNode>(this TSyntaxNode syntaxNode, SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {

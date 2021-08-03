@@ -17,18 +17,18 @@ namespace System
 
 
         public static XmlElementSyntax AddTagLineStarts(this XmlElementSyntax xmlElement,
-            SyntaxTriviaList leadingWhitespace)
+            SyntaxTriviaList indentation)
         {
             var output = xmlElement
                 .WithStartTag(
                     xmlElement.StartTag
-                        .AddLineStart(leadingWhitespace)
+                        .AddLineStart(indentation)
                         .AddTrailingLeadingTrivia(
                             SyntaxFactory.DocumentationCommentExteriorOnly(),
                             SyntaxFactory.Space()))
                 .WithEndTag(
                     xmlElement.EndTag
-                        .AddLineStart(leadingWhitespace)
+                        .AddLineStart(indentation)
                         .AddTrailingLeadingTrivia(
                             SyntaxFactory.DocumentationCommentExteriorOnly(),
                             SyntaxFactory.Space()))
@@ -38,7 +38,7 @@ namespace System
         }
 
         public static XmlElementSyntax AddContentLine(this XmlElementSyntax xmlElement,
-            SyntaxTriviaList leadingWhitespace,
+            SyntaxTriviaList indentation,
             string text)
         {
             var documentationLineElements = SyntaxFactory.ParseDocumentationLine(text);
@@ -47,7 +47,7 @@ namespace System
             if(documentationLineElements.Any())
             {
                 documentationLineElements[0] = documentationLineElements[0]
-                .AddLineStart(leadingWhitespace);
+                .AddLineStart(indentation);
             }
 
             var output = xmlElement.AddContent(documentationLineElements);

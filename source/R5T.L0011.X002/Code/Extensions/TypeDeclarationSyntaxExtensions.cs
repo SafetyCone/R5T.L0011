@@ -91,7 +91,7 @@ namespace System
             var output = typeDeclaration
                 .WithLineLeadingWhitespace(outerLeadingWhitespace)
                 .WithOpenBrace(outerLeadingWhitespace)
-                .WithCloseBrace(outerLeadingWhitespace)
+                .WithCloseBrace2(outerLeadingWhitespace)
                 ;
 
             return output;

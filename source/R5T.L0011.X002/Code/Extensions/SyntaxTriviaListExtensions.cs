@@ -12,6 +12,17 @@ namespace System
         private static ISyntaxFactory SyntaxFactory { get; } = R5T.L0011.T001.SyntaxFactory.Instance;
 
 
+        public static SyntaxTriviaList RemoveLeadingNewLine(this SyntaxTriviaList trivia)
+        {
+            var canRemove = trivia.Count > 0;
+
+            var output = canRemove
+                ? trivia.RemoveAt(0)
+                : trivia;
+
+            return output;
+        }
+
         public static SyntaxTriviaList IndentByTab(this SyntaxTriviaList trivia)
         {
             var tab = SyntaxFactory.Tab();

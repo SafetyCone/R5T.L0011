@@ -29,5 +29,11 @@ namespace System
             var output = syntaxFactory.Token(SyntaxKind.PublicKeyword);
             return output;
         }
+
+        public static SyntaxToken Static(this ISyntaxFactory syntaxFactory)
+        {
+            var output = syntaxFactory.Token(SyntaxKind.StaticKeyword);
+            return output;
+        }
     }
 }

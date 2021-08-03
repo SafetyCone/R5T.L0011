@@ -21,7 +21,7 @@ namespace System
         {
             var output = baseMethod
                 .AddInitialBody(leadingWhitespace)
-                .AddLineStart(leadingWhitespace)
+                .AddLineStart2(leadingWhitespace)
                 .PrependBlankLine(leadingWhitespace, prependBlankLine);
 
             return output;
@@ -35,8 +35,8 @@ namespace System
             var indentedWhitespace = outerLeadingWhitespace.IndentByTab();
 
             var body = SyntaxFactory.Body()
-                    .WithOpenBraceToken(SyntaxFactory.OpenBrace(outerLeadingWhitespace))
-                    .WithCloseBraceToken(SyntaxFactory.CloseBrace(outerLeadingWhitespace, true))
+                    .WithOpenBraceToken(SyntaxFactory.OpenBrace2(outerLeadingWhitespace))
+                    .WithCloseBraceToken(SyntaxFactory.CloseBrace2(outerLeadingWhitespace, true))
                     .ModifyWith(indentedWhitespace, modifier);
 
             var output = baseMethod.WithBody(body) as T;
@@ -49,7 +49,7 @@ namespace System
             where T : BaseMethodDeclarationSyntax
         {
             var adjustedStatements = statements
-                .Select(x => x.AddLineStart(leadingWhitespace))
+                .Select(x => x.AddLineStart2(leadingWhitespace))
                 .ToArray();
 
             var output = method.AddBodyStatements(adjustedStatements) as T;

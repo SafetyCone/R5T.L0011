@@ -53,7 +53,7 @@ namespace System
         /// <summary>
         /// *Only* if the first syntax trivia is a new line, remove the new line and remove whitespace until the next newline.
         /// </summary>
-        public static SyntaxTriviaList RemoveLeadingNewLine(this SyntaxTriviaList whitespace)
+        public static SyntaxTriviaList RemoveFullLeadingNewLine(this SyntaxTriviaList whitespace)
         {
             var firstTriviaIsNewLine = whitespace.First().IsNewLine();
             if(firstTriviaIsNewLine)

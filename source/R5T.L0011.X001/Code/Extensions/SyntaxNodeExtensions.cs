@@ -10,6 +10,42 @@ namespace System
 {
     public static class SyntaxNodeExtensions
     {
+        public static TSyntaxNode SetIndentation<TSyntaxNode>(this TSyntaxNode syntaxToken,
+            SyntaxTriviaList indentation)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxToken.WithLeadingTrivia(indentation.ToArray());
+            return output;
+        }
+
+        public static TSyntaxNode SetIndentationWithoutLeadingNewLine<TSyntaxNode>(this TSyntaxNode syntaxToken,
+            SyntaxTriviaList indentation)
+            where TSyntaxNode : SyntaxNode
+        {
+            var actualIndentation = indentation.RemoveAt(0);
+
+            var output = syntaxToken.WithLeadingTrivia(actualIndentation.ToArray());
+            return output;
+        }
+
+        public static TSyntaxNode Indent<TSyntaxNode>(this TSyntaxNode syntaxToken,
+            SyntaxTriviaList indentation)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxToken.AddLeadingLeadingTrivia(indentation.ToArray());
+            return output;
+        }
+
+        public static TSyntaxNode IndentWihtoutNewLine<TSyntaxNode>(this TSyntaxNode syntaxToken,
+            SyntaxTriviaList indentation)
+            where TSyntaxNode : SyntaxNode
+        {
+            var actualIndentation = indentation.RemoveAt(0);
+
+            var output = syntaxToken.AddLeadingLeadingTrivia(actualIndentation.ToArray());
+            return output;
+        }
+
         public static TSyntaxNode AddLeadingLeadingTrivia<TSyntaxNode>(this TSyntaxNode syntaxNode, params SyntaxTrivia[] trivia)
             where TSyntaxNode : SyntaxNode
         {

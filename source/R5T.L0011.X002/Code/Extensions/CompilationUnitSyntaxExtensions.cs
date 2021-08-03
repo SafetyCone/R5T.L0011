@@ -23,8 +23,8 @@ namespace System
             var @namespace = SyntaxFactory.Namespace(namespaceName)
                 .NormalizeWhitespace() // Regular spacing.
                 .WithLeadingTrivia(leadingWhitespace.PrependNewLine().PrependNewLine()) // Two blank lines.
-                .WithOpenBraceToken(SyntaxFactory.OpenBrace(leadingWhitespace, false))
-                .WithCloseBraceToken(SyntaxFactory.CloseBrace(leadingWhitespace))
+                .WithOpenBraceToken(SyntaxFactory.OpenBrace2(leadingWhitespace, false))
+                .WithCloseBraceToken(SyntaxFactory.CloseBrace2(leadingWhitespace))
                 .ModifyWith(indentedLeadingWhitespace, modifier)
                 ;
 

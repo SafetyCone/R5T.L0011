@@ -1,13 +1,9 @@
 ﻿using System;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.L0011.T001;
-using R5T.L0011.T002;
-
-using CSharpSyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 
 namespace System
@@ -15,28 +11,28 @@ namespace System
     public static partial class ISyntaxFactoryExtensions
     {
         public static EndRegionDirectiveTriviaSyntax EndRegionDirectiveTriviaSyntax(this ISyntaxFactory syntaxFactory,
-            SyntaxTriviaList leadingWhitespace)
+            SyntaxTriviaList indentation)
         {
             var output = syntaxFactory.EndRegionDirectiveTriviaSyntaxOnly()
-                .AddLineStart(leadingWhitespace)
-                .PrependBlankLine(leadingWhitespace);
+                .PrependBlankLine(indentation);
+            ;
 
             return output;
         }
 
         public static SyntaxTrivia EndRegionDirectiveTrivia(this ISyntaxFactory syntaxFactory,
-            SyntaxTriviaList leadingWhitespace)
+            SyntaxTriviaList indentation)
         {
             var output = syntaxFactory.Trivia(syntaxFactory.EndRegionDirectiveTriviaSyntax(
-                leadingWhitespace));
+                indentation));
 
             return output;
         }
 
         public static SyntaxTrivia EndRegion(this ISyntaxFactory syntaxFactory,
-            SyntaxTriviaList leadingWhitespace)
+            SyntaxTriviaList indentation)
         {
-            var output = syntaxFactory.EndRegionDirectiveTrivia(leadingWhitespace);
+            var output = syntaxFactory.EndRegionDirectiveTrivia(indentation);
             return output;
         }
 
@@ -62,21 +58,21 @@ namespace System
         }
 
         public static SyntaxTrivia RegionDirectiveTrivia(this ISyntaxFactory syntaxFactory,
-            SyntaxTriviaList leadingWhitespace,
+            SyntaxTriviaList indentation,
             string regionName)
         {
             var output = syntaxFactory.Trivia(syntaxFactory.RegionDirectiveTriviaSyntax(
-                leadingWhitespace,
+                indentation,
                 regionName));
 
             return output;
         }
 
         public static SyntaxTrivia Region(this ISyntaxFactory syntaxFactory,
-            SyntaxTriviaList leadingWhitespace,
+            SyntaxTriviaList indentation,
             string regionName)
         {
-            var output = syntaxFactory.RegionDirectiveTrivia(leadingWhitespace, regionName);
+            var output = syntaxFactory.RegionDirectiveTrivia(indentation, regionName);
             return output;
         }
     }

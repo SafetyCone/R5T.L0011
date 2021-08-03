@@ -51,12 +51,38 @@ namespace System
             return output;
         }
 
+        public static BlockSyntax Body(this ISyntaxFactory syntaxFactory,
+            SyntaxTriviaList indentation)
+        {
+            var output = syntaxFactory.Body()
+                .Indent(indentation)
+                ;
+
+            return output;
+        }
+
         public static ClassDeclarationSyntax Class(this ISyntaxFactory _, string name)
         {
             return SyntaxFactory.ClassDeclaration(name);
         }
 
-        public static SyntaxToken CloseBrace(this ISyntaxFactory syntaxFactory, SyntaxTriviaList leadingWhitespace, bool appendNewLine = false)
+        public static SyntaxToken CloseBrace(this ISyntaxFactory _)
+        {
+            var output = SyntaxFactory.Token(SyntaxKind.CloseBraceToken);
+            return output;
+        }
+
+        public static SyntaxToken CloseBrace(this ISyntaxFactory syntaxFactory,
+            SyntaxTriviaList indentation)
+        {
+            var output = syntaxFactory.CloseBrace()
+                .Indent(indentation)
+                ;
+
+            return output;
+        }
+
+        public static SyntaxToken CloseBrace2(this ISyntaxFactory syntaxFactory, SyntaxTriviaList leadingWhitespace, bool appendNewLine = false)
         {
             var lineLeadingWhitespace = leadingWhitespace.GetNewLineLeadingWhitespace();
 
@@ -274,7 +300,26 @@ namespace System
             return output;
         }
 
-        public static SyntaxToken OpenBrace(this ISyntaxFactory _, SyntaxTriviaList leadingWhitespace, bool prependNewLine = true)
+        public static SyntaxToken OpenBrace(this ISyntaxFactory _)
+        {
+            var output = SyntaxFactory.Token(SyntaxKind.OpenBraceToken);
+            return output;
+        }
+
+        public static SyntaxToken OpenBrace(this ISyntaxFactory syntaxFactory,
+            SyntaxTriviaList indentation)
+        {
+            //var testIndentation = indentation.RemoveAt(0);
+
+            var output = syntaxFactory.OpenBrace()
+                .Indent(indentation)
+                //.Indent(testIndentation)
+                ;
+
+            return output;
+        }
+
+        public static SyntaxToken OpenBrace2(this ISyntaxFactory _, SyntaxTriviaList leadingWhitespace, bool prependNewLine = true)
         {
             var lineLeadingWhitespace = prependNewLine
                 ? leadingWhitespace.GetNewLineLeadingWhitespace()
@@ -369,6 +414,19 @@ namespace System
         public static TypeSyntax Type(this ISyntaxFactory _, string name)
         {
             return SyntaxFactory.IdentifierName(name);
+        }
+
+        public static TypeParameterConstraintClauseSyntax TypeParameterConstraint(this ISyntaxFactory syntaxFactory, string typeParameterName, string constraintTypeName)
+        {
+            var typeConstraint = SyntaxFactory.TypeConstraint(syntaxFactory.Type(constraintTypeName));
+
+            var output = SyntaxFactory.TypeParameterConstraintClause(
+                syntaxFactory.IdentifierName(typeParameterName))
+                .AddConstraints(typeConstraint)
+                .NormalizeWhitespace()
+                ;
+
+            return output;
         }
 
         public static UsingDirectiveSyntax Using(this ISyntaxFactory syntaxFactory, string namespaceName)

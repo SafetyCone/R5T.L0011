@@ -9,6 +9,44 @@ namespace System
 {
     public static class SyntaxTokenExtensions
     {
+        public static SyntaxToken SetIndentation(this SyntaxToken syntaxToken,
+            SyntaxTriviaList indentation)
+        {
+            var output = syntaxToken.WithLeadingTrivia(indentation.ToArray());
+            return output;
+        }
+
+        /// <summary>
+        /// For use in the obnoxious cases where an open brace or something already includes a new line.
+        /// </summary>
+        public static SyntaxToken SetIndentationWithoutNewLine(this SyntaxToken syntaxToken,
+            SyntaxTriviaList indentation)
+        {
+            var actualIndentation = indentation.RemoveAt(0);
+
+            var output = syntaxToken.WithLeadingTrivia(actualIndentation.ToArray());
+            return output;
+        }
+
+        public static SyntaxToken Indent(this SyntaxToken syntaxToken,
+            SyntaxTriviaList indentation)
+        {
+            var output = syntaxToken.AddLeadingLeadingTrivia(indentation.ToArray());
+            return output;
+        }
+
+        /// <summary>
+        /// For use in the obnoxious cases where an open brace or something already includes a new line.
+        /// </summary>
+        public static SyntaxToken IndentWithoutNewLine(this SyntaxToken syntaxToken,
+            SyntaxTriviaList indentation)
+        {
+            var actualIndentation = indentation.RemoveAt(0);
+
+            var output = syntaxToken.AddLeadingLeadingTrivia(actualIndentation.ToArray());
+            return output;
+        }
+
         public static SyntaxToken AddLeadingLeadingTrivia(this SyntaxToken syntaxToken, params SyntaxTrivia[] trivia)
         {
             var newLeadingTrivia = syntaxToken.HasLeadingTrivia
