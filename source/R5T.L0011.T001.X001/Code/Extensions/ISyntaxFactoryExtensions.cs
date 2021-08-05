@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -395,6 +396,14 @@ namespace System
             string variableName)
         {
             var output = SyntaxFactory.ReturnStatement(syntaxFactory.IdentifierName(variableName));
+            return output;
+        }
+
+        public static SyntaxList<TNode> SyntaxList<TNode>(this ISyntaxFactory _,
+            IEnumerable<TNode> syntaxNodes)
+            where TNode : SyntaxNode
+        {
+            var output = new SyntaxList<TNode>(syntaxNodes);
             return output;
         }
 

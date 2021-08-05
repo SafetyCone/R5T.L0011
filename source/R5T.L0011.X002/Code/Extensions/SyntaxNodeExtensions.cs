@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
 
-using R5T.L0011.T001;
-
 using Microsoft.CodeAnalysis;
+
+using R5T.L0011.T001;
+using R5T.L0011.T004;
+
+using R5T.L0011.X002;
 
 
 namespace System
@@ -29,7 +32,22 @@ namespace System
             return output;
         }
 
+        public static TSyntaxNode AppendBlankLine<TSyntaxNode>(this TSyntaxNode syntaxNode)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxNode.AddTrailingTrailingTrivia(Instances.SyntaxFactory.NewLine());
+            return output;
+        }
+
         public static TSyntaxNode AppendBlankLine<TSyntaxNode>(this TSyntaxNode syntaxNode,
+            SyntaxTriviaList indentation)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxNode.AddTrailingTrailingTrivia(indentation.ToArray());
+            return output;
+        }
+
+        public static TSyntaxNode AppendBlankLine2<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {
@@ -74,6 +92,18 @@ namespace System
             return output;
         }
 
+        public static TSyntaxNode ModifyWith<TSyntaxNode>(this TSyntaxNode syntaxNode, SyntaxNodeModifier<TSyntaxNode> modifier,
+            SyntaxTriviaList indentation,
+            INamespaceNameSet namespaceNames)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = modifier is object
+                ? modifier(syntaxNode, indentation, namespaceNames)
+                : syntaxNode;
+
+            return output;
+        }
+
         public static TSyntaxNode ModifyWith<TSyntaxNode>(this TSyntaxNode syntaxNode, Modifier<TSyntaxNode> modifier)
             where TSyntaxNode : SyntaxNode
         {
@@ -108,6 +138,13 @@ namespace System
                 .AddTrailingTrailingTrivia(endRegion)
                 ;
 
+            return output;
+        }
+
+        public static TSyntaxNode RemoveLeadingBlankLine<TSyntaxNode>(this TSyntaxNode syntaxNode)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxNode.WithLeadingTrivia(syntaxNode.GetLeadingTrivia().RemoveLeadingNewLine());
             return output;
         }
     }

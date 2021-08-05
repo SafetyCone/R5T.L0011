@@ -19,6 +19,16 @@ namespace System
             return classes;
         }
 
+        public static ClassDeclarationSyntax GetClass(this CompilationUnitSyntax compilationUnit,
+            string className)
+        {
+            var @class = compilationUnit.GetClasses()
+                .Where(x => x.Identifier.Text == className)
+                .Single();
+
+            return @class;
+        }
+
         /// <summary>
         /// Gets the single descendent class. (Assumes one class per compilation unit.)
         /// </summary>

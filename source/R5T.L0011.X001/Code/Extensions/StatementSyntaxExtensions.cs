@@ -18,6 +18,12 @@ namespace System
 
             return output;
         }
+        
+        public static string GetTextAsString(this StatementSyntax statement)
+        {
+            var output = statement.ToString();
+            return output;
+        }
 
         public static T WithSemicolonLeadingWhitespace<T>(this T statement,
             SyntaxTriviaList leadingWhitespace)

@@ -3,6 +3,6 @@
 
 namespace Microsoft.CodeAnalysis
 {
-    public delegate T ModifierWithLineLeadingWhitespace<T>(T syntaxNode, SyntaxTriviaList leadingWhitespace)
+    public delegate T ModifierWithIndentation<T>(T syntaxNode, SyntaxTriviaList indentation)
         where T : SyntaxNode;
 }

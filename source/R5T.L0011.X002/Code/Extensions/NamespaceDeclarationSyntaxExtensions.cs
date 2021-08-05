@@ -18,7 +18,7 @@ namespace System
         public static NamespaceDeclarationSyntax AddClass(this NamespaceDeclarationSyntax namespaceDeclarationSyntax, string className,
             MemberSignatureModel signatureModel,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithLineLeadingWhitespace<ClassDeclarationSyntax> modifier)
+            ModifierWithIndentation<ClassDeclarationSyntax> modifier)
         {
             var indentedLeadingWhitespace = leadingWhitespace.IndentByTab();
 
@@ -37,7 +37,7 @@ namespace System
 
         public static NamespaceDeclarationSyntax AddClass(this NamespaceDeclarationSyntax namespaceDeclarationSyntax, string className,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithLineLeadingWhitespace<ClassDeclarationSyntax> modifier)
+            ModifierWithIndentation<ClassDeclarationSyntax> modifier)
         {
             var signatureModel = SignatureModel.GetClassDefault();
 
@@ -48,7 +48,7 @@ namespace System
         public static NamespaceDeclarationSyntax AddInterfaceV01(this NamespaceDeclarationSyntax namespaceDeclarationSyntax, string interfaceName,
             MemberSignatureModel signatureModel,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithLineLeadingWhitespace<InterfaceDeclarationSyntax> modifier)
+            ModifierWithIndentation<InterfaceDeclarationSyntax> modifier)
         {
             var indentedLeadingWhitespace = leadingWhitespace.IndentByTab();
 
@@ -67,7 +67,7 @@ namespace System
 
         public static NamespaceDeclarationSyntax AddInterfaceV01(this NamespaceDeclarationSyntax namespaceDeclarationSyntax, string interfaceName,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithLineLeadingWhitespace<InterfaceDeclarationSyntax> modifier)
+            ModifierWithIndentation<InterfaceDeclarationSyntax> modifier)
         {
             var signatureModel = SignatureModel.GetInterfaceDefault();
 

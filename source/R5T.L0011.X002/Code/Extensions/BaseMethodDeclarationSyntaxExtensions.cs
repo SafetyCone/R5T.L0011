@@ -15,21 +15,33 @@ namespace System
 
 
         public static T AddInitialFormatting<T>(this T baseMethod,
-            SyntaxTriviaList leadingWhitespace,
+            SyntaxTriviaList indentation)
+            where T : BaseMethodDeclarationSyntax
+        {
+            var output = baseMethod
+                .AddInitialBody(indentation)
+                .Indent(indentation)
+                ;
+
+            return output;
+        }
+
+        public static T AddInitialFormatting2<T>(this T baseMethod,
+            SyntaxTriviaList indentation,
             bool prependBlankLine = true)
             where T : BaseMethodDeclarationSyntax
         {
             var output = baseMethod
-                .AddInitialBody(leadingWhitespace)
-                .AddLineStart2(leadingWhitespace)
-                .PrependBlankLine(leadingWhitespace, prependBlankLine);
+                .AddInitialBody(indentation)
+                .Indent(indentation)
+                .PrependBlankLine(indentation, prependBlankLine);
 
             return output;
         }
 
         public static T AddBody<T>(this T baseMethod,
             SyntaxTriviaList outerLeadingWhitespace,
-            ModifierWithLineLeadingWhitespace<BlockSyntax> modifier = default)
+            ModifierWithIndentation<BlockSyntax> modifier = default)
             where T : BaseMethodDeclarationSyntax
         {
             var indentedWhitespace = outerLeadingWhitespace.IndentByTab();
@@ -59,8 +71,8 @@ namespace System
         public static T AddParameterWithModification<T>(this T method,
             string name, string typeName,
             SyntaxTriviaList outerLeadingWhitespace,
-            ModifierWithLineLeadingWhitespace<ParameterSyntax> parameterModifier = default,
-            ModifierWithLineLeadingWhitespace<ParameterSyntax> parameterWhitespaceModifier = default)
+            ModifierWithIndentation<ParameterSyntax> parameterModifier = default,
+            ModifierWithIndentation<ParameterSyntax> parameterWhitespaceModifier = default)
             where T : BaseMethodDeclarationSyntax
         {
             var parameter = SyntaxFactory.Parameter(name, typeName)

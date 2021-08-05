@@ -29,6 +29,46 @@ namespace System
             return set;
         }
 
+        public static INamespaceNameSet AddIfNotCodeBodyNamespace(this INamespaceNameSet set,
+            string codeBodyNamespaceName,
+            string namespaceName)
+        {
+            if(namespaceName != codeBodyNamespaceName)
+            {
+                set.AddValue(namespaceName);
+            }
+
+            return set;
+        }
+
+        public static INamespaceNameSet AddIfNotCodeBodyNamespace(this INamespaceNameSet set,
+            string codeBodyNamespaceName,
+            params string[] namespaceNames)
+        {
+            foreach (var namespaceName in namespaceNames)
+            {
+                set.AddIfNotCodeBodyNamespace(
+                    codeBodyNamespaceName,
+                    namespaceName);
+            }
+
+            return set;
+        }
+
+        public static INamespaceNameSet AddIfNotCodeBodyNamespace(this INamespaceNameSet set,
+            string codeBodyNamespaceName,
+            IEnumerable<string> namespaceNames)
+        {
+            foreach (var namespaceName in namespaceNames)
+            {
+                set.AddIfNotCodeBodyNamespace(
+                    codeBodyNamespaceName,
+                    namespaceName);
+            }
+
+            return set;
+        }
+
         public static INamespaceNameSet Remove(this INamespaceNameSet set, string namespaceName)
         {
             set.RemoveValue(namespaceName);

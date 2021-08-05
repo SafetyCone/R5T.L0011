@@ -5,12 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\R5T.Magyar\source\R5T.Magyar\R5T.Magyar.csproj" />
     <ProjectReference Include="..\R5T.L0011\R5T.L0011.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Code\Classes\" />
-    <Folder Include="Code\Interfaces\" />
   </ItemGroup>
 
 </Project>

@@ -12,13 +12,31 @@ namespace System
         private static ISyntaxFactory SyntaxFactory { get; } = R5T.L0011.T001.SyntaxFactory.Instance;
 
 
+        public static SyntaxTriviaList RemoveFirstToken(this SyntaxTriviaList trivia)
+        {
+            var output = trivia.RemoveAt(0);
+            return output;
+        }
+
+        public static bool FirstTokenIsNewLine(this SyntaxTriviaList trivia)
+        {
+            var output = trivia.First().IsNewLine();
+            return output;
+        }
+
         public static SyntaxTriviaList RemoveLeadingNewLine(this SyntaxTriviaList trivia)
         {
-            var canRemove = trivia.Count > 0;
+            var output = trivia;
 
-            var output = canRemove
-                ? trivia.RemoveAt(0)
-                : trivia;
+            var canRemove = trivia.Count > 0;
+            if(canRemove)
+            {
+                var firstTokenIsNewLine = trivia.FirstTokenIsNewLine();
+                if(firstTokenIsNewLine)
+                {
+                    output = trivia.RemoveFirstToken();
+                }
+            }
 
             return output;
         }

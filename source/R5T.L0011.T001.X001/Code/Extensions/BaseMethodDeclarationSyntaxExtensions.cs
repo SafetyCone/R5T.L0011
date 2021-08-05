@@ -33,8 +33,8 @@ namespace System
         {
             var output = method
                 .WithBody(SyntaxFactory.Body()
-                    .WithOpenBraceToken(SyntaxFactory.OpenBrace2(leadingWhitespace))
-                    .WithCloseBraceToken(SyntaxFactory.CloseBrace2(leadingWhitespace)))
+                    .WithOpenBraceToken(SyntaxFactory.OpenBrace(leadingWhitespace))
+                    .WithCloseBraceToken(SyntaxFactory.CloseBrace(leadingWhitespace)))
                 as T;
 
             return output;
