@@ -8,12 +8,12 @@ namespace System
 {
     public static class MemberAccessExpressionSyntaxExtensions
     {
-        public static MemberAccessExpressionSyntax WithDotTokenLeadingWhitespace(this MemberAccessExpressionSyntax memberAccess,
-            SyntaxTriviaList leadingWhitespace)
+        public static MemberAccessExpressionSyntax WithIndentedDotToken(this MemberAccessExpressionSyntax memberAccess,
+            SyntaxTriviaList indentation)
         {
             var dotToken = memberAccess.GetChildDotToken();
 
-            var newDotToken = dotToken.AddLeadingWhitespace(leadingWhitespace);
+            var newDotToken = dotToken.AddLeadingWhitespace(indentation);
 
             var output = memberAccess.ReplaceToken(dotToken, newDotToken);
             return output;

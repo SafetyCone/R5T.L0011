@@ -26,14 +26,14 @@ namespace System
         }
 
         public static T WithSemicolonLeadingWhitespace<T>(this T statement,
-            SyntaxTriviaList leadingWhitespace)
+            SyntaxTriviaList indentation)
             where T : StatementSyntax
         {
-            var semicolonToken = statement.GetChildSemicolonToken();
+            var oldSemicolonToken = statement.GetChildSemicolonToken();
 
-            var newSemicolonToken = semicolonToken.AddLeadingWhitespace(leadingWhitespace);
+            var newSemicolonToken = oldSemicolonToken.Indent(indentation);
 
-            var output = statement.ReplaceToken(semicolonToken, newSemicolonToken);
+            var output = statement.ReplaceToken(oldSemicolonToken, newSemicolonToken);
             return output;
         }
     }

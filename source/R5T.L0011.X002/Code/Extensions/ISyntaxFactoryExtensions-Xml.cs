@@ -11,10 +11,10 @@ namespace System
     public static partial class ISyntaxFactoryExtensions
     {
         public static XmlElementSyntax XmlSummary(this ISyntaxFactory syntaxFactory,
-            SyntaxTriviaList leadingWhitespace)
+            SyntaxTriviaList indentation)
         {
             var output = syntaxFactory.XmlSummaryElementOnly()
-                .AddTagLineStarts(leadingWhitespace)
+                .AddTagLineStarts(indentation)
                 ;
 
             return output;

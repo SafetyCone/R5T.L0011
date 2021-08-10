@@ -88,7 +88,7 @@ namespace System
             SyntaxTriviaList indentation)
         {
             // Obnoxiously, the namespace adds its own new line.
-            var actualIndentation = indentation.RemoveLeadingNewLine();
+            var actualIndentation = indentation.RemoveLeadingNewLineNotIncludingStructuredTrivia();
 
             var output = namespaceDeclarationSyntax
                 .WithOpenBraceToken(SyntaxFactory.OpenBrace(actualIndentation));

@@ -12,6 +12,13 @@ namespace System
 {
     public static class ClassDeclarationSyntaxExtensions
     {
+        public static ClassDeclarationSyntax AddMethod(this ClassDeclarationSyntax @class,
+               MethodDeclarationSyntax method)
+        {
+            var output = @class.AddMembers(method);
+            return output;
+        }
+
         public static WasFound<MethodDeclarationSyntax> HasFirstMethod(this ClassDeclarationSyntax @class)
         {
             var firstMethodOrDefault = @class.Members
