@@ -28,6 +28,12 @@ namespace System
             return output;
         }
 
+        //public static T AddStatement<T>(this T baseMethod,
+        //    StatementSyntax statementSyntax)
+        //{
+
+        //}
+
         public static IEnumerable<ParameterSyntax> GetParameters(this BaseMethodDeclarationSyntax method)
         {
             var output = method.ParameterList.Parameters
@@ -64,7 +70,7 @@ namespace System
             var parameterWasFound = method.HasParameter(parameterName);
             if(!parameterWasFound)
             {
-                var message = Instances.ExceptionMessage.ParameterNotFound(parameterName);
+                var message = Instances.ExceptionMessageGenerator.ParameterNotFound(parameterName);
 
                 throw new Exception(message);
             }
@@ -118,7 +124,7 @@ namespace System
             var statementWasFound = method.HasStatement(statementText);
             if(!statementWasFound)
             {
-                var message = Instances.ExceptionMessage.StatementNotFound(statementText);
+                var message = Instances.ExceptionMessageGenerator.StatementNotFound(statementText);
 
                 throw new Exception(message);
             }

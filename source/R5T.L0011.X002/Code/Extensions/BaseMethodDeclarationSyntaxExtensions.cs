@@ -41,7 +41,7 @@ namespace System
 
         public static T AddBody<T>(this T baseMethod,
             SyntaxTriviaList outerLeadingWhitespace,
-            ModifierWithIndentation<BlockSyntax> modifier = default)
+            ModifierWithIndentationSynchronous<BlockSyntax> modifier = default)
             where T : BaseMethodDeclarationSyntax
         {
             var indentedWhitespace = outerLeadingWhitespace.IndentByTab();
@@ -71,8 +71,8 @@ namespace System
         public static T AddParameterWithModification<T>(this T method,
             string name, string typeName,
             SyntaxTriviaList outerLeadingWhitespace,
-            ModifierWithIndentation<ParameterSyntax> parameterModifier = default,
-            ModifierWithIndentation<ParameterSyntax> parameterWhitespaceModifier = default)
+            ModifierWithIndentationSynchronous<ParameterSyntax> parameterModifier = default,
+            ModifierWithIndentationSynchronous<ParameterSyntax> parameterWhitespaceModifier = default)
             where T : BaseMethodDeclarationSyntax
         {
             var parameter = SyntaxFactory.Parameter(name, typeName)

@@ -18,7 +18,7 @@ namespace System
         public static NamespaceDeclarationSyntax AddClass(this NamespaceDeclarationSyntax namespaceDeclarationSyntax, string className,
             MemberSignatureModel signatureModel,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithIndentation<ClassDeclarationSyntax> modifier)
+            ModifierWithIndentationSynchronous<ClassDeclarationSyntax> modifier)
         {
             var indentedLeadingWhitespace = leadingWhitespace.IndentByTab();
 
@@ -37,7 +37,7 @@ namespace System
 
         public static NamespaceDeclarationSyntax AddClass(this NamespaceDeclarationSyntax namespaceDeclarationSyntax, string className,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithIndentation<ClassDeclarationSyntax> modifier)
+            ModifierWithIndentationSynchronous<ClassDeclarationSyntax> modifier)
         {
             var signatureModel = SignatureModel.GetClassDefault();
 
@@ -48,7 +48,7 @@ namespace System
         public static NamespaceDeclarationSyntax AddInterfaceV01(this NamespaceDeclarationSyntax namespaceDeclarationSyntax, string interfaceName,
             MemberSignatureModel signatureModel,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithIndentation<InterfaceDeclarationSyntax> modifier)
+            ModifierWithIndentationSynchronous<InterfaceDeclarationSyntax> modifier)
         {
             var indentedLeadingWhitespace = leadingWhitespace.IndentByTab();
 
@@ -67,7 +67,7 @@ namespace System
 
         public static NamespaceDeclarationSyntax AddInterfaceV01(this NamespaceDeclarationSyntax namespaceDeclarationSyntax, string interfaceName,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithIndentation<InterfaceDeclarationSyntax> modifier)
+            ModifierWithIndentationSynchronous<InterfaceDeclarationSyntax> modifier)
         {
             var signatureModel = SignatureModel.GetInterfaceDefault();
 
@@ -87,7 +87,8 @@ namespace System
         public static NamespaceDeclarationSyntax WithOpenBrace(this NamespaceDeclarationSyntax namespaceDeclarationSyntax,
             SyntaxTriviaList indentation)
         {
-            // Obnoxiously, the namespace adds its own new line.
+            // Obnoxiously, the namespace adds its own new line after its declaration, before its open brace.
+            // So we need to remove the new line from the desired indentation of the open brace.
             var actualIndentation = indentation.RemoveLeadingNewLineNotIncludingStructuredTrivia();
 
             var output = namespaceDeclarationSyntax

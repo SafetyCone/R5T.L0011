@@ -1,0 +1,1 @@
+R5T.L0011.X003 - INamespacedTypeName (R5T.T0034)-based extensions to Roslyn functionality.

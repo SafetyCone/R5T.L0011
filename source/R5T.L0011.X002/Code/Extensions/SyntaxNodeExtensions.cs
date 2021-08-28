@@ -104,26 +104,6 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode ModifyWith<TSyntaxNode>(this TSyntaxNode syntaxNode, Modifier<TSyntaxNode> modifier)
-            where TSyntaxNode : SyntaxNode
-        {
-            var output = modifier is object
-                ? modifier(syntaxNode)
-                : syntaxNode;
-
-            return output;
-        }
-
-        public static TSyntaxNode ModifyWith<TSyntaxNode, TData>(this TSyntaxNode syntaxNode, ModifierWith<TSyntaxNode, TData> modifier, TData data)
-            where TSyntaxNode : SyntaxNode
-        {
-            var output = modifier is object
-                ? modifier(syntaxNode, data)
-                : syntaxNode;
-
-            return output;
-        }
-
         public static TSyntaxNode WrapWithRegion<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList indentation,
             string regionName)

@@ -39,7 +39,7 @@ namespace System
 
         public static CompilationUnitSyntax AddNamespace(this CompilationUnitSyntax compilationUnit, string namespaceName,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithIndentation<NamespaceDeclarationSyntax> modifier)
+            ModifierWithIndentationSynchronous<NamespaceDeclarationSyntax> modifier)
         {
             var indentedLeadingWhitespace = leadingWhitespace.IndentByTab();
 

@@ -7,10 +7,10 @@ namespace System
 {
     public static class ISymbolExtensions
     {
-        public static bool HasAttributeOfType(this ISymbol symbol, string attributeTypeName)
+        public static bool HasAttributeWithTypeName(this ISymbol symbol, string attributeTypeName)
         {
             var output = symbol.GetAttributes()
-                .ContainsAttributeOfType(attributeTypeName);
+                .ContainsAttributeWithTypeName(attributeTypeName);
             
             return output;
         }
@@ -20,7 +20,7 @@ namespace System
         {
             var attributeTypeName = typeof(TAttribute).Name;
 
-            var output = symbol.HasAttributeOfType(attributeTypeName);
+            var output = symbol.HasAttributeWithTypeName(attributeTypeName);
             return output;
         }
     }

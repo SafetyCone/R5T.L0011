@@ -16,7 +16,7 @@ namespace System
         public static T AddMethodWithoutBody<T>(this T typeDeclaration,
             string name, string returnType,
             SyntaxTriviaList leadingWhitespace,
-            ModifierWithIndentation<MethodDeclarationSyntax> modifier)
+            ModifierWithIndentationSynchronous<MethodDeclarationSyntax> modifier)
             where T : TypeDeclarationSyntax
         {
             var indentedLeadingWhitespace = leadingWhitespace.IndentByTab();
@@ -35,9 +35,9 @@ namespace System
         public static T AddMethod<T>(this T typeDeclaration,
             string name, string returnType,
             SyntaxTriviaList leadingWhitespace,
-            Modifier<MethodDeclarationSyntax> methodModifier = default,
-            ModifierWithIndentation<MethodDeclarationSyntax> methodWhitespaceModifier = default,
-            ModifierWithIndentation<BlockSyntax> bodyModifier = default)
+            ModifierSynchronous<MethodDeclarationSyntax> methodModifier = default,
+            ModifierWithIndentationSynchronous<MethodDeclarationSyntax> methodWhitespaceModifier = default,
+            ModifierWithIndentationSynchronous<BlockSyntax> bodyModifier = default)
             where T : TypeDeclarationSyntax
         {
             var indentedLeadingWhitespace = leadingWhitespace.IndentByTab();
@@ -69,8 +69,8 @@ namespace System
 
         public static T AddProperty<T>(this T typeDeclaration, string name, string typeName,
             SyntaxTriviaList outerLeadingWhitespace,
-            ModifierWithIndentation<PropertyDeclarationSyntax> premodifier = default,
-            ModifierWithIndentation<PropertyDeclarationSyntax> modifier = default)
+            ModifierWithIndentationSynchronous<PropertyDeclarationSyntax> premodifier = default,
+            ModifierWithIndentationSynchronous<PropertyDeclarationSyntax> modifier = default)
             where T : TypeDeclarationSyntax
         {
             var property = SyntaxFactory.Property(name, typeName)

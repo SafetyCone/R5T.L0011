@@ -51,6 +51,14 @@ namespace System
             return semanticModel;
         }
 
+        /// <summary>
+        /// Quality-of-life overload for <see cref="GetCompilationUnit(Document)"/>.
+        /// </summary>
+        public static Task<CompilationUnitSyntax> GetSyntaxModel(this Document document)
+        {
+            return document.GetCompilationUnit();
+        }
+
         public static async Task<INamedTypeSymbol[]> GetNamedTypeSymbols<T>(this Document document,
             IEnumerable<T> typeDeclarations)
             where T : TypeDeclarationSyntax
@@ -62,6 +70,13 @@ namespace System
                 .ToArray();
 
             return typeSymbols;
+        }
+
+        public static IEnumerable<Document> WhereFilePathIs(this IEnumerable<Document> documents,
+            string codeFilePath)
+        {
+            var output = documents.Where(document => document.FilePath == codeFilePath);
+            return output;
         }
     }
 }

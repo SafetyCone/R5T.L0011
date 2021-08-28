@@ -48,5 +48,34 @@ namespace System
 
             return intefaces;
         }
+
+        public static IEnumerable<TypeDeclarationSyntax> GetTypes(this CompilationUnitSyntax compilationUnit)
+        {
+            var intefaces = compilationUnit.DescendantNodes()
+                .OfType<TypeDeclarationSyntax>()
+                ;
+
+            return intefaces;
+        }
+
+        public static TSyntaxNode ModifyWith<TSyntaxNode>(this TSyntaxNode syntaxNode, ModifierSynchronous<TSyntaxNode> modifier)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = modifier is object
+                ? modifier(syntaxNode)
+                : syntaxNode;
+
+            return output;
+        }
+
+        public static TSyntaxNode ModifyWith<TSyntaxNode, TData>(this TSyntaxNode syntaxNode, ModifierSynchronousWith<TSyntaxNode, TData> modifier, TData data)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = modifier is object
+                ? modifier(syntaxNode, data)
+                : syntaxNode;
+
+            return output;
+        }
     }
 }

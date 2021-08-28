@@ -8,8 +8,15 @@ using R5T.Magyar;
 
 namespace System
 {
+    /// <summary>
+    /// NOTE: you probably want <see cref="BaseMethodDeclarationSyntaxExtensions"/>.
+    /// </summary>
     public static class MethodDeclarationSyntaxExtensions
     {
-        /// NOTE: you probably want <see cref="BaseMethodDeclarationSyntaxExtensions"/>.
+        public static string Name(this MethodDeclarationSyntax method)
+        {
+            var output = method.Identifier.Text;
+            return output;
+        }
     }
 }

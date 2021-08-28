@@ -1,0 +1,1 @@
+R5T.L0011.T005 - ITypeSymbolOperator extensions for testing attribute availability and other functionality.

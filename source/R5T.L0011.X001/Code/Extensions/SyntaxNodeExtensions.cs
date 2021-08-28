@@ -127,7 +127,7 @@ namespace System
         }
 
         public static TSyntaxNode ModifyWith<TSyntaxNode>(this TSyntaxNode syntaxNode, SyntaxTriviaList lineLeadingWhitespace,
-            ModifierWithIndentation<TSyntaxNode> modifier)
+            ModifierWithIndentationSynchronous<TSyntaxNode> modifier)
             where TSyntaxNode : SyntaxNode
         {
             var output = modifier is object

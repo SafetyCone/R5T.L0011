@@ -39,9 +39,9 @@ namespace System
 
         public static XmlElementSyntax AddContentLine(this XmlElementSyntax xmlElement,
             SyntaxTriviaList indentation,
-            string text)
+            string documenationLine)
         {
-            var documentationLineElements = SyntaxFactory.ParseDocumentationLine(text);
+            var documentationLineElements = SyntaxFactory.ParseDocumentationLine(documenationLine);
 
             // If any elements, prepend the line leading whitespace.
             if(documentationLineElements.Any())

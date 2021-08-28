@@ -13,6 +13,16 @@ namespace System
     public static class ClassDeclarationSyntaxExtensions
     {
         public static ClassDeclarationSyntax AddMethod(this ClassDeclarationSyntax @class,
+            MethodDeclarationSyntax method,
+            ModifierSynchronous<MethodDeclarationSyntax> modifier = default)
+        {
+            var modifiedClass = method.ModifyWith(modifier);
+
+            var output = @class.AddMembers(modifiedClass);
+            return output;
+        }
+
+        public static ClassDeclarationSyntax AddMethod(this ClassDeclarationSyntax @class,
                MethodDeclarationSyntax method)
         {
             var output = @class.AddMembers(method);

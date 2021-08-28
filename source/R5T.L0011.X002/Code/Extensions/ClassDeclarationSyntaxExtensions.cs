@@ -18,9 +18,9 @@ namespace System
 
         public static ClassDeclarationSyntax AddConstructor(this ClassDeclarationSyntax @class,
             SyntaxTriviaList outerLeadingWhitespace,
-            ModifierWithIndentation<ConstructorDeclarationSyntax> premodifier = default,
-            ModifierWithIndentation<ConstructorDeclarationSyntax> modifier = default,
-            ModifierWithIndentation<BlockSyntax> bodyModifier = default)
+            ModifierWithIndentationSynchronous<ConstructorDeclarationSyntax> premodifier = default,
+            ModifierWithIndentationSynchronous<ConstructorDeclarationSyntax> modifier = default,
+            ModifierWithIndentationSynchronous<BlockSyntax> bodyModifier = default)
         {
             var constructor = SyntaxFactory.Constructor(@class.Identifier)
                 .ModifyWith(outerLeadingWhitespace, premodifier)

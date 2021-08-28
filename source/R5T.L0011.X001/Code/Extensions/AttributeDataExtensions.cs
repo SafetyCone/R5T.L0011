@@ -9,10 +9,10 @@ namespace System
 {
     public static class AttributeDataExtensions
     {
-        public static bool ContainsAttributeOfType(this IEnumerable<AttributeData> attributes, string attributeTypeName)
+        public static bool ContainsAttributeWithTypeName(this IEnumerable<AttributeData> attributes, string attributeTypeName)
         {
             var output = attributes
-                .Select(x => x.AttributeClass.Name == attributeTypeName)
+                .Where(x => x.AttributeClass.Name == attributeTypeName)
                 .Any();
 
             return output;
@@ -23,7 +23,7 @@ namespace System
         {
             var attributeTypeName = typeof(TAttribute).Name;
 
-            var output = attributes.ContainsAttributeOfType(attributeTypeName);
+            var output = attributes.ContainsAttributeWithTypeName(attributeTypeName);
             return output;
         }
     }

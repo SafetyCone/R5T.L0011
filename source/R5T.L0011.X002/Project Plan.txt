@@ -1,1 +1,1 @@
-R5T.L0011.X002 - Microsoft.CodeAnalysis (Roslyn) extensions building on non-Roslyn libraries.
+R5T.L0011.X002 - Common Microsoft.CodeAnalysis (Roslyn) extensions building on non-Roslyn libraries.

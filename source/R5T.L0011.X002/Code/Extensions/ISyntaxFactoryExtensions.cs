@@ -6,6 +6,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using R5T.Magyar;
+
 using R5T.L0011.T001;
 using R5T.L0011.T002;
 using R5T.L0011.T004;
@@ -107,7 +109,7 @@ namespace System
 
         public static SyntaxToken VarIdentifier(this ISyntaxFactory syntaxFactory)
         {
-            var output = syntaxFactory.Identifier(SyntaxKind.VarKeyword, Syntax.VarText());
+            var output = syntaxFactory.Identifier(SyntaxKind.VarKeyword, Syntax.Var());
             return output;
         }
 

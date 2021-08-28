@@ -20,6 +20,21 @@ namespace System
             return output;
         }
 
+        public static AttributeSyntax Attribute(this ISyntaxFactory _,
+            string name)
+        {
+            var nameSyntax = _.Name(name);
+
+            var output = SyntaxFactory.Attribute(nameSyntax);
+            return output;
+        }
+
+        public static AttributeListSyntax AttributeList(this ISyntaxFactory _)
+        {
+            var output = SyntaxFactory.AttributeList();
+            return output;
+        }
+
         public static ArgumentSyntax Argument(this ISyntaxFactory _, ExpressionSyntax expression)
         {
             var output = SyntaxFactory.Argument(expression);
