@@ -3,24 +3,20 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-using R5T.L0011.T001;
-using R5T.L0011.T003;
+using Instances = R5T.L0011.X002.Instances;
 
 
 namespace System
 {
     public static class BaseTypeDeclarationSyntaxExtensions
     {
-        private static ISyntaxFactory SyntaxFactory { get; } = R5T.L0011.T001.SyntaxFactory.Instance;
-
-
         public static T WithBraces<T>(this T baseTypeDeclarationSyntax,
             SyntaxTriviaList indentation)
             where T : BaseTypeDeclarationSyntax
         {
             var modified = baseTypeDeclarationSyntax
-                .WithOpenBraceToken(SyntaxFactory.OpenBrace(indentation))
-                .WithCloseBraceToken(SyntaxFactory.CloseBrace(indentation))
+                .WithOpenBraceToken(Instances.SyntaxFactory.OpenBrace(indentation))
+                .WithCloseBraceToken(Instances.SyntaxFactory.CloseBrace(indentation))
                 ;
 
             var output = modified as T;
@@ -32,7 +28,7 @@ namespace System
             where T : BaseTypeDeclarationSyntax
         {
             var output = baseTypeDeclarationSyntax
-                .WithCloseBraceToken(SyntaxFactory.CloseBrace(indentation))
+                .WithCloseBraceToken(Instances.SyntaxFactory.CloseBrace(indentation))
                 as T;
 
             return output;
@@ -43,7 +39,7 @@ namespace System
             where T : BaseTypeDeclarationSyntax
         {
             var output = baseTypeDeclarationSyntax
-                .WithCloseBraceToken(SyntaxFactory.CloseBrace2(leadingWhitespace, appendNewLine))
+                .WithCloseBraceToken(Instances.SyntaxFactory.CloseBrace2(leadingWhitespace, appendNewLine))
                 as T;
 
             return output;
@@ -54,7 +50,7 @@ namespace System
             where T : BaseTypeDeclarationSyntax
         {
             var output = baseTypeDeclarationSyntax
-                .WithOpenBraceToken(SyntaxFactory.OpenBrace(indentation))
+                .WithOpenBraceToken(Instances.SyntaxFactory.OpenBrace(indentation))
                 as T;
 
             return output;
@@ -65,7 +61,7 @@ namespace System
             where T : BaseTypeDeclarationSyntax
         {
             var output = baseTypeDeclarationSyntax
-                .WithOpenBraceToken(SyntaxFactory.OpenBrace2(leadingWhitespace, prependNewLine))
+                .WithOpenBraceToken(Instances.SyntaxFactory.OpenBrace2(leadingWhitespace, prependNewLine))
                 as T;
 
             return output;

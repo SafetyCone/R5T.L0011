@@ -52,7 +52,7 @@ namespace System
         {
             var output = syntaxFactory.RegionDirectiveTriviaSyntaxOnly(regionName)
                 .AddLineStart(leadingWhitespace)
-                .AppendBlankLine2(leadingWhitespace);
+                .AppendBlankLine(leadingWhitespace);
 
             return output;
         }

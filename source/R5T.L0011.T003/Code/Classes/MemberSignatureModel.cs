@@ -3,8 +3,7 @@
 
 namespace R5T.L0011.T003
 {
-    public class MemberSignatureModel
+    public class MemberSignatureModel : SignatureModelBase
     {
-        public AccessibilityLevel AccessibilityLevel { get; set; }
     }
 }

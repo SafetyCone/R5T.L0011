@@ -16,5 +16,15 @@ namespace System
             var output = @namespace.AddMembers(modifiedClass);
             return output;
         }
+
+        public static NamespaceDeclarationSyntax AddInterface(this NamespaceDeclarationSyntax @namespace,
+            InterfaceDeclarationSyntax @interface,
+            ModifierSynchronous<InterfaceDeclarationSyntax> modifier = default)
+        {
+            var modifiedClass = @interface.ModifyWith(modifier);
+
+            var output = @namespace.AddMembers(modifiedClass);
+            return output;
+        }
     }
 }

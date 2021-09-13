@@ -66,6 +66,24 @@ namespace System
             return output;
         }
 
+        /// <summary>
+        /// Removes all end of line characters.
+        /// </summary>
+        public static SyntaxTriviaList RemoveNewLines(this SyntaxTriviaList trivia)
+        {
+            var output = new SyntaxTriviaList(trivia.Where(xTrivia => !xTrivia.IsNewLine()));
+            return output;
+        }
+
+        /// <summary>
+        /// Converts indentation (tabination with a leading new line) to tabination by removing any new lines.
+        /// </summary>
+        public static SyntaxTriviaList GetTabination(this SyntaxTriviaList indentation)
+        {
+            var output = indentation.RemoveNewLines();
+            return output;
+        }
+
         public static SyntaxTriviaList RemoveLeadingNewLine(this SyntaxTriviaList trivia)
         {
             var output = trivia;

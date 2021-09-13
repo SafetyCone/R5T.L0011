@@ -4,45 +4,46 @@ using System.IO;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 
 namespace System
 {
     public static class SyntaxNodeExtensions
     {
-        public static TSyntaxNode SetIndentation<TSyntaxNode>(this TSyntaxNode syntaxToken,
+        public static TSyntaxNode SetIndentation<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxToken.WithLeadingTrivia(indentation.ToArray());
+            var output = syntaxNode.WithLeadingTrivia(indentation.ToArray());
             return output;
         }
 
-        public static TSyntaxNode SetIndentationWithoutLeadingNewLine<TSyntaxNode>(this TSyntaxNode syntaxToken,
+        public static TSyntaxNode SetIndentationWithoutLeadingNewLine<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
         {
             var actualIndentation = indentation.RemoveAt(0);
 
-            var output = syntaxToken.WithLeadingTrivia(actualIndentation.ToArray());
+            var output = syntaxNode.WithLeadingTrivia(actualIndentation.ToArray());
             return output;
         }
 
-        public static TSyntaxNode Indent<TSyntaxNode>(this TSyntaxNode syntaxToken,
+        public static TSyntaxNode Indent<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxToken.AddLeadingLeadingTrivia(indentation.ToArray());
+            var output = syntaxNode.AddLeadingLeadingTrivia(indentation.ToArray());
             return output;
         }
 
-        public static TSyntaxNode IndentWihtoutNewLine<TSyntaxNode>(this TSyntaxNode syntaxToken,
+        public static TSyntaxNode IndentWihtoutNewLine<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
         {
             var actualIndentation = indentation.RemoveAt(0);
 
-            var output = syntaxToken.AddLeadingLeadingTrivia(actualIndentation.ToArray());
+            var output = syntaxNode.AddLeadingLeadingTrivia(actualIndentation.ToArray());
             return output;
         }
 

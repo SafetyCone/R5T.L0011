@@ -24,6 +24,11 @@ namespace System
             return SyntaxValues.ArrayOpen;
         }
 
+        public static string Async(this ISyntax _)
+        {
+            return SyntaxValues.Async;
+        }
+
         public static string CloseParenthesis(this ISyntax _)
         {
             return Strings.CloseParenthesis;
@@ -45,9 +50,34 @@ namespace System
             return output;
         }
 
+        public static string Internal(this ISyntax _)
+        {
+            return SyntaxValues.Internal;
+        }
+
+        public static string None(this ISyntax _)
+        {
+            return SyntaxValues.None;
+        }
+
+        public static string Override(this ISyntax _)
+        {
+            return SyntaxValues.Override;
+        }
+
+        public static string Partial(this ISyntax _)
+        {
+            return SyntaxValues.Partial;
+        }
+
         public static string Private(this ISyntax _)
         {
             return SyntaxValues.Private;
+        }
+
+        public static string Protected(this ISyntax _)
+        {
+            return SyntaxValues.Protected;
         }
 
         public static string Public(this ISyntax _)

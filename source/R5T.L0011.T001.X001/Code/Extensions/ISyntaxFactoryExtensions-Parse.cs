@@ -14,7 +14,7 @@ namespace System
 {
     public static partial class ISyntaxFactoryExtensions
     {
-        public static ConstructorDeclarationSyntax ParseConstructor(this ISyntaxFactory _,
+        public static ConstructorDeclarationSyntax ParseConstructorDeclaration(this ISyntaxFactory _,
             string text)
         {
             var output = SyntaxFactory.ParseMemberDeclaration(text) as ConstructorDeclarationSyntax;
