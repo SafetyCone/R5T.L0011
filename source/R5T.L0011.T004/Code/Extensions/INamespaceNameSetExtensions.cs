@@ -6,6 +6,8 @@ using R5T.Magyar;
 
 using R5T.L0011.T004;
 
+using Instances = R5T.L0011.T004.Instances;
+
 
 namespace System
 {
@@ -29,11 +31,38 @@ namespace System
             return set;
         }
 
-        public static INamespaceNameSet AddIfNotCodeBodyNamespace(this INamespaceNameSet set,
+        /// <summary>
+        /// Quality-of-life overload for <see cref="AddNamespaceForTypeIfOutsideCodeBodyNamespace(INamespaceNameSet, string, string)"/>.
+        /// </summary>
+        public static INamespaceNameSet AddNamespacedTypeName(this INamespaceNameSet set,
+            string codeBodyNamespaceName,
+            string namespacedTypeName)
+        {
+            set.AddNamespaceForTypeIfOutsideCodeBodyNamespace(
+                codeBodyNamespaceName,
+                namespacedTypeName);
+
+            return set;
+        }
+
+        public static INamespaceNameSet AddNamespaceForTypeIfOutsideCodeBodyNamespace(this INamespaceNameSet set,
+            string codeBodyNamespaceName,
+            string namespacedTypeName)
+        {
+            var namespaceNameForType = Instances.NamespacedTypeName.GetNamespaceName(namespacedTypeName);
+
+            set.AddIfNotInCodeBodyNamespace(
+                codeBodyNamespaceName,
+                namespaceNameForType);
+
+            return set;
+        }
+
+        public static INamespaceNameSet AddIfNotInCodeBodyNamespace(this INamespaceNameSet set,
             string codeBodyNamespaceName,
             string namespaceName)
         {
-            if(namespaceName != codeBodyNamespaceName)
+            if(!Instances.NamespaceName.IsIn(namespaceName, codeBodyNamespaceName))
             {
                 set.AddValue(namespaceName);
             }
@@ -41,13 +70,13 @@ namespace System
             return set;
         }
 
-        public static INamespaceNameSet AddIfNotCodeBodyNamespace(this INamespaceNameSet set,
+        public static INamespaceNameSet AddIfNotInCodeBodyNamespace(this INamespaceNameSet set,
             string codeBodyNamespaceName,
             params string[] namespaceNames)
         {
             foreach (var namespaceName in namespaceNames)
             {
-                set.AddIfNotCodeBodyNamespace(
+                set.AddIfNotInCodeBodyNamespace(
                     codeBodyNamespaceName,
                     namespaceName);
             }
@@ -55,13 +84,13 @@ namespace System
             return set;
         }
 
-        public static INamespaceNameSet AddIfNotCodeBodyNamespace(this INamespaceNameSet set,
+        public static INamespaceNameSet AddIfNotInCodeBodyNamespace(this INamespaceNameSet set,
             string codeBodyNamespaceName,
             IEnumerable<string> namespaceNames)
         {
             foreach (var namespaceName in namespaceNames)
             {
-                set.AddIfNotCodeBodyNamespace(
+                set.AddIfNotInCodeBodyNamespace(
                     codeBodyNamespaceName,
                     namespaceName);
             }

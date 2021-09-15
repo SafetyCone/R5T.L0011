@@ -6,7 +6,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.L0011.T001;
 using R5T.L0011.T004;
-using R5T.L0011.X002;
+
+using Instances = R5T.L0011.X002.Instances;
 
 
 namespace System

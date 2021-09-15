@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 
 using R5T.L0011.T001;
 using R5T.L0011.T004;
 
-using R5T.L0011.X002;
+using Instances = R5T.L0011.X002.Instances;
 
 
 namespace System
