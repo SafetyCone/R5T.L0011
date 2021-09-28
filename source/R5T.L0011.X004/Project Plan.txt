@@ -1,0 +1,3 @@
+R5T.L0011.X004 - Extensions to ICodeFileOperator (and other R5T.T0045 extension method bases).
+
+GOALS:

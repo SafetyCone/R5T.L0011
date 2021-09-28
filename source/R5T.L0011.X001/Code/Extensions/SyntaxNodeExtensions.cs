@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace System
@@ -124,6 +124,26 @@ namespace System
             where TSyntaxNode : SyntaxNode
         {
             var output = syntaxNode.AddTrailingTrailingTrivia(trivia);
+            return output;
+        }
+
+        public static IEnumerable<TDescendantSyntaxNodeType> GetDescendantsOfType<TSyntaxNode, TDescendantSyntaxNodeType>(this TSyntaxNode syntaxNode)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxNode.DescendantNodes()
+                .OfType<TDescendantSyntaxNodeType>()
+                ;
+
+            return output;
+        }
+
+        public static IEnumerable<InterfaceDeclarationSyntax> GetInterfaces<TSyntaxNode>(this TSyntaxNode syntaxNode)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxNode.DescendantNodes()
+                .OfType<InterfaceDeclarationSyntax>()
+                ;
+
             return output;
         }
 

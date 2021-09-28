@@ -29,30 +29,10 @@ namespace System
             return output;
         }
 
-        public static WasFound<MethodDeclarationSyntax> HasFirstMethod(this ClassDeclarationSyntax @class)
-        {
-            var firstMethodOrDefault = @class.Members
-                .OfType<MethodDeclarationSyntax>()
-                .FirstOrDefault();
-
-            var wasFound = WasFound.From(firstMethodOrDefault);
-            return wasFound;
-        }
-
         public static string GetClassName(this ClassDeclarationSyntax @class)
         {
             var output = @class.Identifier.Text;
             return output;
-        }
-
-        public static WasFound<ConstructorDeclarationSyntax> HasConstructor(this ClassDeclarationSyntax @class)
-        {
-            var constructorOrDefault = @class.Members
-                .OfType<ConstructorDeclarationSyntax>()
-                .SingleOrDefault();
-
-            var wasFound = WasFound.From(constructorOrDefault);
-            return wasFound;
         }
 
         public static ConstructorDeclarationSyntax GetConstructor(this ClassDeclarationSyntax @class)
@@ -82,6 +62,42 @@ namespace System
                 ;
 
             return output;
+        }
+
+        /// <summary>
+        /// Simply check whether an attribute with the specified type name exists.
+        /// (Does not check for X vs. XAttribute varieties of attribute type name.)
+        /// </summary>
+        public static bool HasAttributeOfTypeSimple(this ClassDeclarationSyntax @class,
+            string attributeTypeName)
+        {
+            var output = @class.AttributeLists
+                .SelectMany(xAttributeList => xAttributeList.Attributes) // Get all attributes across all attribute lists.
+                .Where(xAttribute => xAttribute.Name.ToString() == attributeTypeName)
+                .Any()
+                ;
+
+            return output;
+        }
+
+        public static WasFound<ConstructorDeclarationSyntax> HasConstructor(this ClassDeclarationSyntax @class)
+        {
+            var constructorOrDefault = @class.Members
+                .OfType<ConstructorDeclarationSyntax>()
+                .SingleOrDefault();
+
+            var wasFound = WasFound.From(constructorOrDefault);
+            return wasFound;
+        }
+
+        public static WasFound<MethodDeclarationSyntax> HasFirstMethod(this ClassDeclarationSyntax @class)
+        {
+            var firstMethodOrDefault = @class.Members
+                .OfType<MethodDeclarationSyntax>()
+                .FirstOrDefault();
+
+            var wasFound = WasFound.From(firstMethodOrDefault);
+            return wasFound;
         }
 
         public static WasFound<PropertyDeclarationSyntax> HasProperty(this ClassDeclarationSyntax @class,

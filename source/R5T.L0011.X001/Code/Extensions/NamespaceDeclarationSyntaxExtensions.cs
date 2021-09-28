@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace System
 {
-    public static class NamespaceDeclarationExtensions
+    public static class NamespaceDeclarationSyntaxExtensions
     {
         public static NamespaceDeclarationSyntax AddClass(this NamespaceDeclarationSyntax @namespace,
             ClassDeclarationSyntax @class,

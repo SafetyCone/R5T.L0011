@@ -5,6 +5,8 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using R5T.Magyar;
+
 
 namespace System
 {
@@ -32,12 +34,21 @@ namespace System
         /// <summary>
         /// Gets the single descendent class. (Assumes one class per compilation unit.)
         /// </summary>
-        public static ClassDeclarationSyntax GetClass(this CompilationUnitSyntax compilationUnit)
+        public static ClassDeclarationSyntax GetClassSingle(this CompilationUnitSyntax compilationUnit)
         {
-            var @class = compilationUnit.GetClasses()
+            var output = compilationUnit.GetClasses()
                 .Single();
 
-            return @class;
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="GetClassSingle(CompilationUnitSyntax)"/> as the default.
+        /// </summary>
+        public static ClassDeclarationSyntax GetClass(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.GetClassSingle();
+            return output;
         }
 
         public static IEnumerable<InterfaceDeclarationSyntax> GetInterfaces(this CompilationUnitSyntax compilationUnit)
@@ -47,6 +58,88 @@ namespace System
                 ;
 
             return intefaces;
+        }
+
+        public static InterfaceDeclarationSyntax GetInterfaceSingle(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.GetInterfaces()
+                .Single();
+
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="GetInterfaceSingle(CompilationUnitSyntax)"/> as the default.
+        /// </summary>
+        public static InterfaceDeclarationSyntax GetInterface(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.GetInterfaceSingle();
+            return output;
+        }
+
+        public static IEnumerable<NamespaceDeclarationSyntax> GetNamespaces(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.DescendantNodes()
+                .OfType<NamespaceDeclarationSyntax>()
+                ;
+
+            return output;
+        }
+
+        public static WasFound<ClassDeclarationSyntax> HasClassSingle(this CompilationUnitSyntax compilationUnit)
+        {
+            var classOrDefault = compilationUnit.GetClasses()
+                .SingleOrDefault();
+
+            var output = WasFound.From(classOrDefault);
+            return output;
+        }
+
+        public static WasFound<ClassDeclarationSyntax> HasClassFirst(this CompilationUnitSyntax compilationUnit)
+        {
+            var classOrDefault = compilationUnit.GetClasses()
+                .FirstOrDefault();
+
+            var output = WasFound.From(classOrDefault);
+            return output;
+        }
+
+        /// <summary>
+        /// Select <see cref="HasClassSingle(CompilationUnitSyntax)"/> as the default.
+        /// </summary>
+        public static WasFound<ClassDeclarationSyntax> HasClass(this CompilationUnitSyntax compilationUnit)
+        {
+            var classOrDefault = compilationUnit.GetClasses()
+                .SingleOrDefault();
+
+            var output = WasFound.From(classOrDefault);
+            return output;
+        }
+
+        public static WasFound<InterfaceDeclarationSyntax> HasInterfaceSingle(this CompilationUnitSyntax compilationUnit)
+        {
+            var interfaceOrDefault = compilationUnit.GetInterfaces()
+                .SingleOrDefault();
+
+            var output = WasFound.From(interfaceOrDefault);
+            return output;
+        }
+
+        public static WasFound<InterfaceDeclarationSyntax> HasInterfaceFirst(this CompilationUnitSyntax compilationUnit)
+        {
+            var interfaceOrDefault = compilationUnit.GetInterfaces()
+                .FirstOrDefault();
+
+            var output = WasFound.From(interfaceOrDefault);
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="HasInterfaceSingle(CompilationUnitSyntax)"/> as the default.
+        /// </summary>
+        public static WasFound<InterfaceDeclarationSyntax> HasInterface(this CompilationUnitSyntax compilationUnit)
+        {
+            return compilationUnit.HasInterfaceSingle();
         }
 
         public static IEnumerable<TypeDeclarationSyntax> GetTypes(this CompilationUnitSyntax compilationUnit)
