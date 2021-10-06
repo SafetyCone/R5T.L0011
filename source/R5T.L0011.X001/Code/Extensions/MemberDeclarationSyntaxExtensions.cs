@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
@@ -21,6 +23,15 @@ namespace System
                 .Where(xAttribute => xAttribute.Name.ToString() == attributeTypeName)
                 .Any()
                 ;
+
+            return output;
+        }
+
+        public static bool IsStatic(this MemberDeclarationSyntax member)
+        {
+            var output = member.Modifiers
+                .Where(xModifer => xModifer.IsStatic())
+                .Any();
 
             return output;
         }

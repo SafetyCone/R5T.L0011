@@ -98,5 +98,16 @@ namespace System
             var output = SyntaxFactory.ParseStatement(text);
             return output;
         }
+
+        public static UsingDirectiveSyntax ParseUsingDirective(this ISyntaxFactory _,
+            string text)
+        {
+            var output = SyntaxFactory.ParseCompilationUnit(text)
+                .DescendantNodes()
+                .OfType<UsingDirectiveSyntax>()
+                .First();
+
+            return output;
+        }
     }
 }

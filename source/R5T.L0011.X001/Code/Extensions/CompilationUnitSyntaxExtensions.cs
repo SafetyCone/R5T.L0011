@@ -12,6 +12,15 @@ namespace System
 {
     public static class CompilationUnitSyntaxExtensions
     {
+        public static UsingDirectiveSyntax[] GetUsings(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.ChildNodes()
+                .OfType<UsingDirectiveSyntax>()
+                .ToArray();
+
+            return output;
+        }
+
         public static IEnumerable<ClassDeclarationSyntax> GetClasses(this CompilationUnitSyntax compilationUnit)
         {
             var classes = compilationUnit.DescendantNodes()
@@ -29,6 +38,27 @@ namespace System
                 .Single();
 
             return @class;
+        }
+
+        public static WasFound<ClassDeclarationSyntax> HasClass_SingleOrDefault(this CompilationUnitSyntax compilationUnit,
+            string className)
+        {
+            var @class = compilationUnit.GetClasses()
+                .Where(x => x.Identifier.Text == className)
+                .SingleOrDefault();
+
+            var output = WasFound.From(@class);
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="HasClass_SingleOrDefault(CompilationUnitSyntax, string)"/> as the default.
+        /// </summary>
+        public static WasFound<ClassDeclarationSyntax> HasClass(this CompilationUnitSyntax compilationUnit,
+            string className)
+        {
+            var output = compilationUnit.HasClass_SingleOrDefault(className);
+            return output;
         }
 
         /// <summary>
@@ -83,6 +113,23 @@ namespace System
                 .OfType<NamespaceDeclarationSyntax>()
                 ;
 
+            return output;
+        }
+
+        public static NamespaceDeclarationSyntax GetNamespace_SingleOrDefault(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.GetNamespaces()
+                .SingleOrDefault();
+
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="GetNamespace_SingleOrDefault(CompilationUnitSyntax)"/>.
+        /// </summary>
+        public static NamespaceDeclarationSyntax GetNamespace(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.GetNamespace_SingleOrDefault();
             return output;
         }
 

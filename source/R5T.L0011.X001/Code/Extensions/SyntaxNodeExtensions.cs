@@ -11,6 +11,33 @@ namespace System
 {
     public static class SyntaxNodeExtensions
     {
+        public static TChild GetChildOfType_SingleOrDefault<TChild>(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.ChildNodes()
+                .OfType<TChild>()
+                .SingleOrDefault();
+
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="GetChildOfType_SingleOrDefault{TChild}(SyntaxNode)"/> as the default.
+        /// </summary>
+        public static TChild GetChildOfType<TChild>(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.GetChildOfType_SingleOrDefault<TChild>();
+            return output;
+        }
+
+        public static bool HasChildOfType<TChild>(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.ChildNodes()
+                .OfType<TChild>()
+                .Any();
+
+            return output;
+        }
+
         public static TSyntaxNode SetIndentation<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode

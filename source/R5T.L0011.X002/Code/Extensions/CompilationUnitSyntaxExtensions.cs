@@ -29,15 +29,6 @@ namespace System
             return set;
         }
 
-        public static UsingDirectiveSyntax[] GetUsings(this CompilationUnitSyntax compilationUnit)
-        {
-            var output = compilationUnit.ChildNodes()
-                .OfType<UsingDirectiveSyntax>()
-                .ToArray();
-
-            return output;
-        }
-
         public static CompilationUnitSyntax AddNamespace(this CompilationUnitSyntax compilationUnit, string namespaceName,
             SyntaxTriviaList leadingWhitespace,
             ModifierWithIndentationSynchronous<NamespaceDeclarationSyntax> modifier)

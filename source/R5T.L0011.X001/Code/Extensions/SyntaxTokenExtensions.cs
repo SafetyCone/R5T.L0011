@@ -3,12 +3,19 @@ using System.IO;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 
 namespace System
 {
     public static class SyntaxTokenExtensions
     {
+        public static bool IsStatic(this SyntaxToken syntaxToken)
+        {
+            var output = syntaxToken.IsKind(SyntaxKind.StaticKeyword);
+            return output;
+        }
+
         public static SyntaxToken SetIndentation(this SyntaxToken syntaxToken,
             SyntaxTriviaList indentation)
         {

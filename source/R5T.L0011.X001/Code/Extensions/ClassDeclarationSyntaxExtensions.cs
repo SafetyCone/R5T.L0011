@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.Magyar;
@@ -50,6 +51,15 @@ namespace System
         {
             var output = @class.Members
                 .OfType<PropertyDeclarationSyntax>()
+                ;
+
+            return output;
+        }
+
+        public static IEnumerable<PropertyDeclarationSyntax> GetStaticProperties(this ClassDeclarationSyntax @class)
+        {
+            var output = @class.GetProperties()
+                .Where(xProperty => xProperty.IsStatic())
                 ;
 
             return output;
@@ -156,6 +166,15 @@ namespace System
         {
             var output = @class.WithMembers(@class.Members.Remove(member));
             return output;
+        }
+
+        public static bool IsStatic(this ClassDeclarationSyntax @class)
+        {
+            var isStatic = @class.Modifiers
+                .Where(xToken => xToken.IsKind(SyntaxKind.StaticKeyword))
+                .Any();
+
+            return isStatic;
         }
     }
 }
