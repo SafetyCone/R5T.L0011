@@ -6,6 +6,8 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using Instances = R5T.L0011.X001.Instances;
+
 
 namespace System
 {
@@ -64,7 +66,7 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode IndentWihtoutNewLine<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode IndentWithoutNewLine<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
         {

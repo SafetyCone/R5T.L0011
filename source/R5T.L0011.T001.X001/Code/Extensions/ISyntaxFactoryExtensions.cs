@@ -325,11 +325,8 @@ namespace System
         public static SyntaxToken OpenBrace(this ISyntaxFactory syntaxFactory,
             SyntaxTriviaList indentation)
         {
-            //var testIndentation = indentation.RemoveAt(0);
-
             var output = syntaxFactory.OpenBrace()
                 .Indent(indentation)
-                //.Indent(testIndentation)
                 ;
 
             return output;

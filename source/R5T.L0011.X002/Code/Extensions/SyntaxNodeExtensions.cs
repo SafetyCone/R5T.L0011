@@ -4,7 +4,6 @@ using System.Linq;
 
 using Microsoft.CodeAnalysis;
 
-using R5T.L0011.T001;
 using R5T.L0011.T004;
 
 using Instances = R5T.L0011.X002.Instances;
@@ -14,8 +13,19 @@ namespace System
 {
     public static class SyntaxNodeExtensions
     {
-        private static ISyntaxFactory SyntaxFactory { get; } = R5T.L0011.T001.SyntaxFactory.Instance;
+        public static (T, TChild, SyntaxAnnotation) AnnotateChild<T, TChild>(this T syntaxNode,
+            TChild childSyntaxNode)
+            where T : SyntaxNode
+            where TChild : SyntaxNode
+        {
+            var annotation = Instances.SyntaxFactory.Annotation();
 
+            var outputChildSyntaxNode = childSyntaxNode.WithAdditionalAnnotations(annotation);
+
+            var outputSyntaxNode = syntaxNode.ReplaceNode(childSyntaxNode, outputChildSyntaxNode);
+
+            return (outputSyntaxNode, outputChildSyntaxNode, annotation);
+        }
 
         public static TSyntaxNode AddLineStart<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList leadingWhitespace)
@@ -110,9 +120,9 @@ namespace System
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
         {
-            var region = SyntaxFactory.Region(indentation, regionName);
+            var region = Instances.SyntaxFactory.Region(indentation, regionName);
 
-            var endRegion = SyntaxFactory.EndRegion(indentation);
+            var endRegion = Instances.SyntaxFactory.EndRegion(indentation);
 
             var output = syntaxNode
                 .AddLeadingLeadingTrivia(region)
@@ -245,6 +255,22 @@ namespace System
             //    });
 
             //return output;
+        }
+
+        /// <summary>
+        /// The Roslyn parser always assumes whitespace is trailing.
+        /// Thus when inserting a node when the prior node is correctly indented, the prior node will have the trailing newline, so the inserted node only needs tabination. But it then needs its own new line.
+        /// </summary>
+        public static TSyntaxNode IndentForInsertion<TSyntaxNode>(this TSyntaxNode syntaxNode,
+            SyntaxTriviaList indentation)
+            where TSyntaxNode : SyntaxNode
+        {
+            var output = syntaxNode
+                .IndentWithoutNewLine(indentation)
+                .AppendBlankLine()
+                ;
+
+            return output;
         }
     }
 }

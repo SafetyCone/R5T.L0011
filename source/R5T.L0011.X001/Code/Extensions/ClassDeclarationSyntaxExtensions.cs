@@ -30,6 +30,33 @@ namespace System
             return output;
         }
 
+        public static ClassDeclarationSyntax AddProperty(this ClassDeclarationSyntax @class,
+            PropertyDeclarationSyntax property)
+        {
+            var output = @class.AddMembers(property);
+            return output;
+        }
+
+        public static ClassDeclarationSyntax AddPropertyAfter(this ClassDeclarationSyntax @class,
+            PropertyDeclarationSyntax property,
+            string priorPropertyName)
+        {
+            var priorProperty = @class.GetProperty(priorPropertyName);
+
+            var output = @class.InsertNodesAfter(priorProperty, EnumerableHelper.From(property));
+            return output;
+        }
+
+        public static ClassDeclarationSyntax AddPropertyBefore(this ClassDeclarationSyntax @class,
+            PropertyDeclarationSyntax property,
+            string nextPropertyName)
+        {
+            var nextProperty = @class.GetProperty(nextPropertyName);
+
+            var output = @class.InsertNodesBefore(nextProperty, EnumerableHelper.From(property));
+            return output;
+        }
+
         public static string GetClassName(this ClassDeclarationSyntax @class)
         {
             var output = @class.Identifier.Text;

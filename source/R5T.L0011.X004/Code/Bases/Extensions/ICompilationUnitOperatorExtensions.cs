@@ -101,14 +101,14 @@ namespace System
             return output;
         }
 
-        public static string[] GetExtensionMethodNamespacedTypedMethodNames_StringlyTyped(this ICompilationUnitOperator _,
+        public static string[] GetExtensionMethodNamespacedTypedParameterizedMethodNames_StringlyTyped(this ICompilationUnitOperator _,
             CompilationUnitSyntax compilationUnit)
         {
             var output = _.GetExtensionMethodTuples(compilationUnit)
                 .Select(xTuple =>
                 {
-                    var namespacedTypedMethodName = Instances.MethodNameOperator.GetNamespacedTypedParameterizedMethodName(xTuple);
-                    return namespacedTypedMethodName;
+                    var namespacedTypedParameterizedMethodName = Instances.MethodNameOperator.GetNamespacedTypedParameterizedMethodName(xTuple);
+                    return namespacedTypedParameterizedMethodName;
                 })
                 .ToArray();
 
@@ -186,6 +186,13 @@ namespace System
             string filePath)
         {
             return _.LoadCompilationUnit(filePath);
+        }
+
+        public static void Save(this ICompilationUnitOperator _,
+            string filePath,
+            CompilationUnitSyntax compilationUnit)
+        {
+            compilationUnit.WriteTo(filePath);
         }
     }
 }
