@@ -13,6 +13,15 @@ namespace System
 {
     public static class SyntaxNodeExtensions
     {
+        public static T Annotate<T>(this T syntaxNode, out SyntaxAnnotation annotation)
+            where T : SyntaxNode
+        {
+            annotation = Instances.SyntaxFactory.Annotation();
+
+            var output = syntaxNode.WithAdditionalAnnotations(annotation);
+            return output;
+        }
+
         public static (T, TChild, SyntaxAnnotation) AnnotateChild<T, TChild>(this T syntaxNode,
             TChild childSyntaxNode)
             where T : SyntaxNode
