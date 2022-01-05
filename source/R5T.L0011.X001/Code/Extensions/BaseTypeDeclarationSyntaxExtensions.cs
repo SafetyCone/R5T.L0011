@@ -15,7 +15,7 @@ namespace System
             var output = baseType
                 .AddLeadingLeadingTrivia(
                     SyntaxFactory.Trivia(documentationComment));
-
+            
             return output;
         }
     }

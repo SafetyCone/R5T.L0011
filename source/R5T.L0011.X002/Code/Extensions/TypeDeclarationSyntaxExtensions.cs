@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using R5T.Magyar;
 
 using R5T.L0011.T001;
 
@@ -12,6 +16,43 @@ namespace System
     {
         private static ISyntaxFactory SyntaxFactory { get; } = R5T.L0011.T001.SyntaxFactory.Instance;
 
+
+        public static T AddMembersWithLineSpacing<T>(this T typeDeclaration,
+            MemberDeclarationSyntax[] members,
+            bool addSpaceBeforeFirstMember)
+            where T : TypeDeclarationSyntax
+        {
+            if(members.Length < 1)
+            {
+                return typeDeclaration;
+            }
+
+            var actualFirstMember = addSpaceBeforeFirstMember
+                ? members.First().PrependBlankLine()
+                : members.First()
+                ;
+
+            var actualMembers = EnumerableHelper.From(actualFirstMember)
+                .Concat(members.SkipFirst()
+                    .Select(xMember => xMember.PrependBlankLine()))
+                .ToArray();
+
+            var output = typeDeclaration.AddMembers(actualMembers) as T;
+            return output;
+        }
+
+        public static T AddMembersWithLineSpacing<T>(this T typeDeclaration,
+            MemberDeclarationSyntax[] members)
+            where T : TypeDeclarationSyntax
+        {
+            // If we have members already, prepend a blank line to the first member, else do not.
+            var addSpaceBeforeFirstMember = typeDeclaration.HasMembers();
+
+            var output = typeDeclaration.AddMembersWithLineSpacing(members,
+                addSpaceBeforeFirstMember);
+
+            return output;
+        }
 
         public static T AddMethodWithoutBody<T>(this T typeDeclaration,
             string name, string returnType,

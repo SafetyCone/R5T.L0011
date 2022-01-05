@@ -57,6 +57,9 @@ namespace System
             string text)
         {
             var output = SyntaxFactory.ParseMemberDeclaration(text) as MethodDeclarationSyntax;
+
+            output.VerifyNonNull("Failed to parse method declaration.");
+
             return output;
         }
 

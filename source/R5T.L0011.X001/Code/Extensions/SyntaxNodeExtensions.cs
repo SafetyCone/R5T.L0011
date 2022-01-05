@@ -247,6 +247,14 @@ namespace System
             return syntaxNode.ReplaceNodesAndTokens(GetNodes, GetTokens, nodeTransformer, tokenTransformer);
         }
 
+        public static void VerifyNonNull(this SyntaxNode syntaxNode, string message)
+        {
+            if(syntaxNode is null)
+            {
+                throw new ArgumentNullException(message);
+            }
+        }
+
         public static void WriteTo(this SyntaxNode syntaxNode, string filePath)
         {
             using var fileWriter = new StreamWriter(filePath);

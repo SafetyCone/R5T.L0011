@@ -67,6 +67,9 @@ namespace System
             return output;
         }
 
+        /// <summary>
+        /// Old and bad.
+        /// </summary>
         public static TSyntaxNode AppendBlankLine2<TSyntaxNode>(this TSyntaxNode syntaxNode,
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode

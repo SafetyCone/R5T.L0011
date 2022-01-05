@@ -30,6 +30,13 @@ namespace System
             return output;
         }
 
+        public static ClassDeclarationSyntax AddMethods(this ClassDeclarationSyntax @class,
+               MethodDeclarationSyntax[] methods)
+        {
+            var output = @class.AddMembers(methods);
+            return output;
+        }
+
         public static ClassDeclarationSyntax AddProperty(this ClassDeclarationSyntax @class,
             PropertyDeclarationSyntax property)
         {

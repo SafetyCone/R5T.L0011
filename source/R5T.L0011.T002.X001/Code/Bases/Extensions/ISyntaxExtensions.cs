@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 using R5T.L0011.T002;
 
@@ -7,10 +8,25 @@ namespace System
 {
     public static partial class ISyntaxExtensions
     {
-        public static string Tab(this ISyntax syntax)
+        public static int DecrementSpacesCountByTab(this ISyntax _, int spacesCount, int tabWidth)
         {
-            var output = syntax.GetSpaces(syntax.DefaultTabSpacesCount());
+            var possiblyNegativeSpacesCount = spacesCount - tabWidth;
+
+            var output = possiblyNegativeSpacesCount < 0
+                ? 0
+                : possiblyNegativeSpacesCount;
+
             return output;
+        }
+
+        public static int DecrementSpacesCountByTab(this ISyntax syntax, int spacesCount)
+        {
+            return syntax.DecrementSpacesCountByTab(spacesCount, syntax.DefaultTabSpacesCount());
+        }
+
+        public static string GetIndentation(this ISyntax syntax, int spacesCount)
+        {
+            return syntax.GetSpaces(spacesCount);
         }
 
         public static string GetSpaces(this ISyntax _, int spacesCount)
@@ -35,20 +51,22 @@ namespace System
             return syntax.IncrementSpacesCountByTab(spacesCount);
         }
 
-        public static int DecrementSpacesCountByTab(this ISyntax _, int spacesCount, int tabWidth)
+        /// <summary>
+        /// Characters that are invalid in an identifier.
+        /// </summary>
+        public static char[] InvalidIdentifierCharacters(this ISyntax _)
         {
-            var possiblyNegativeSpacesCount = spacesCount - tabWidth;
-
-            var output = possiblyNegativeSpacesCount < 0
-                ? 0
-                : possiblyNegativeSpacesCount;
+            var output = new[]
+            {
+                Characters.At,
+                Characters.Colon,
+                Characters.Minus,
+                Characters.Period,
+                Characters.Plus,
+                Characters.Space,
+            };
 
             return output;
-        }
-
-        public static int DecrementSpacesCountByTab(this ISyntax syntax, int spacesCount)
-        {
-            return syntax.DecrementSpacesCountByTab(spacesCount, syntax.DefaultTabSpacesCount());
         }
 
         public static int Outdent(this ISyntax syntax, int spacesCount)
@@ -56,9 +74,10 @@ namespace System
             return syntax.DecrementSpacesCountByTab(spacesCount);
         }
 
-        public static string GetIndentation(this ISyntax syntax, int spacesCount)
+        public static string Tab(this ISyntax syntax)
         {
-            return syntax.GetSpaces(spacesCount);
+            var output = syntax.GetSpaces(syntax.DefaultTabSpacesCount());
+            return output;
         }
     }
 }
