@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using R5T.Magyar;
@@ -10,6 +11,12 @@ namespace System
 {
     public static class UsingDirectivesSpecificationExtensions
     {
+        public static IEnumerable<string> GetUsingNamespaceNamesIncludingEmpty(this UsingDirectivesSpecification usingDirectivesSpecification)
+        {
+            var output = usingDirectivesSpecification.UsingNamespaceNames.Append(String.Empty);
+            return output;
+        }
+
         public static WasFound<NameAlias> HasNameAliasFor(this UsingDirectivesSpecification usingDirectivesSpecification,
             string name)
         {

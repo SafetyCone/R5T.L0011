@@ -8,18 +8,18 @@ using R5T.L0011.T004;
 
 namespace System
 {
-    public static class CompilationUnitSyntaxExtensions
+    public static class NamespaceDeclarationSyntaxExtensions
     {
-        public static UsingDirectivesSpecification GetUsingDirectivesSpecification(this CompilationUnitSyntax compilationUnit)
+        public static UsingDirectivesSpecification GetUsingDirectivesSpecification(this NamespaceDeclarationSyntax @namespace)
         {
-            var usings = compilationUnit.GetUsings();
+            var usings = @namespace.GetUsings();
 
             var output = usings.GetUsingDirectivesSpecification();
             return output;
         }
 
-        public static UsingDirectivesSpecification GetUsingDirectivesSpecification(this CompilationUnitSyntax compilationUnit,
-            NamespaceDeclarationSyntax @namespace)
+        public static UsingDirectivesSpecification GetUsingDirectivesSpecification(this NamespaceDeclarationSyntax @namespace,
+            CompilationUnitSyntax compilationUnit)  
         {
             var compilationUsings = compilationUnit.GetUsings();
             var namespaceUsings = @namespace.GetUsings();

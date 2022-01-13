@@ -46,6 +46,15 @@ namespace System
             return output;
         }
 
+        public static UsingDirectiveSyntax[] GetUsings(this NamespaceDeclarationSyntax @namespace)
+        {
+            var output = @namespace.ChildNodes()
+                .OfType<UsingDirectiveSyntax>()
+                .ToArray();
+
+            return output;
+        }
+
         public static WasFound<ClassDeclarationSyntax> HasClass_SingleOrDefault(this NamespaceDeclarationSyntax @namespace,
             string className)
         {
