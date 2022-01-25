@@ -458,6 +458,18 @@ namespace System
             return output;
         }
 
+        public static UsingDirectiveSyntax Using(this ISyntaxFactory syntaxFactory, 
+            string aliasForName,
+            string name)
+        {
+            var nameSyntax = syntaxFactory.Name(name);
+
+            var aliasSyntax = SyntaxFactory.NameEquals(aliasForName);
+
+            var output = SyntaxFactory.UsingDirective(aliasSyntax, nameSyntax);
+            return output;
+        }
+
         public static UsingDirectiveSyntax Using(this ISyntaxFactory _, NameSyntax name)
         {
             var output = SyntaxFactory.UsingDirective(name)

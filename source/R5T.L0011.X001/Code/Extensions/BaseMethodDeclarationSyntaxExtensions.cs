@@ -52,6 +52,14 @@ namespace System
             return output;
         }
 
+        public static WasFound<BlockSyntax> HasBody(this BaseMethodDeclarationSyntax method)
+        {
+            var methodBody = method.Body;
+
+            var output = WasFound.From(methodBody);
+            return output;
+        }
+
         public static WasFound<ParameterSyntax> HasParameter(this BaseMethodDeclarationSyntax method,
             string parameterName)
         {

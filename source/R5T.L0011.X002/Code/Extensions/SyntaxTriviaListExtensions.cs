@@ -23,9 +23,21 @@ namespace System
             return output;
         }
 
+        public static SyntaxTriviaList RemoveLastToken(this SyntaxTriviaList trivia)
+        {
+            var output = trivia.RemoveAt(trivia.Count - 1);
+            return output;
+        }
+
         public static bool FirstTokenIsNewLineNotIncludingStructuredTrivia(this SyntaxTriviaList trivia)
         {
             var output = trivia.First().IsNewLine();
+            return output;
+        }
+
+        public static bool LastTokenIsNewLineNotIncludingStructuredTrivia(this SyntaxTriviaList trivia)
+        {
+            var output = trivia.Last().IsNewLine();
             return output;
         }
 
@@ -66,6 +78,23 @@ namespace System
             return output;
         }
 
+        public static SyntaxTriviaList RemoveTrailingNewLineNotIncludingStructuredTrivia(this SyntaxTriviaList trivia)
+        {
+            var output = trivia;
+
+            var canRemove = trivia.Count > 0;
+            if (canRemove)
+            {
+                var lastTokenIsNewLine = trivia.LastTokenIsNewLineNotIncludingStructuredTrivia();
+                if (lastTokenIsNewLine)
+                {
+                    output = trivia.RemoveLastToken();
+                }
+            }
+
+            return output;
+        }
+
         /// <summary>
         /// Removes all end of line characters.
         /// </summary>
@@ -100,15 +129,47 @@ namespace System
 
                     var structuredNewFirstTriviaNodeLeadingTrivia = structuredFirstTriviaNodeLeadingTrivia.RemoveLeadingNewLine();
 
-                    var newStructureFirstTriviaNode = structuredFirstTriviaNode.WithLeadingTrivia(structuredNewFirstTriviaNodeLeadingTrivia);
+                    var newStructuredFirstTriviaNode = structuredFirstTriviaNode.WithLeadingTrivia(structuredNewFirstTriviaNodeLeadingTrivia);
 
-                    var newTriviaToken = CSharpSyntaxFactory.Trivia(newStructureFirstTriviaNode);
+                    var newTriviaToken = CSharpSyntaxFactory.Trivia(newStructuredFirstTriviaNode);
 
                     output = output.Replace(firstTrivia, newTriviaToken);
                 }
                 else
                 {
                     output = trivia.RemoveLeadingNewLineNotIncludingStructuredTrivia();
+                }
+            }
+            // Else, just return the input trivia.
+
+            return output;
+        }
+
+        public static SyntaxTriviaList RemoveTrailingNewLine(this SyntaxTriviaList trivia)
+        {
+            var output = trivia;
+
+            var canRemove = trivia.Count > 0;
+            if (canRemove)
+            {
+                var lastTrivia = trivia.Last();
+                if (lastTrivia.HasStructure)
+                {
+                    var structuredLastTriviaNode = lastTrivia.GetStructure() as StructuredTriviaSyntax;
+
+                    var structuredLastTriviaNodeTrailingTrivia = structuredLastTriviaNode.GetTrailingTrivia();
+
+                    var structuredNewLastTriviaNodeTrailingTrivia = structuredLastTriviaNodeTrailingTrivia.RemoveTrailingNewLine();
+
+                    var newStructuredLastTriviaNode = structuredLastTriviaNode.WithTrailingTrivia(structuredNewLastTriviaNodeTrailingTrivia);
+
+                    var newTriviaToken = CSharpSyntaxFactory.Trivia(newStructuredLastTriviaNode);
+
+                    output = output.Replace(lastTrivia, newTriviaToken);
+                }
+                else
+                {
+                    output = trivia.RemoveTrailingNewLineNotIncludingStructuredTrivia();
                 }
             }
             // Else, just return the input trivia.

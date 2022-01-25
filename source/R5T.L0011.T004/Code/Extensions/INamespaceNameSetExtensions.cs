@@ -23,6 +23,14 @@ namespace System
         public static T AddRange<T>(this T set, params string[] namespaceNames)
             where T : INamespaceNameSet
         {
+            set.AddRange(namespaceNames.AsEnumerable());
+
+            return set;
+        }
+
+        public static T AddRange<T>(this T set, IEnumerable<string> namespaceNames)
+            where T : INamespaceNameSet
+        {
             foreach (var namespaceName in namespaceNames)
             {
                 set.Add(namespaceName);

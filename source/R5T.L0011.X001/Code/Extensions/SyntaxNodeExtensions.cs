@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using R5T.Magyar;
 
 using Instances = R5T.L0011.X001.Instances;
 
@@ -13,6 +17,44 @@ namespace System
 {
     public static class SyntaxNodeExtensions
     {
+        public static SyntaxList<TNode> ToSyntaxList<TNode>(this IEnumerable<TNode> nodes)
+            where TNode : SyntaxNode
+        {
+            var output = new SyntaxList<TNode>(nodes);
+            return output;
+        }
+
+        public static bool BeginsWithNewLine(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.GetLeadingTrivia().BeginsWithNewLine();
+            return output;
+        }
+
+        public static bool ContainsToken(this SyntaxNode syntaxNode,
+            SyntaxToken syntaxToken)
+        {
+            var nodeSpan = syntaxNode.FullSpan;
+            var tokenSpan = syntaxToken.FullSpan;
+
+            var nodeContainsToken = nodeSpan.Start <= tokenSpan.Start && nodeSpan.End >= tokenSpan.End;
+            return nodeContainsToken;
+        }
+
+        public static bool EndsWithNewLine(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.GetTrailingTrivia().EndsWithNewLine();
+            return output;
+        }
+
+        public static IEnumerable<TDescendantSyntaxNodeType> GetChildrenOfType<TDescendantSyntaxNodeType>(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.ChildNodes()
+                .OfType<TDescendantSyntaxNodeType>()
+                ;
+
+            return output;
+        }
+
         public static TChild GetChildOfType_SingleOrDefault<TChild>(this SyntaxNode syntaxNode)
         {
             var output = syntaxNode.ChildNodes()
@@ -31,6 +73,159 @@ namespace System
             return output;
         }
 
+        public static SyntaxToken GetChildSemicolonToken<TNode>(this TNode node)
+            where TNode : SyntaxNode
+        {
+            var output = node.ChildTokens()
+                .Where(token => token.IsKind(SyntaxKind.SemicolonToken))
+                .Single();
+
+            return output;
+        }
+
+        public static SyntaxToken GetDescendantSemicolonToken<TNode>(this TNode node)
+            where TNode : SyntaxNode
+        {
+            var output = node.DescendantTokens()
+                .Where(token => token.IsKind(SyntaxKind.SemicolonToken))
+                .Single();
+
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="GetDescendantSemicolonToken{TNode}(TNode)"/> as the default.
+        /// </summary>
+        public static SyntaxToken GetSemicolonToken<TNode>(this TNode node)
+            where TNode : SyntaxNode
+        {
+            var output = node.GetDescendantSemicolonToken();
+            return output;
+        }
+
+        public static WasFound<SyntaxNode> HasAnnotatedNode_First(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var annotatedNodeOrDefault = syntaxNode.GetAnnotatedNodes(annotation)
+                .FirstOrDefault();
+
+            var output = WasFound.From(annotatedNodeOrDefault);
+            return output;
+        }
+
+        public static WasFound<SyntaxNode> HasAnnotatedNode_Single(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var annotatedNodeOrDefault = syntaxNode.GetAnnotatedNodes(annotation)
+                .SingleOrDefault();
+
+            var output = WasFound.From(annotatedNodeOrDefault);
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="HasAnnotatedNode_Single(SyntaxNode, SyntaxAnnotation)"/> as the default.
+        /// </summary>
+        public static WasFound<SyntaxNode> HasAnnotatedNode(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var output = syntaxNode.HasAnnotatedNode_Single(annotation);
+            return output;
+        }
+
+        public static WasFound<TChildNode> HasAnnotatedNode_First<TChildNode>(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+            where TChildNode : SyntaxNode
+        {
+            var annotatedNodeOrDefault = syntaxNode.GetAnnotatedNodes<TChildNode>(annotation)
+                .FirstOrDefault();
+
+            var output = WasFound.From(annotatedNodeOrDefault);
+            return output;
+        }
+
+        public static WasFound<TChildNode> HasAnnotatedNode_Single<TChildNode>(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+            where TChildNode : SyntaxNode
+        {
+            var annotatedNodeOrDefault = syntaxNode.GetAnnotatedNodes<TChildNode>(annotation)
+                .SingleOrDefault();
+
+            var output = WasFound.From(annotatedNodeOrDefault);
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="HasAnnotatedNode{TChildNode}(SyntaxNode, SyntaxAnnotation)"/> as the default.
+        /// </summary>
+        public static WasFound<TChildNode> HasAnnotatedNode<TChildNode>(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+            where TChildNode : SyntaxNode
+        {
+            var output = syntaxNode.HasAnnotatedNode_Single<TChildNode>(annotation);
+            return output;
+        }
+
+        public static WasFound<SyntaxToken> HasAnnotatedToken_First(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var annotatedTokenOrDefault = syntaxNode.GetAnnotatedTokens(annotation)
+                .FirstOrDefault();
+
+            var output = WasFound.From(annotatedTokenOrDefault);
+            return output;
+        }
+
+        public static WasFound<SyntaxToken> HasAnnotatedToken_Single(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var annotatedTokenOrDefault = syntaxNode.GetAnnotatedTokens(annotation)
+                .SingleOrDefault();
+
+            var output = WasFound.From(annotatedTokenOrDefault);
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="HasAnnotatedToken_Single(SyntaxNode, SyntaxAnnotation)"/> as the default.
+        /// </summary>
+        public static WasFound<SyntaxToken> HasAnnotatedToken(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var output = syntaxNode.HasAnnotatedToken_Single(annotation);
+            return output;
+        }
+
+        public static WasFound<SyntaxTrivia> HasAnnotatedTrivia_Single(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var triviaOrDefault = syntaxNode.GetAnnotatedTrivia(annotation)
+                .SingleOrDefault();
+
+            var output = WasFound.From(triviaOrDefault);
+            return output;
+        }
+
+        public static WasFound<SyntaxTrivia> HasAnnotatedTrivia_First(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var triviaOrDefault = syntaxNode.GetAnnotatedTrivia(annotation)
+                .FirstOrDefault();
+
+            var output = WasFound.From(triviaOrDefault);
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="HasAnnotatedTrivia_Single(SyntaxNode, SyntaxAnnotation)"/> as the default.
+        /// </summary>
+        public static WasFound<SyntaxTrivia> HasAnnotatedTrivia(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var output = syntaxNode.HasAnnotatedTrivia_Single(annotation);
+            return output;
+        }
+
         public static bool HasChildOfType<TChild>(this SyntaxNode syntaxNode)
         {
             var output = syntaxNode.ChildNodes()
@@ -40,17 +235,123 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode SetIndentation<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static bool HasParent(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.Parent is object;
+            return output;
+        }
+
+        public static SyntaxNode GetAnnotatedNode(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var hasAnnotatedNode = syntaxNode.HasAnnotatedNode(annotation);
+            if(!hasAnnotatedNode)
+            {
+                throw new Exception("No node with annotation found.");
+            }
+
+            return hasAnnotatedNode.Result;
+        }
+
+        public static TChildNode GetAnnotatedNode<TChildNode>(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+            where TChildNode : SyntaxNode
+        {
+            var hasAnnotatedNode = syntaxNode.HasAnnotatedNode<TChildNode>(annotation);
+            if (!hasAnnotatedNode)
+            {
+                throw new Exception($"No node of type {typeof(TChildNode)} with annotation found.");
+            }
+
+            return hasAnnotatedNode.Result;
+        }
+
+        public static IEnumerable<TChildNode> GetAnnotatedNodes<TChildNode>(this SyntaxNode syntaxNode,
+            SyntaxAnnotation syntaxAnnotation)
+            where TChildNode : SyntaxNode
+        {
+            var output = syntaxNode.GetAnnotatedNodes(syntaxAnnotation)
+                .Cast<TChildNode>()
+                ;
+
+            return output;
+        }
+
+        public static SyntaxToken GetAnnotatedToken(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var hasAnnotatedToken = syntaxNode.HasAnnotatedToken(annotation);
+            if (!hasAnnotatedToken)
+            {
+                throw new Exception("No token with annotation found.");
+            }
+
+            return hasAnnotatedToken.Result;
+        }
+
+        /// <summary>
+        /// Awkward naming since "trivia" is both singular and plural, thus the Microsoft methods returning and enumerable do not allow differentiation between singular and plural.
+        /// </summary>
+        public static SyntaxTrivia GetAnnotatedTriviaSingle(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var hasAnnotatedTrivia = syntaxNode.HasAnnotatedTrivia(annotation);
+            if (!hasAnnotatedTrivia)
+            {
+                throw new Exception("No trivia with annotation found.");
+            }
+
+            return hasAnnotatedTrivia.Result;
+        }
+
+        /// <inheritdoc cref="GetAnnotatedTriviaSingle(SyntaxNode, SyntaxAnnotation)"/>
+        public static IEnumerable<SyntaxTrivia> GetAnnotatedTriviaEnumerable(this SyntaxNode syntaxNode,
+            SyntaxAnnotation annotation)
+        {
+            var output = syntaxNode.GetAnnotatedTrivia(annotation);
+            return output;
+        }
+
+        public static TChild GetChildAsType_SingleOrDefault<TChild>(this SyntaxNode syntaxNode)
+            where TChild : class
+        {
+            var output = syntaxNode.ChildNodes().SingleOrDefault() as TChild;
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="GetChildAsType_SingleOrDefault{TChild}(SyntaxNode)"/> as the default.
+        /// </summary>
+        public static TChild GetChildAsType<TChild>(this SyntaxNode syntaxNode)
+            where TChild : class
+        {
+            var output = syntaxNode.GetChildAsType_SingleOrDefault<TChild>();
+            return output;
+        }
+
+        public static TNode SetIndentation<TNode>(this TNode syntaxNode,
             SyntaxTriviaList indentation)
-            where TSyntaxNode : SyntaxNode
+            where TNode : SyntaxNode
         {
             var output = syntaxNode.WithLeadingTrivia(indentation.ToArray());
             return output;
         }
 
-        public static TSyntaxNode SetIndentationWithoutLeadingNewLine<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TNode SetIndentationPreservingNonWhitespaceTrivia<TNode>(this TNode syntaxNode,
             SyntaxTriviaList indentation)
-            where TSyntaxNode : SyntaxNode
+            where TNode : SyntaxNode
+        {
+            var nonWhitespaceLeadingTrivia = syntaxNode.GetNonWhitespaceLeadingTrivia();
+
+            var leadingTrivia = indentation.AppendRange(nonWhitespaceLeadingTrivia);
+
+            var output = syntaxNode.WithLeadingTrivia(leadingTrivia.ToArray());
+            return output;
+        }
+
+        public static TNode SetIndentationWithoutLeadingNewLine<TNode>(this TNode syntaxNode,
+            SyntaxTriviaList indentation)
+            where TNode : SyntaxNode
         {
             var actualIndentation = indentation.RemoveAt(0);
 
@@ -58,17 +359,147 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode Indent<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static SyntaxNode SetLeadingIndentationOfDescendent(this SyntaxNode parentSyntaxNode,
+            SyntaxNode childSyntaxNode,
+            SyntaxTriviaList indentation,
+            bool includeDocumentationComments = false)
+        {
+            var childFirstSyntaxToken = childSyntaxNode.GetFirstToken(includeDocumentationComments: includeDocumentationComments);
+
+            var output = parentSyntaxNode.SetLeadingIndentationOfDescendent(
+                childFirstSyntaxToken,
+                indentation,
+                includeDocumentationComments);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Returns the parent node, with the leading trivia of the child set to the input indentation.
+        /// </summary>
+        public static SyntaxNode SetLeadingIndentationOfDescendent(this SyntaxNode syntaxNode,
+            SyntaxToken childSyntaxToken,
+            SyntaxTriviaList indentation,
+            bool includeDocumentationComments = false)
+        {
+            var previousSyntaxToken = childSyntaxToken.GetPreviousToken(includeDocumentationComments: includeDocumentationComments);
+
+            // Verify the previousl syntax token is in this parent node (required for proper return of modification).
+            syntaxNode.VerifyContainsToken(previousSyntaxToken);
+
+            var leadingSeparatingTrivia = childSyntaxToken.GetLeadingSeparatingTrivia(previousSyntaxToken, includeDocumentationComments);
+
+            var changesRequired = leadingSeparatingTrivia != indentation;
+            if(changesRequired)
+            {
+                var output = syntaxNode.SetSeparatingWhitespaceBetweenDescendentTokens(previousSyntaxToken, childSyntaxToken, indentation);
+                return output;
+            }
+            else
+            {
+                // No changes required, just return the parent node.
+                return syntaxNode;
+            }
+        }
+
+        public static TNode SetSeparatingWhitespaceBetweenDescendentTokens_Leading<TNode>(this TNode syntaxNode,
+            SyntaxToken firstDescendent,
+            SyntaxToken secondDescendent,
             SyntaxTriviaList indentation)
-            where TSyntaxNode : SyntaxNode
+            where TNode : SyntaxNode
+        {
+            syntaxNode.VerifyContainsToken(firstDescendent);
+            syntaxNode.VerifyContainsToken(secondDescendent);
+
+            var (modifiedFirst, modifiedSecond) = firstDescendent.SetSeparatingWhitespace_Leading(
+                secondDescendent,
+                indentation);
+
+            var outputSyntaxNode = syntaxNode.ReplaceTokens(
+                EnumerableHelper.From(firstDescendent, secondDescendent),
+                (originalToken, _) =>
+                {
+                    if (originalToken == firstDescendent)
+                    {
+                        return modifiedFirst;
+                    }
+
+                    if (originalToken == secondDescendent)
+                    {
+                        return modifiedSecond;
+                    }
+
+                    throw new Exception();
+                });
+
+            return outputSyntaxNode;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="SetSeparatingWhitespaceBetweenDescendentTokens_Leading(SyntaxNode, SyntaxToken, SyntaxToken, SyntaxTriviaList)"/> as the default.
+        /// </summary>
+        public static TNode SetSeparatingWhitespaceBetweenDescendentTokens<TNode>(this TNode syntaxNode,
+            SyntaxToken firstDescendent,
+            SyntaxToken secondDescendent,
+            SyntaxTriviaList indentation)
+            where TNode : SyntaxNode
+        {
+            var output = syntaxNode.SetSeparatingWhitespaceBetweenDescendentTokens_Leading(firstDescendent, secondDescendent, indentation);
+            return output;
+        }
+
+        public static TNode SetSeparatingWhitespaceBetweenDescendents<TNode>(this TNode syntaxNode,
+            SyntaxToken firstDescendent,
+            SyntaxNode secondDescendent,
+            SyntaxTriviaList indentation)
+            where TNode : SyntaxNode
+        {
+            var secondDescendentToken = secondDescendent.GetFirstToken(); // Get the first token of the second descendent.
+
+            var output = syntaxNode.SetSeparatingWhitespaceBetweenDescendentTokens_Leading(firstDescendent, secondDescendentToken, indentation);
+            return output;
+        }
+
+        public static TNode SetSeparatingWhitespaceBetweenDescendents<TNode>(this TNode syntaxNode,
+            SyntaxNode firstDescendent,
+            SyntaxToken secondDescendent,
+            SyntaxTriviaList indentation)
+            where TNode : SyntaxNode
+        {
+            var firstDescendentToken = firstDescendent.GetLastToken(); // Get the last token of the first descendent.
+
+            var output = syntaxNode.SetSeparatingWhitespaceBetweenDescendentTokens(firstDescendentToken, secondDescendent, indentation);
+            return output;
+        }
+
+        public static bool StartsWithNewLine(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.GetLeadingTrivia().StartsWithNewLine();
+            return output;
+        }
+
+        public static IEnumerable<TNode> Indent<TNode>(this IEnumerable<TNode> syntaxNodes,
+            SyntaxTriviaList indentation)
+            where TNode : SyntaxNode
+        {
+            var output = syntaxNodes
+                .Select(xSyntaxNode => xSyntaxNode.Indent(indentation))
+                ;
+
+            return output;
+        }
+
+        public static TNode Indent<TNode>(this TNode syntaxNode,
+            SyntaxTriviaList indentation)
+            where TNode : SyntaxNode
         {
             var output = syntaxNode.AddLeadingLeadingTrivia(indentation.ToArray());
             return output;
         }
 
-        public static TSyntaxNode IndentWithoutNewLine<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TNode IndentWithoutNewLine<TNode>(this TNode syntaxNode,
             SyntaxTriviaList indentation)
-            where TSyntaxNode : SyntaxNode
+            where TNode : SyntaxNode
         {
             var actualIndentation = indentation.RemoveAt(0);
 
@@ -76,19 +507,33 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode AddLeadingLeadingTrivia<TSyntaxNode>(this TSyntaxNode syntaxNode, params SyntaxTrivia[] trivia)
-            where TSyntaxNode : SyntaxNode
+        public static TNode AddLeadingLeadingTrivia<TNode>(this TNode syntaxNode, IEnumerable<SyntaxTrivia> trivias)
+            where TNode : SyntaxNode
         {
             var newLeadingTrivia = syntaxNode.HasLeadingTrivia
-                ? syntaxNode.GetLeadingTrivia().InsertRange(0, trivia)
-                : new SyntaxTriviaList(trivia);
+                ? syntaxNode.GetLeadingTrivia().InsertRange(0, trivias)
+                : new SyntaxTriviaList(trivias);
 
             var output = syntaxNode.WithLeadingTrivia(newLeadingTrivia);
             return output;
         }
 
-        public static TSyntaxNode AddTrailingLeadingTrivia<TSyntaxNode>(this TSyntaxNode syntaxNode, params SyntaxTrivia[] trivia)
-            where TSyntaxNode : SyntaxNode
+        public static TNode AddLeadingLeadingTrivia<TNode>(this TNode syntaxNode, params SyntaxTrivia[] trivias)
+            where TNode : SyntaxNode
+        {
+            var output = syntaxNode.AddLeadingLeadingTrivia(trivias.AsEnumerable());
+            return output;
+        }
+
+        public static TNode AddLeadingLeadingTrivia<TNode>(this TNode syntaxNode, SyntaxTriviaList trivia)
+            where TNode : SyntaxNode
+        {
+            var output = syntaxNode.AddLeadingLeadingTrivia(trivia.AsEnumerable());
+            return output;
+        }
+
+        public static TNode AddTrailingLeadingTrivia<TNode>(this TNode syntaxNode, params SyntaxTrivia[] trivia)
+            where TNode : SyntaxNode
         {
             var newLeadingTrivia = syntaxNode.HasLeadingTrivia
                 ? syntaxNode.GetLeadingTrivia().AddRange(trivia)
@@ -98,24 +543,24 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode AddLeadingTrivia<TSyntaxNode>(this TSyntaxNode syntaxNode, params SyntaxTrivia[] trivia)
-            where TSyntaxNode : SyntaxNode
+        public static TNode AddLeadingTrivia<TNode>(this TNode syntaxNode, params SyntaxTrivia[] trivia)
+            where TNode : SyntaxNode
         {
             var output = syntaxNode.AddTrailingLeadingTrivia(trivia);
             return output;
         }
 
-        public static TSyntaxNode AddLeadingWhitespace<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TNode AddLeadingWhitespace<TNode>(this TNode syntaxNode,
             SyntaxTriviaList leadingWhitespace)
-            where TSyntaxNode : SyntaxNode
+            where TNode : SyntaxNode
         {
             var output = syntaxNode.AddLeadingLeadingTrivia(leadingWhitespace.ToArray());
             return output;
         }
 
-        public static IEnumerable<TSyntaxNode> AddLeadingWhitespace<TSyntaxNode>(this IEnumerable<TSyntaxNode> syntaxNodes,
+        public static IEnumerable<TNode> AddLeadingWhitespace<TNode>(this IEnumerable<TNode> syntaxNodes,
             SyntaxTriviaList leadingWhitespace)
-            where TSyntaxNode : SyntaxNode
+            where TNode : SyntaxNode
         {
             var output = syntaxNodes
                 .Select(syntaxNode =>
@@ -127,8 +572,8 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode AddTrailingTrailingTrivia<TSyntaxNode>(this TSyntaxNode syntaxNode, params SyntaxTrivia[] trivia)
-            where TSyntaxNode : SyntaxNode
+        public static TNode AddTrailingTrailingTrivia<TNode>(this TNode syntaxNode, params SyntaxTrivia[] trivia)
+            where TNode : SyntaxNode
         {
             var newTrailingTrivia = syntaxNode.HasTrailingTrivia
                 ? syntaxNode.GetTrailingTrivia().AddRange(trivia)
@@ -138,8 +583,8 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode AddLeadingTrailingTrivia<TSyntaxNode>(this TSyntaxNode syntaxNode, params SyntaxTrivia[] trivia)
-            where TSyntaxNode : SyntaxNode
+        public static TNode AddLeadingTrailingTrivia<TNode>(this TNode syntaxNode, params SyntaxTrivia[] trivia)
+            where TNode : SyntaxNode
         {
             var newTrailingTrivia = syntaxNode.HasTrailingTrivia
                 ? syntaxNode.GetTrailingTrivia().InsertRange(0, trivia)
@@ -149,15 +594,15 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode AddTrailingTrivia<TSyntaxNode>(this TSyntaxNode syntaxNode, params SyntaxTrivia[] trivia)
-            where TSyntaxNode : SyntaxNode
+        public static TNode AddTrailingTrivia<TNode>(this TNode syntaxNode, params SyntaxTrivia[] trivia)
+            where TNode : SyntaxNode
         {
             var output = syntaxNode.AddTrailingTrailingTrivia(trivia);
             return output;
         }
 
-        public static IEnumerable<TDescendantSyntaxNodeType> GetDescendantsOfType<TSyntaxNode, TDescendantSyntaxNodeType>(this TSyntaxNode syntaxNode)
-            where TSyntaxNode : SyntaxNode
+        public static IEnumerable<TDescendantSyntaxNodeType> GetDescendantsOfType<TNode, TDescendantSyntaxNodeType>(this TNode syntaxNode)
+            where TNode : SyntaxNode
         {
             var output = syntaxNode.DescendantNodes()
                 .OfType<TDescendantSyntaxNodeType>()
@@ -166,8 +611,8 @@ namespace System
             return output;
         }
 
-        public static IEnumerable<InterfaceDeclarationSyntax> GetInterfaces<TSyntaxNode>(this TSyntaxNode syntaxNode)
-            where TSyntaxNode : SyntaxNode
+        public static IEnumerable<InterfaceDeclarationSyntax> GetInterfaces<TNode>(this TNode syntaxNode)
+            where TNode : SyntaxNode
         {
             var output = syntaxNode.DescendantNodes()
                 .OfType<InterfaceDeclarationSyntax>()
@@ -176,9 +621,166 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode ModifyWith<TSyntaxNode>(this TSyntaxNode syntaxNode, SyntaxTriviaList lineLeadingWhitespace,
-            ModifierWithIndentationSynchronous<TSyntaxNode> modifier)
-            where TSyntaxNode : SyntaxNode
+        public static WasFound<SyntaxNode> GetParent(this SyntaxNode syntaxNode)
+        {
+            var output = WasFound.From(syntaxNode.Parent);
+            return output;
+        }
+
+        private static void GetParentsInsideToOutside_Internal(this SyntaxNode syntaxNode, List<SyntaxNode> parentAccumulator)
+        {
+            if(syntaxNode.HasParent())
+            {
+                parentAccumulator.Add(syntaxNode.Parent);
+
+                syntaxNode.Parent.GetParentsInsideToOutside_Internal(parentAccumulator);
+            }
+            // Else, return.
+        }
+
+        public static IEnumerable<SyntaxNode> GetParentsInsideToOutside(this SyntaxNode syntaxNode)
+        {
+            var parentAccumulator = new List<SyntaxNode>();
+
+            syntaxNode.GetParentsInsideToOutside_Internal(parentAccumulator);
+
+            return parentAccumulator;
+        }
+
+        public static IEnumerable<SyntaxNode> GetParentsOutsideToInside(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.GetParentsInsideToOutside()
+                .Reverse()
+                ;
+
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="GetParentsInsideToOutside(SyntaxNode)"/> as the default.
+        /// </summary>
+        public static SyntaxNode[] GetParents(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.GetParentsInsideToOutside().Now();
+            return output;
+        }
+
+        public static WasFound<SyntaxNodeOrToken> GetPriorSiblingNodeOrToken(this SyntaxNode syntaxNode)
+        {
+            var parentWasFound = syntaxNode.GetParent();
+            if (parentWasFound)
+            {
+                var parent = parentWasFound.Result;
+
+                var childNodesAndTokens = parent.ChildNodesAndTokens();
+
+                var indexOfSyntaxToken = childNodesAndTokens.IndexOfChildInNodesAndTokens(syntaxNode);
+                if (indexOfSyntaxToken == 0)
+                {
+                    return WasFound.NotFound<SyntaxNodeOrToken>();
+                }
+                else
+                {
+                    var priorSibling = childNodesAndTokens[indexOfSyntaxToken - 1];
+
+                    return WasFound.From(priorSibling);
+                }
+            }
+            else
+            {
+                return WasFound.NotFound<SyntaxNodeOrToken>();
+            }
+        }
+
+        public static WasFound<SyntaxNodeOrToken> GetNextSiblingNodeOrToken(this SyntaxNode syntaxNode)
+        {
+            var parentWasFound = syntaxNode.GetParent();
+            if (parentWasFound)
+            {
+                var parent = parentWasFound.Result;
+
+                var childNodesAndTokens = parent.ChildNodesAndTokens();
+
+                var indexOfSyntaxToken = childNodesAndTokens.IndexOfChildInNodesAndTokens(syntaxNode);
+                if (indexOfSyntaxToken == childNodesAndTokens.LastIndex())
+                {
+                    return WasFound.NotFound<SyntaxNodeOrToken>();
+                }
+                else
+                {
+                    var nextSibling = childNodesAndTokens[indexOfSyntaxToken + 1];
+
+                    return WasFound.From(nextSibling);
+                }
+            }
+            else
+            {
+                return WasFound.NotFound<SyntaxNodeOrToken>();
+            }
+        }
+
+        public static TNode ModifyWith<TNode>(this TNode syntaxNode, ModifierSynchronous<TNode> modifier)
+            where TNode : SyntaxNode
+        {
+            var output = modifier is object
+                ? modifier(syntaxNode)
+                : syntaxNode;
+
+            return output;
+        }
+
+        public static WasFound<int> IndexOfChildInNodesAndTokens(this SyntaxNode syntaxNode, SyntaxNode childSyntaxNode)
+        {
+            var childNodesAndTokens = syntaxNode.ChildNodesAndTokens();
+
+            var output = childNodesAndTokens.IndexOfChildInNodesAndTokens(childSyntaxNode);
+            return output;
+        }
+
+        public static WasFound<int> IndexOfChildInNodesAndTokens(this SyntaxNode syntaxNode, SyntaxToken childSyntaxToken)
+        {
+            var childNodesAndTokens = syntaxNode.ChildNodesAndTokens();
+
+            var output = childNodesAndTokens.IndexOfChildInNodesAndTokens(childSyntaxToken);
+            return output;
+        }
+
+        public static TNode ModifyIf<TNode>(this TNode node,
+            bool condition,
+            Func<TNode, TNode> modifier)
+        {
+            var output = condition
+                ? modifier(node)
+                : node
+                ;
+
+            return output;
+        }
+
+        public static TNode ModifyWith<TNode, TData>(this TNode syntaxNode, ModifierSynchronousWith<TNode, TData> modifier, TData data)
+            where TNode : SyntaxNode
+        {
+            var output = modifier is object
+                ? modifier(syntaxNode, data)
+                : syntaxNode;
+
+            return output;
+        }
+
+        public static async Task<TNode> ModifyWith<TNode>(this TNode syntaxNode,
+            Func<TNode, Task<TNode>> action = default)
+            where TNode : SyntaxNode
+        {
+            var output = action is object
+                ? await action(syntaxNode)
+                : syntaxNode;
+
+            return output;
+        }
+
+        public static TNode ModifyWith<TNode>(this TNode syntaxNode, SyntaxTriviaList lineLeadingWhitespace,
+            ModifierWithIndentationSynchronous<TNode> modifier)
+            where TNode : SyntaxNode
         {
             var output = modifier is object
                 ? modifier(syntaxNode, lineLeadingWhitespace)
@@ -187,10 +789,10 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode PrependLeadingWhitespace<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TNode PrependLeadingWhitespace<TNode>(this TNode syntaxNode,
             SyntaxAnnotation annotation,
             SyntaxTriviaList leadingWhitespace)
-            where TSyntaxNode : SyntaxNode
+            where TNode : SyntaxNode
         {
             var output = syntaxNode.ReplaceNodesAndTokens(
                 theSyntaxNode => theSyntaxNode.GetAnnotatedNodesAndTokens(annotation),
@@ -200,12 +802,41 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode ReplaceNodesAndTokens<TSyntaxNode>(this TSyntaxNode syntaxNode,
-            Func<TSyntaxNode, IEnumerable<SyntaxNode>> syntaxNodeSelector,
-            Func<TSyntaxNode, IEnumerable<SyntaxToken>> syntaxTokenSelector,
+        public static TNode ReplaceNodeSynchronous<TNode, TChildSyntaxNode>(this TNode syntaxNode,
+            Func<TNode, TChildSyntaxNode> childNodeSelector,
+            Func<TChildSyntaxNode, TChildSyntaxNode> childNodeModifier)
+            where TNode : SyntaxNode
+            where TChildSyntaxNode : SyntaxNode
+        {
+            var childNode = childNodeSelector(syntaxNode);
+
+            var modifiedChildNode = childNodeModifier(childNode);
+
+            var output = syntaxNode.ReplaceNode(childNode, modifiedChildNode);
+            return output;
+        }
+
+        public static TNode ReplaceNodes<TNode>(this TNode syntaxNode,
+            Func<TNode, Dictionary<SyntaxNode, SyntaxNode>> replacementsGenerator)
+            where TNode : SyntaxNode
+        {
+            var replacements = replacementsGenerator(syntaxNode);
+
+            var output = syntaxNode.ReplaceNodes(replacements.Keys, (original, modified) =>
+            {
+                var replacement = replacements[original];
+                return replacement;
+            });
+
+            return output;
+        }
+
+        public static TNode ReplaceNodesAndTokens<TNode>(this TNode syntaxNode,
+            Func<TNode, IEnumerable<SyntaxNode>> syntaxNodeSelector,
+            Func<TNode, IEnumerable<SyntaxToken>> syntaxTokenSelector,
             Func<SyntaxNode, SyntaxNode> nodeTransformer,
             Func<SyntaxToken, SyntaxToken> tokenTransformer)
-            where TSyntaxNode : SyntaxNode
+            where TNode : SyntaxNode
         {
             var modifiedSyntaxNode = syntaxNode;
 
@@ -224,20 +855,20 @@ namespace System
             });
         }
 
-        public static TSyntaxNode ReplaceNodesAndTokens<TSyntaxNode>(this TSyntaxNode syntaxNode,
-            Func<TSyntaxNode, IEnumerable<SyntaxNodeOrToken>> selector,
+        public static TNode ReplaceNodesAndTokens<TNode>(this TNode syntaxNode,
+            Func<TNode, IEnumerable<SyntaxNodeOrToken>> selector,
             Func<SyntaxNode, SyntaxNode> nodeTransformer,
             Func<SyntaxToken, SyntaxToken> tokenTransformer)
-            where TSyntaxNode : SyntaxNode
+            where TNode : SyntaxNode
         {
-            IEnumerable<SyntaxNode> GetNodes(TSyntaxNode compilationUnit)
+            IEnumerable<SyntaxNode> GetNodes(TNode compilationUnit)
             {
                 return selector(compilationUnit)
                     .Where(x => x.IsNode)
                     .Select(x => x.AsNode());
             }
 
-            IEnumerable<SyntaxToken> GetTokens(TSyntaxNode compilationUnit)
+            IEnumerable<SyntaxToken> GetTokens(TNode compilationUnit)
             {
                 return selector(compilationUnit)
                     .Where(x => x.IsToken)
@@ -255,7 +886,50 @@ namespace System
             }
         }
 
-        public static void WriteTo(this SyntaxNode syntaxNode, string filePath)
+        public static void VerifyContainsToken(this SyntaxNode syntaxNode,
+            SyntaxToken syntaxToken)
+        {
+            var nodeContainsToken = syntaxNode.ContainsToken(syntaxToken);
+            if(!nodeContainsToken)
+            {
+                throw new Exception("Syntax node does not contain syntax token.");
+            }
+        }
+
+        public static TNode WithIndentedSemicolon<TNode>(this TNode node,
+            SyntaxTriviaList indentation)
+            where TNode : SyntaxNode
+        {
+            var oldSemicolonToken = node.GetSemicolonToken();
+
+            var newSemicolonToken = oldSemicolonToken.Indent(indentation);
+
+            var output = node.ReplaceToken(oldSemicolonToken, newSemicolonToken);
+            return output;
+        }
+
+        public static TNode WithSemicolonIndentation<TNode>(this TNode node,
+            SyntaxTriviaList indentation)
+            where TNode : SyntaxNode
+        {
+            var oldSemicolonToken = node.GetSemicolonToken();
+
+            var newSemicolonToken = oldSemicolonToken.WithLeadingTrivia(indentation);
+
+            var output = node.ReplaceToken(oldSemicolonToken, newSemicolonToken);
+            return output;
+        }
+
+        public static async Task WriteTo(this SyntaxNode syntaxNode, string filePath)
+        {
+            var text = syntaxNode.ToFullString();
+
+            using var fileWriter = new StreamWriter(filePath);
+
+            await fileWriter.WriteAsync(text);
+        }
+
+        public static void WriteToSynchronous(this SyntaxNode syntaxNode, string filePath)
         {
             using var fileWriter = new StreamWriter(filePath);
 

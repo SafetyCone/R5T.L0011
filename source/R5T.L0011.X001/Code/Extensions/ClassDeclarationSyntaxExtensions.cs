@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -23,14 +24,14 @@ namespace System
             return output;
         }
 
-        public static ClassDeclarationSyntax AddMethod(this ClassDeclarationSyntax @class,
+        public static ClassDeclarationSyntax AddMethodWithoutModification(this ClassDeclarationSyntax @class,
                MethodDeclarationSyntax method)
         {
             var output = @class.AddMembers(method);
             return output;
         }
 
-        public static ClassDeclarationSyntax AddMethods(this ClassDeclarationSyntax @class,
+        public static ClassDeclarationSyntax AddMethodsWithoutModification(this ClassDeclarationSyntax @class,
                MethodDeclarationSyntax[] methods)
         {
             var output = @class.AddMembers(methods);
@@ -185,9 +186,10 @@ namespace System
         }
 
         /// <summary>
-        /// NOTE: does not include constructors.
+        /// Gets all <see cref="BaseMethodDeclarationSyntax"/> methods, including <see cref="MethodDeclarationSyntax"/>, <see cref="OperatorDeclarationSyntax"/>, etc.
+        /// NOTE: does not include constructors?
         /// </summary>
-        public static IEnumerable<BaseMethodDeclarationSyntax> GetMethods(this ClassDeclarationSyntax @class)
+        public static IEnumerable<BaseMethodDeclarationSyntax> GetAllMethods(this ClassDeclarationSyntax @class)
         {
             var output = @class.Members
                 .OfType<MethodDeclarationSyntax>();
@@ -195,10 +197,14 @@ namespace System
             return output;
         }
 
-        public static ClassDeclarationSyntax RemoveMember(this ClassDeclarationSyntax @class,
-            MemberDeclarationSyntax member)
+        /// <summary>
+        /// Gets only <see cref="MethodDeclarationSyntax"/> methods (not including other <see cref="BaseMethodDeclarationSyntax"/> method types like <see cref="OperatorDeclarationSyntax"/>, etc.).
+        /// </summary>
+        public static IEnumerable<MethodDeclarationSyntax> GetMethods(this ClassDeclarationSyntax @class)
         {
-            var output = @class.WithMembers(@class.Members.Remove(member));
+            var output = @class.Members
+                .OfType<MethodDeclarationSyntax>();
+
             return output;
         }
 
@@ -209,6 +215,44 @@ namespace System
                 .Any();
 
             return isStatic;
+        }
+
+        public static bool IsClassName(this ClassDeclarationSyntax @class,
+            string className)
+        {
+            var output = @class.GetClassName() == className;
+            return output;
+        }
+
+        public static async Task<ClassDeclarationSyntax> ModifyMethod(this ClassDeclarationSyntax @class,
+            Func<ClassDeclarationSyntax, MethodDeclarationSyntax> methodSelector,
+            Func<MethodDeclarationSyntax, Task<MethodDeclarationSyntax>> methodAction = default)
+        {
+            var method = methodSelector(@class);
+
+            var outputMethod = await methodAction(method);
+
+            var outputClass = @class.ReplaceNode(method, outputMethod);
+            return outputClass;
+        }
+
+        public static async Task<ClassDeclarationSyntax> ModifyMethodBody(this ClassDeclarationSyntax @class,
+            Func<ClassDeclarationSyntax, MethodDeclarationSyntax> methodSelector,
+            Func<BlockSyntax, Task<BlockSyntax>> methodBodyAction = default)
+        {
+            var method = methodSelector(@class);
+
+            var outputMethod = await method.ModifyMethodBody(methodBodyAction);
+
+            var outputClass = @class.ReplaceNode(method, outputMethod);
+            return outputClass;
+        }
+
+        public static ClassDeclarationSyntax RemoveMember(this ClassDeclarationSyntax @class,
+            MemberDeclarationSyntax member)
+        {
+            var output = @class.WithMembers(@class.Members.Remove(member));
+            return output;
         }
     }
 }

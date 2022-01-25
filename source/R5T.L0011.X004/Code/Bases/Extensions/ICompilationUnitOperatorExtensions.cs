@@ -188,11 +188,35 @@ namespace System
             return _.LoadCompilationUnit(filePath);
         }
 
-        public static void Save(this ICompilationUnitOperator _,
+        public static async Task Modify(this ICompilationUnitOperator _,
+            string codeFilePath,
+            Func<CompilationUnitSyntax, Task<CompilationUnitSyntax>> compilationUnitModifierAction = default)
+        {
+            // If no modification, do nothing.
+            if(compilationUnitModifierAction == default)
+            {
+                return;
+            }
+
+            var inputCompilationUnit = await _.Load(codeFilePath);
+
+            var outputCompilationUnit = await compilationUnitModifierAction(inputCompilationUnit);
+
+            await _.Save(codeFilePath, outputCompilationUnit);
+        }
+
+        public static async Task Save(this ICompilationUnitOperator _,
             string filePath,
             CompilationUnitSyntax compilationUnit)
         {
-            compilationUnit.WriteTo(filePath);
+            await compilationUnit.WriteTo(filePath);
+        }
+
+        public static void SaveSynchronous(this ICompilationUnitOperator _,
+            string filePath,
+            CompilationUnitSyntax compilationUnit)
+        {
+            compilationUnit.WriteToSynchronous(filePath);
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.L0011.T001;
@@ -53,6 +52,11 @@ namespace System
             return output;
         }
 
+        /// <summary>
+        /// Note, this is a wrapper around <see cref="SyntaxFactory.ParseMemberDeclaration(string, int, Microsoft.CodeAnalysis.ParseOptions?, bool)"/>.
+        /// As a result, it produces method body blocks with open braces that include a trailing new line.
+        /// This is non-standard.
+        /// </summary>
         public static MethodDeclarationSyntax ParseMethodDeclaration(this ISyntaxFactory _,
             string text)
         {
@@ -95,11 +99,50 @@ namespace System
             return output;
         }
 
+        /// <summary>
+        /// Parses text containing a statement.
+        /// <example-text-input>Example text input:
+        /// <code>
+        /// var executionSynchronicityProviderAction = Instances.ServiceAction.AddConstructorBasedExecutionSynchronicityProviderAction(Synchronicity.Synchronous);
+        /// </code>
+        /// </example-text-input>
+        /// </summary>
         public static StatementSyntax ParseStatement(this ISyntaxFactory _,
             string text)
         {
             var output = SyntaxFactory.ParseStatement(text);
             return output;
+        }
+
+        /// <summary>
+        /// Parses multiple statements using the single statement parsing functionality.
+        /// <inheritdoc cref="ParseStatement(ISyntaxFactory, string)" path="/summary/example-text-input"/>
+        /// </summary>
+        public static IEnumerable<StatementSyntax> ParseStatements(this ISyntaxFactory _,
+            IEnumerable<string> texts)
+        {
+            var output = texts.Select(_.ParseStatement);
+            return output;
+        }
+
+        /// <summary>
+        /// Parses text containing multiple statements. Example text input:
+        /// <code>
+        /// var executionSynchronicityProviderAction = Instances.ServiceAction.AddConstructorBasedExecutionSynchronicityProviderAction(Synchronicity.Synchronous);
+        /// var organizationProviderAction = Instances.ServiceAction.AddOrganizationProviderAction(); // Rivet organization.
+        /// var rootOutputDirectoryPathProviderAction = Instances.ServiceAction.AddConstructorBasedRootOutputDirectoryPathProviderAction(@"C:\Temp\Output");
+        /// </code>
+        /// </summary>
+        public static IEnumerable<StatementSyntax> ParseStatements(this ISyntaxFactory _,
+            string text)
+        {
+            // Parse as a compilation unit. Statements will each be wrapped in global statements.
+            var statements = SyntaxFactory.ParseCompilationUnit(text)
+                .GetChildrenOfType<GlobalStatementSyntax>()
+                .Select(xGlobalStatement => xGlobalStatement
+                    .GetChildAsType<StatementSyntax>());
+
+            return statements;
         }
 
         public static UsingDirectiveSyntax ParseUsingDirective(this ISyntaxFactory _,

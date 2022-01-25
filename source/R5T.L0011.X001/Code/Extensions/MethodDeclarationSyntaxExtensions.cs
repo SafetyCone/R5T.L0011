@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.Magyar;
@@ -47,6 +49,33 @@ namespace System
                 ?? false;
 
             return output;
+        }
+
+        public static bool IsName(this MethodDeclarationSyntax method,
+            string methodName)
+        {
+            var output = method.Name() == methodName;
+            return output;
+        }
+
+        public static async Task<MethodDeclarationSyntax> ModifyMethodBody(this MethodDeclarationSyntax method,
+            Func<BlockSyntax, Task<BlockSyntax>> methodBodyAction = default)
+        {
+            // Only do work if work is required.
+            if (methodBodyAction == default)
+            {
+                return method;
+            }
+
+            var methodBody = method.Body is object
+                ? method.Body
+                : SyntaxFactory.Block()
+                ;
+
+            var outputMethodBody = await methodBodyAction(methodBody);
+
+            var outputMethod = method.WithBody(outputMethodBody);
+            return outputMethod;
         }
 
         public static string Name(this MethodDeclarationSyntax method)

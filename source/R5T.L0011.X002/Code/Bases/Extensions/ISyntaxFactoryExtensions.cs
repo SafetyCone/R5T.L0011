@@ -107,6 +107,16 @@ namespace System
             return output;
         }
 
+        public static UsingDirectiveSyntax Using(this ISyntaxFactory _,
+            NameAlias nameAlias)
+        {
+            var output = _.Using(
+                nameAlias.DestinationName,
+                nameAlias.SourceNameExpression);
+
+            return output;
+        }
+
         public static SyntaxToken VarIdentifier(this ISyntaxFactory syntaxFactory)
         {
             var output = syntaxFactory.Identifier(SyntaxKind.VarKeyword, Syntax.Var());

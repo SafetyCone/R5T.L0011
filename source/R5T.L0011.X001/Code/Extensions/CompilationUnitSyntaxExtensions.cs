@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -140,9 +141,20 @@ namespace System
             return output;
         }
 
-        public static NamespaceDeclarationSyntax GetNamespace_SingleOrDefault(this CompilationUnitSyntax compilationUnit)
+        public static IEnumerable<NamespaceDeclarationSyntax> GetNamespaces(this CompilationUnitSyntax compilationUnit,
+            Func<NamespaceDeclarationSyntax, bool> namespaceSelector)
         {
             var output = compilationUnit.GetNamespaces()
+                .Where(namespaceSelector)
+                ;
+
+            return output;
+        }
+
+        public static NamespaceDeclarationSyntax GetNamespace_SingleOrDefault(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit
+                .GetNamespaces()
                 .SingleOrDefault();
 
             return output;
@@ -154,6 +166,37 @@ namespace System
         public static NamespaceDeclarationSyntax GetNamespace(this CompilationUnitSyntax compilationUnit)
         {
             var output = compilationUnit.GetNamespace_SingleOrDefault();
+            return output;
+        }
+
+        public static NamespaceDeclarationSyntax GetNamespace_SingleOrDefault(this CompilationUnitSyntax compilationUnit,
+            string namespaceName)
+        {
+            var output = compilationUnit
+                .GetNamespaces(xNamespace => xNamespace.GetName() == namespaceName)
+                .SingleOrDefault();
+
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="GetNamespace_SingleOrDefault(CompilationUnitSyntax, string)"/>.
+        /// </summary>
+        public static NamespaceDeclarationSyntax GetNamespace(this CompilationUnitSyntax compilationUnit,
+            string namespaceName)
+        {
+            var output = compilationUnit.GetNamespace_SingleOrDefault(namespaceName);
+            return output;
+        }
+
+        public static WasFound<NamespaceDeclarationSyntax> HasNamespace(this CompilationUnitSyntax compilationUnit,
+            string namespaceName)
+        {
+            var namespaceOrDefault = compilationUnit
+                .GetNamespaces(xNamespace => xNamespace.GetName() == namespaceName)
+                .SingleOrDefault();
+
+            var output = WasFound.From(namespaceOrDefault);
             return output;
         }
 
@@ -222,24 +265,49 @@ namespace System
             return intefaces;
         }
 
-        public static TSyntaxNode ModifyWith<TSyntaxNode>(this TSyntaxNode syntaxNode, ModifierSynchronous<TSyntaxNode> modifier)
-            where TSyntaxNode : SyntaxNode
+        public static async Task<CompilationUnitSyntax> ModifyClass(this CompilationUnitSyntax compilationUnit,
+            Func<CompilationUnitSyntax, ClassDeclarationSyntax> classSelector,
+            Func<ClassDeclarationSyntax, Task<ClassDeclarationSyntax>> classAction = default)
         {
-            var output = modifier is object
-                ? modifier(syntaxNode)
-                : syntaxNode;
+            var @class = classSelector(compilationUnit);
 
-            return output;
+            var outputClass = await classAction(@class);
+
+            var outputCompilationUnit = compilationUnit.ReplaceNode(@class, outputClass);
+            return outputCompilationUnit;
         }
 
-        public static TSyntaxNode ModifyWith<TSyntaxNode, TData>(this TSyntaxNode syntaxNode, ModifierSynchronousWith<TSyntaxNode, TData> modifier, TData data)
-            where TSyntaxNode : SyntaxNode
+        public static async Task<CompilationUnitSyntax> ModifyClass(this CompilationUnitSyntax compilationUnit,
+            Func<CompilationUnitSyntax, NamespaceDeclarationSyntax> namespaceSelector,
+            Func<NamespaceDeclarationSyntax, ClassDeclarationSyntax> classSelector,
+            Func<ClassDeclarationSyntax, Task<ClassDeclarationSyntax>> classAction = default)
         {
-            var output = modifier is object
-                ? modifier(syntaxNode, data)
-                : syntaxNode;
+            var @namespace = namespaceSelector(compilationUnit);
+            var @class = classSelector(@namespace);
 
-            return output;
+            var outputClass = await classAction(@class);
+
+            var outputCompilationUnit = compilationUnit.ReplaceNode(@class, outputClass);
+            return outputCompilationUnit;
+        }
+
+        public static async Task<CompilationUnitSyntax> ModifyClassMethod(this CompilationUnitSyntax compilationUnit,
+            Func<CompilationUnitSyntax, ClassDeclarationSyntax> classSelector,
+            Func<ClassDeclarationSyntax, MethodDeclarationSyntax> methodSelector,
+            Func<MethodDeclarationSyntax, Task<MethodDeclarationSyntax>> methodAction = default)
+        {
+            var outputCompilationUnit = await compilationUnit.ModifyClass(
+                classSelector,
+                async @class =>
+                {
+                    var outputClass = await @class.ModifyMethod(
+                        methodSelector,
+                        methodAction);
+
+                    return outputClass;
+                });
+
+            return outputCompilationUnit;
         }
     }
 }

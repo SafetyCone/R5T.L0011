@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
 
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
@@ -10,31 +7,32 @@ namespace System
 {
     public static class StatementSyntaxExtensions
     {
-        public static SyntaxToken GetChildSemicolonToken(this StatementSyntax statement)
-        {
-            var output = statement.ChildTokens()
-                .Where(token => token.IsKind(SyntaxKind.SemicolonToken))
-                .Single();
-
-            return output;
-        }
-        
         public static string GetTextAsString(this StatementSyntax statement)
         {
             var output = statement.ToString();
             return output;
         }
 
-        public static T WithSemicolonLeadingWhitespace<T>(this T statement,
-            SyntaxTriviaList indentation)
-            where T : StatementSyntax
+        public static bool HasBaseMemberAccessExpression(this StatementSyntax statement,
+            out MemberAccessExpressionSyntax baseMemberAccessExpression)
         {
-            var oldSemicolonToken = statement.GetChildSemicolonToken();
+            if (statement is ExpressionStatementSyntax expressionStatement)
+            {
+                if (expressionStatement.Expression is InvocationExpressionSyntax invocationExpression)
+                {
+                    var output = invocationExpression.HasBaseMemberAccessExpression(
+                        out baseMemberAccessExpression);
 
-            var newSemicolonToken = oldSemicolonToken.Indent(indentation);
+                    return output;
+                }
+            }
 
-            var output = statement.ReplaceToken(oldSemicolonToken, newSemicolonToken);
-            return output;
+            baseMemberAccessExpression = default;
+
+            return false;
+
+            // Else, invalidation operation.
+            throw new InvalidOperationException("Invocation expression had no base simple member access expression.");
         }
     }
 }
