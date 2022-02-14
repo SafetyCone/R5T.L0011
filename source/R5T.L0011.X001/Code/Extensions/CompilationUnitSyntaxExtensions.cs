@@ -13,39 +13,6 @@ namespace System
 {
     public static class CompilationUnitSyntaxExtensions
     {
-        public static UsingDirectiveSyntax[] GetUsings(this CompilationUnitSyntax compilationUnit)
-        {
-            var output = compilationUnit.ChildNodes()
-                .OfType<UsingDirectiveSyntax>()
-                .ToArray();
-
-            return output;
-        }
-
-        public static WasFound<UsingDirectiveSyntax> HasUsing(this CompilationUnitSyntax compilationUnit,
-            string namespaceName)
-        {
-            var usingDirectiveOrDefault = compilationUnit.GetUsings()
-                .Where(xUsingDirective => xUsingDirective.IsUsingNamespaceDirective() && xUsingDirective.GetNamespaceName() == namespaceName)
-                .SingleOrDefault(); // Use robust single logic.
-
-            var output = WasFound.From(usingDirectiveOrDefault);
-
-            return output;
-        }
-
-        public static UsingDirectiveSyntax GetUsing(this CompilationUnitSyntax compilationUnit,
-            string namespaceName)
-        {
-            var wasFound = compilationUnit.HasUsing(namespaceName);
-            if(!wasFound)
-            {
-                throw new Exception($"Using directive for namespace name '{namespaceName}' not found.");
-            }
-
-            return wasFound;
-        }
-
         public static IEnumerable<ClassDeclarationSyntax> GetClasses(this CompilationUnitSyntax compilationUnit)
         {
             var classes = compilationUnit.DescendantNodes()

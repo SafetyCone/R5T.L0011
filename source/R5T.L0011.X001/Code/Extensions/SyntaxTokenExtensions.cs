@@ -5,7 +5,6 @@ using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.Magyar;
 
@@ -142,43 +141,7 @@ namespace System
             return output;
         }
 
-        public static SyntaxToken AddLeadingLeadingTrivia(this SyntaxToken syntaxToken, IEnumerable<SyntaxTrivia> trivias)
-        {
-            var newLeadingTrivia = syntaxToken.HasLeadingTrivia
-                ? syntaxToken.LeadingTrivia.InsertRange(0, trivias)
-                : new SyntaxTriviaList(trivias);
-
-            var output = syntaxToken.WithLeadingTrivia(newLeadingTrivia);
-            return output;
-        }
-
-        public static SyntaxToken AddLeadingLeadingTrivia(this SyntaxToken syntaxToken, params SyntaxTrivia[] trivias)
-        {
-            var output = syntaxToken.AddLeadingLeadingTrivia(trivias.AsEnumerable());
-            return output;
-        }
-
-        public static SyntaxToken AddLeadingLeadingTrivia(this SyntaxToken syntaxToken, SyntaxTriviaList trivia)
-        {
-            var output = syntaxToken.AddLeadingLeadingTrivia(trivia.AsEnumerable());
-            return output;
-        }
-
-        public static SyntaxToken AddTrailingLeadingTrivia(this SyntaxToken syntaxToken, params SyntaxTrivia[] trivia)
-        {
-            var newLeadingTrivia = syntaxToken.HasLeadingTrivia
-                ? syntaxToken.LeadingTrivia.AddRange(trivia)
-                : new SyntaxTriviaList(trivia);
-
-            var output = syntaxToken.WithLeadingTrivia(newLeadingTrivia);
-            return output;
-        }
-
-        public static SyntaxToken AddLeadingTrivia(this SyntaxToken syntaxToken, params SyntaxTrivia[] trivia)
-        {
-            var output = syntaxToken.AddTrailingLeadingTrivia(trivia);
-            return output;
-        }
+        
 
         public static SyntaxToken AddLeadingWhitespace(this SyntaxToken syntaxToken,
             SyntaxTriviaList leadingWhitespace)
@@ -187,31 +150,7 @@ namespace System
             return output;
         }
 
-        public static SyntaxToken AddTrailingTrailingTrivia(this SyntaxToken syntaxToken, params SyntaxTrivia[] trivia)
-        {
-            var newTrailingTrivia = syntaxToken.HasTrailingTrivia
-                ? syntaxToken.TrailingTrivia.AddRange(trivia)
-                : new SyntaxTriviaList(trivia);
-
-            var output = syntaxToken.WithTrailingTrivia(newTrailingTrivia);
-            return output;
-        }
-
-        public static SyntaxToken AddLeadingTrailingTrivia(this SyntaxToken syntaxToken, params SyntaxTrivia[] trivia)
-        {
-            var newTrailingTrivia = syntaxToken.HasTrailingTrivia
-                ? syntaxToken.TrailingTrivia.InsertRange(0, trivia)
-                : new SyntaxTriviaList(trivia);
-
-            var output = syntaxToken.WithTrailingTrivia(newTrailingTrivia);
-            return output;
-        }
-
-        public static SyntaxToken AddTrailingTrivia(this SyntaxToken syntaxToken, params SyntaxTrivia[] trivia)
-        {
-            var output = syntaxToken.AddTrailingTrailingTrivia(trivia);
-            return output;
-        }
+        
 
         public static WasFound<SyntaxNode> GetParent(this SyntaxToken syntaxToken)
         {

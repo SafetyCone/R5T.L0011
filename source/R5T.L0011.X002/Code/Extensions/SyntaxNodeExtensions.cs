@@ -15,44 +15,100 @@ namespace System
 {
     public static class SyntaxNodeExtensions
     {
-        public static T Annotate<T>(this T syntaxNode, out SyntaxAnnotation annotation)
+        public static T Annotate<T>(this T node,
+            out SyntaxAnnotation annotation)
             where T : SyntaxNode
         {
             annotation = Instances.SyntaxFactory.Annotation();
 
-            var output = syntaxNode.WithAdditionalAnnotations(annotation);
+            var output = node.WithAdditionalAnnotations(annotation);
             return output;
         }
 
-        public static (T, TChild, SyntaxAnnotation) AnnotateChild<T, TChild>(this T syntaxNode,
-            TChild childSyntaxNode)
+        public static (T, TChild, SyntaxAnnotation) AnnotateChild<T, TChild>(this T node,
+            TChild childNode)
             where T : SyntaxNode
             where TChild : SyntaxNode
         {
             var annotation = Instances.SyntaxFactory.Annotation();
 
-            var outputChildSyntaxNode = childSyntaxNode.WithAdditionalAnnotations(annotation);
+            var outputChildSyntaxNode = childNode.WithAdditionalAnnotations(annotation);
 
-            var outputSyntaxNode = syntaxNode.ReplaceNode(childSyntaxNode, outputChildSyntaxNode);
+            var outputSyntaxNode = node.ReplaceNode(childNode, outputChildSyntaxNode);
 
             return (outputSyntaxNode, outputChildSyntaxNode, annotation);
         }
 
-        public static TNode AnnotateDescendantToken<TNode>(this TNode syntaxNode,
-            SyntaxToken syntaxToken,
+        public static TNode AnnotateToken<TNode>(this TNode node,
+            SyntaxToken descendantToken,
             out SyntaxAnnotation annotation)
             where TNode : SyntaxNode
         {
             annotation = Instances.SyntaxFactory.Annotation();
 
-            var newToken = syntaxToken.WithAdditionalAnnotations(annotation);
+            var newToken = descendantToken.WithAdditionalAnnotations(annotation);
 
-            var outputSyntaxNode = syntaxNode.ReplaceToken(syntaxToken, newToken);
+            var outputSyntaxNode = node.ReplaceToken(descendantToken, newToken);
 
             return outputSyntaxNode;
         }
 
-        public static TNode AnnotateTokens<TNode>(this TNode syntaxNode,
+        public static TNode AnnotateNode<TNode>(this TNode node,
+            SyntaxNode descendantNode,
+            out SyntaxAnnotation annotation)
+            where TNode : SyntaxNode
+        {
+            annotation = Instances.SyntaxFactory.Annotation();
+
+            var newNode = descendantNode.WithAdditionalAnnotations(annotation);
+
+            var outputSyntaxNode = node.ReplaceNode_Better(descendantNode, newNode);
+
+            return outputSyntaxNode;
+        }
+
+        public static TNode AnnotateNode<TNode, TDescendantNode>(this TNode node,
+            TDescendantNode descendantNode,
+            out SyntaxAnnotation annotation,
+            out TDescendantNode annotatedDescendantNode)
+            where TNode : SyntaxNode
+            where TDescendantNode : SyntaxNode
+        {
+            annotation = Instances.SyntaxFactory.Annotation();
+
+            annotatedDescendantNode = descendantNode.WithAdditionalAnnotations(annotation);
+
+            var outputSyntaxNode = node.ReplaceNode_Better(descendantNode, annotatedDescendantNode);
+
+            return outputSyntaxNode;
+        }
+
+        public static TNode AnnotateNodes<TNode, TDescendantNode>(this TNode node,
+            IEnumerable<TDescendantNode> descendantNodes,
+            out Dictionary<TDescendantNode, SyntaxAnnotation> annotationsByInputNode)
+            where TNode : SyntaxNode
+            where TDescendantNode : SyntaxNode
+        {
+            // Temporary variable is required for use in anonymous method below.
+            var tempAnotationsByInputNodes = new Dictionary<TDescendantNode, SyntaxAnnotation>();
+
+            var outputSyntaxNode = node.ReplaceNodes_Better(
+                descendantNodes,
+                (_, possiblyRewrittenNode) =>
+                {
+                    var outputNode = possiblyRewrittenNode.Annotate(out var annotation);
+
+                    tempAnotationsByInputNodes.Add(possiblyRewrittenNode, annotation);
+
+                    return outputNode;
+                });
+
+            annotationsByInputNode = tempAnotationsByInputNodes;
+
+            return outputSyntaxNode;
+        }
+
+        public static TNode AnnotateTokens<TNode>(this TNode node,
             IEnumerable<SyntaxToken> syntaxTokens,
             out Dictionary<SyntaxToken, SyntaxAnnotation> annotationsByInputTokens)
             where TNode : SyntaxNode
@@ -60,7 +116,7 @@ namespace System
             // Temporary variable is required for use in anonymous method below.
             var tempAnotationsByInputTokens = new Dictionary<SyntaxToken, SyntaxAnnotation>();
 
-            var outputSyntaxNode = syntaxNode.ReplaceTokens(
+            var outputSyntaxNode = node.ReplaceTokens(
                 syntaxTokens,
                 (originalToken, _) =>
                 {
@@ -76,7 +132,7 @@ namespace System
             return outputSyntaxNode;
         }
 
-        public static TNode AnnotateTrivias<TNode>(this TNode syntaxNode,
+        public static TNode AnnotateTrivias<TNode>(this TNode node,
             IEnumerable<SyntaxTrivia> trivias,
             out Dictionary<SyntaxTrivia, SyntaxAnnotation> annotationsByInputTrivias)
             where TNode : SyntaxNode
@@ -84,7 +140,7 @@ namespace System
             // Temporary variable is required for use in anonymous method below.
             var tempAannotationsByInputTrivias = new Dictionary<SyntaxTrivia, SyntaxAnnotation>();
 
-            var outputSyntaxNode = syntaxNode.ReplaceTrivia(
+            var outputSyntaxNode = node.ReplaceTrivia(
                 trivias,
                 (originalTrivia, _) =>
                 {
@@ -100,103 +156,97 @@ namespace System
             return outputSyntaxNode;
         }
 
-        public static TSyntaxNode AddLineStart<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode AddLineStart<TSyntaxNode>(this TSyntaxNode node,
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode.AddLeadingLeadingTrivia(leadingWhitespace.ToArray());
+            var output = node.AddLeadingLeadingTrivia(leadingWhitespace.ToArray());
             return output;
         }
 
-        public static TSyntaxNode AddLineStart2<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode AddLineStart2<TSyntaxNode>(this TSyntaxNode node,
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode.AddLeadingLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
+            var output = node.AddLeadingLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
             return output;
         }
 
-        public static TSyntaxNode AppendBlankLine<TSyntaxNode>(this TSyntaxNode syntaxNode)
+        public static TSyntaxNode AppendBlankLine<TSyntaxNode>(this TSyntaxNode node)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode.AddTrailingTrailingTrivia(Instances.SyntaxFactory.NewLine());
+            var output = node.AddTrailingTrailingTrivia(Instances.SyntaxFactory.NewLine());
             return output;
         }
 
-        public static TSyntaxNode AppendBlankLine<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode AppendBlankLine<TSyntaxNode>(this TSyntaxNode node,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode.AddTrailingTrailingTrivia(indentation.ToArray());
+            var output = node.AddTrailingTrailingTrivia(indentation.ToArray());
             return output;
         }
 
         /// <summary>
         /// Old and bad.
         /// </summary>
-        public static TSyntaxNode AppendBlankLine2<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode AppendBlankLine2<TSyntaxNode>(this TSyntaxNode node,
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode.AddTrailingTrailingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
+            var output = node.AddTrailingTrailingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
             return output;
         }
 
-        public static TSyntaxNode InsertLineStart<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode InsertLineStart<TSyntaxNode>(this TSyntaxNode node,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode.AddTrailingLeadingTrivia(indentation.ToArray());
+            var output = node.AddTrailingLeadingTrivia(indentation.ToArray());
             return output;
         }
 
-        public static TSyntaxNode InsertLineStart2<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode InsertLineStart2<TSyntaxNode>(this TSyntaxNode node,
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode.AddTrailingLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
+            var output = node.AddTrailingLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
             return output;
         }
 
-        public static TSyntaxNode PrependBlankLine<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode PrependBlankLine<TSyntaxNode>(this TSyntaxNode node,
             SyntaxTriviaList leadingWhitespace,
             bool actuallyPrependTheLine = true)
             where TSyntaxNode : SyntaxNode
         {
             if(!actuallyPrependTheLine)
             {
-                return syntaxNode;
+                return node;
             }
 
-            var output = syntaxNode.AddLeadingLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
+            var output = node.AddLeadingLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
             return output;
         }
 
-        public static TSyntaxNode PrependBlankLine<TSyntaxNode>(this TSyntaxNode syntaxNode)
+        public static IEnumerable<TSyntaxNode> PrependBlankLine<TSyntaxNode>(this IEnumerable<TSyntaxNode> nodes)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode.PrependBlankLine(new SyntaxTriviaList());
-            return output;
-        }
-
-        public static IEnumerable<TSyntaxNode> PrependBlankLine<TSyntaxNode>(this IEnumerable<TSyntaxNode> syntaxNodes)
-            where TSyntaxNode : SyntaxNode
-        {
-            var output = syntaxNodes
+            var output = nodes
                 .Select(xSyntaxNode => xSyntaxNode.PrependBlankLine())
                 ;
 
             return output;
         }
 
-        public static TSyntaxNode ModifyWith<TSyntaxNode>(this TSyntaxNode syntaxNode, SyntaxNodeModifier<TSyntaxNode> modifier,
+        public static TSyntaxNode ModifyWith<TSyntaxNode>(this TSyntaxNode node,
+            SyntaxNodeModifier<TSyntaxNode> modifier,
             SyntaxTriviaList indentation,
             INamespaceNameSet namespaceNames)
             where TSyntaxNode : SyntaxNode
         {
             var output = modifier is object
-                ? modifier(syntaxNode, indentation, namespaceNames)
-                : syntaxNode;
+                ? modifier(node, indentation, namespaceNames)
+                : node;
 
             return output;
         }
@@ -248,7 +298,7 @@ namespace System
 
                 var nextToken = token.GetNextToken();
 
-                outputNode = outputNode.AnnotateDescendantToken(nextToken,
+                outputNode = outputNode.AnnotateToken(nextToken,
                     out var nextTokenAnnotation);
 
                 var tokenTrailingTrivia = token.TrailingTrivia;
@@ -324,7 +374,7 @@ namespace System
             return outputNode;
         }
 
-        public static TSyntaxNode WrapWithRegion<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode WrapWithRegion<TSyntaxNode>(this TSyntaxNode node,
             string regionName,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
@@ -333,7 +383,7 @@ namespace System
 
             var endRegion = Instances.SyntaxFactory.EndRegion(indentation);
 
-            var output = syntaxNode
+            var output = node
                 .AddLeadingLeadingTrivia(region)
                 .AddTrailingTrailingTrivia(endRegion)
                 ;
@@ -341,10 +391,10 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode RemoveLeadingBlankLine<TSyntaxNode>(this TSyntaxNode syntaxNode)
+        public static TSyntaxNode RemoveLeadingBlankLine<TSyntaxNode>(this TSyntaxNode node)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode.WithLeadingTrivia(syntaxNode.GetLeadingTrivia().RemoveLeadingNewLine());
+            var output = node.WithLeadingTrivia(node.GetLeadingTrivia().RemoveLeadingNewLine());
             return output;
         }
 
@@ -359,12 +409,12 @@ namespace System
             return output;
         }
 
-        public static TSyntaxNode IndentBlock<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode IndentBlock<TSyntaxNode>(this TSyntaxNode node,
             SyntaxTriviaList indentation,
             bool prependNewLineToFirstToken = true)
             where TSyntaxNode : SyntaxNode
         {
-            var outputNode = syntaxNode;
+            var outputNode = node;
 
             // Get tabination of indentation for later use.
             var tabination = indentation.GetTabination();
@@ -503,11 +553,11 @@ namespace System
         /// The Roslyn parser always assumes whitespace is trailing.
         /// Thus when inserting a node when the prior node is correctly indented, the prior node will have the trailing newline, so the inserted node only needs tabination. But it then needs its own new line.
         /// </summary>
-        public static TSyntaxNode IndentForInsertion<TSyntaxNode>(this TSyntaxNode syntaxNode,
+        public static TSyntaxNode IndentForInsertion<TSyntaxNode>(this TSyntaxNode node,
             SyntaxTriviaList indentation)
             where TSyntaxNode : SyntaxNode
         {
-            var output = syntaxNode
+            var output = node
                 .IndentWithoutNewLine(indentation)
                 .AppendBlankLine()
                 ;

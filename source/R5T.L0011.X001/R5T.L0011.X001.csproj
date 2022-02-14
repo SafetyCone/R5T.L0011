@@ -7,6 +7,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\R5T.Magyar\source\R5T.Magyar.T002\R5T.Magyar.T002.csproj" />
     <ProjectReference Include="..\..\..\R5T.Magyar\source\R5T.Magyar\R5T.Magyar.csproj" />
+    <ProjectReference Include="..\R5T.L0011.X000\R5T.L0011.X000.csproj" />
+    <ProjectReference Include="..\R5T.L0011.X001-1\R5T.L0011.X001-1.csproj" />
     <ProjectReference Include="..\R5T.L0011\R5T.L0011.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
+using R5T.Magyar;
+
 using R5T.L0011.T002;
 
 

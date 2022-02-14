@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -171,52 +170,6 @@ namespace System
                 typeDeclarationPredicate);
 
             return output;
-        }
-
-        public static Task<CompilationUnitSyntax> LoadCompilationUnit(this ICompilationUnitOperator _,
-            string filePath)
-        {
-            return Instances.CodeFileOperator.LoadCompilationUnit(filePath);
-        }
-
-        /// <summary>
-        /// Quality-of-life overload for <see cref="LoadCompilationUnit(ICodeFile, string)"/>.
-        /// </summary>
-        public static Task<CompilationUnitSyntax> Load(this ICompilationUnitOperator _,
-            string filePath)
-        {
-            return _.LoadCompilationUnit(filePath);
-        }
-
-        public static async Task Modify(this ICompilationUnitOperator _,
-            string codeFilePath,
-            Func<CompilationUnitSyntax, Task<CompilationUnitSyntax>> compilationUnitModifierAction = default)
-        {
-            // If no modification, do nothing.
-            if(compilationUnitModifierAction == default)
-            {
-                return;
-            }
-
-            var inputCompilationUnit = await _.Load(codeFilePath);
-
-            var outputCompilationUnit = await compilationUnitModifierAction(inputCompilationUnit);
-
-            await _.Save(codeFilePath, outputCompilationUnit);
-        }
-
-        public static async Task Save(this ICompilationUnitOperator _,
-            string filePath,
-            CompilationUnitSyntax compilationUnit)
-        {
-            await compilationUnit.WriteTo(filePath);
-        }
-
-        public static void SaveSynchronous(this ICompilationUnitOperator _,
-            string filePath,
-            CompilationUnitSyntax compilationUnit)
-        {
-            compilationUnit.WriteToSynchronous(filePath);
         }
     }
 }

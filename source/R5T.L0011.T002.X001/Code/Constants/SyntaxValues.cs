@@ -1,5 +1,7 @@
 ﻿using System;
 
+using R5T.Magyar;
+
 
 namespace R5T.L0011.T002.X001
 {

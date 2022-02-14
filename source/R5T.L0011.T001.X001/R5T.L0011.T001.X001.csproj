@@ -5,10 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\R5T.Magyar\source\R5T.Magyar\R5T.Magyar.csproj" />
+    <ProjectReference Include="..\R5T.L0011.T001.X000\R5T.L0011.T001.X000.csproj" />
     <ProjectReference Include="..\R5T.L0011.T001\R5T.L0011.T001.csproj" />
     <ProjectReference Include="..\R5T.L0011.X001\R5T.L0011.X001.csproj" />
-    <ProjectReference Include="..\R5T.L0011\R5T.L0011.csproj" />
   </ItemGroup>
 
 </Project>

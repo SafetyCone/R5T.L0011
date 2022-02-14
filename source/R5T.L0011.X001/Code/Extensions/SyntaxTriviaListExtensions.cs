@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 using R5T.Magyar;
 
@@ -12,18 +14,6 @@ namespace System
 {
     public static class SyntaxTriviaListExtensions
     {
-        public static bool BeginsWithNewLine(this SyntaxTriviaList trivias)
-        {
-            var output = trivias.Any() && trivias.First().IsNewLine();
-            return output;
-        }
-
-        public static bool EndsWithNewLine(this SyntaxTriviaList trivias)
-        {
-            var output = trivias.Any() && trivias.Last().IsNewLine();
-            return output;
-        }
-
         /// <summary>
         /// Determines if line separator trivia was found.
         /// <inheritdoc cref="Documentation.LineSeparatorTrivia" path="/definition"/>
@@ -59,7 +49,7 @@ namespace System
             var hasLineSeparatorNewLine = IndexHelper.IsFound(indexOfLineSeparatorNewLine);
 
             var lineSeparatorTrivia = hasLineSeparatorNewLine
-                ? trivia.FromIndex(indexOfLineSeparatorNewLine).ToSyntaxTriviaList()
+                ? Linq.SyntaxTriviaEnumerableExtensions.ToSyntaxTriviaList(trivia.FromIndex(indexOfLineSeparatorNewLine)) // Explicit spefication of extension method due to duplicate in Microsft.CodeAnalysis.CSharp.
                 : default
                 ;
 
@@ -85,12 +75,6 @@ namespace System
             var sequenceEqual = startingTrivia.SequenceEqual(triviaStartingTrivia, SyntaxTriviaTextComparer.Instance);
 
             return sequenceEqual;
-        }
-
-        public static bool StartsWithNewLine(this SyntaxTriviaList trivias)
-        {
-            var output = trivias.Any() && trivias.First().IsNewLine();
-            return output;
         }
 
         public static SyntaxTriviaList TrimWhitespaceStart(this SyntaxTriviaList trivia)

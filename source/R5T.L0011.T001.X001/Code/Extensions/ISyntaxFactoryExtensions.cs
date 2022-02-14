@@ -222,16 +222,6 @@ namespace System
             return SyntaxFactory.Identifier(text);
         }
 
-        public static IdentifierNameSyntax IdentifierName(this ISyntaxFactory _, string text)
-        {
-            return SyntaxFactory.IdentifierName(text);
-        }
-
-        public static IdentifierNameSyntax IdentifierName(this ISyntaxFactory _, SyntaxToken identifier)
-        {
-            return SyntaxFactory.IdentifierName(identifier);
-        }
-
         public static InterfaceDeclarationSyntax Interface(this ISyntaxFactory _, string name)
         {
             return SyntaxFactory.InterfaceDeclaration(name);
@@ -281,12 +271,6 @@ namespace System
             var returnTypeSyntax = syntaxFactory.Type(returnType);
 
             var output = syntaxFactory.Method(name, returnTypeSyntax);
-            return output;
-        }
-
-        public static IdentifierNameSyntax Name(this ISyntaxFactory _, string name)
-        {
-            var output = SyntaxFactory.IdentifierName(name);
             return output;
         }
 
@@ -446,35 +430,6 @@ namespace System
                 .AddConstraints(typeConstraint)
                 .NormalizeWhitespace()
                 ;
-
-            return output;
-        }
-
-        public static UsingDirectiveSyntax Using(this ISyntaxFactory syntaxFactory, string namespaceName)
-        {
-            var name = syntaxFactory.Name(namespaceName);
-
-            var output = syntaxFactory.Using(name);
-            return output;
-        }
-
-        public static UsingDirectiveSyntax Using(this ISyntaxFactory syntaxFactory, 
-            string aliasForName,
-            string name)
-        {
-            var nameSyntax = syntaxFactory.Name(name);
-
-            var aliasSyntax = SyntaxFactory.NameEquals(aliasForName);
-
-            var output = SyntaxFactory.UsingDirective(aliasSyntax, nameSyntax);
-            return output;
-        }
-
-        public static UsingDirectiveSyntax Using(this ISyntaxFactory _, NameSyntax name)
-        {
-            var output = SyntaxFactory.UsingDirective(name)
-                .NormalizeWhitespace()
-                .WithEndOfLine();
 
             return output;
         }

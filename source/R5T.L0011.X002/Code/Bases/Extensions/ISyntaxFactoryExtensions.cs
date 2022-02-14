@@ -12,6 +12,8 @@ using R5T.L0011.T001;
 using R5T.L0011.T002;
 using R5T.L0011.T004;
 
+using NameAlias = R5T.L0011.T004.NameAlias;
+
 using CSharpSyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 
@@ -49,7 +51,9 @@ namespace System
             var output = block.NamespaceNames
                 .Select(namespaceName =>
                 {
-                    var usingDiretctive = syntaxFactory.Using(namespaceName);
+                    var usingDiretctive = syntaxFactory.Using_WithoutLeadingNewLine(namespaceName)
+                        .WithEndOfLine();
+
                     return usingDiretctive;
                 })
                 .ToArray();
@@ -110,7 +114,7 @@ namespace System
         public static UsingDirectiveSyntax Using(this ISyntaxFactory _,
             NameAlias nameAlias)
         {
-            var output = _.Using(
+            var output = _.Using_WithoutLeadingNewLine(
                 nameAlias.DestinationName,
                 nameAlias.SourceNameExpression);
 

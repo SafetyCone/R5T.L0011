@@ -6,6 +6,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.L0011.T004;
 
+using NameAlias = R5T.L0011.T004.NameAlias;
+
 
 namespace System
 {
@@ -15,7 +17,7 @@ namespace System
         {
             var output = new UsingDirectivesSpecification();
 
-            var usingNamespaceDirectives = usingDirectives.GetUsingNamespaceDirectives();
+            var usingNamespaceDirectives = usingDirectives.GetUsingNamespaceDirectiveSyntaxes();
 
             var usingNamespaceNames = usingNamespaceDirectives
                 .Select(xUsingNamespaceDirective => xUsingNamespaceDirective.GetNamespaceName())
@@ -23,13 +25,12 @@ namespace System
 
             output.UsingNamespaceNames.AddRange(usingNamespaceNames);
 
-            var nameAliasDirectives = usingDirectives.GetNameAliasDirectives();
+            var nameAliasDirectives = usingDirectives.GetUsingNameAliasDirectiveSyntaxes();
 
             var nameAliases = nameAliasDirectives
                 .Select(xNameAlias =>
                 {
-                    var destinationName = xNameAlias.GetNameEquals();
-                    var sourceNameExpression = xNameAlias.GetQualifiedName();
+                    var (destinationName, sourceNameExpression) = xNameAlias.GetNameAliasValues();
 
                     return new NameAlias
                     {

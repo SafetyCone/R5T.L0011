@@ -2,6 +2,8 @@
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using R5T.Magyar;
+
 using Instances = R5T.L0011.X002.Instances;
 
 

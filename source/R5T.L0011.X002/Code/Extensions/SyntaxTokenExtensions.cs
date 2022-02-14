@@ -27,17 +27,5 @@ namespace System
             var output = syntaxToken.AddTrailingTrivia(comment);
             return output;
         }
-
-        public static SyntaxToken AppendNewLineLeadingWhitespace(this SyntaxToken syntaxToken, SyntaxTriviaList leadingWhitespace)
-        {
-            var output = syntaxToken.AddTrailingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
-            return output;
-        }
-
-        public static SyntaxToken PrependNewLine(this SyntaxToken syntaxToken)
-        {
-            var output = syntaxToken.AddLeadingLeadingTrivia(Instances.SyntaxFactory.NewLine());
-            return output;
-        }
     }
 }
