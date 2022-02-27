@@ -62,5 +62,39 @@ namespace System
             var namespacedTypedParameterizedMethodName = $"{namespacedTypeName}.{methodName}{typeParametersArray}";
             return namespacedTypedParameterizedMethodName;
         }
+
+        /// <summary>
+        /// Can handle extension parameters.
+        /// </summary>
+        public static string GetNamespacedTypedParameterizedMethodNameWithTypeParameters(this IMethodNameOperator _,
+            (NamespaceDeclarationSyntax Namespace, ClassDeclarationSyntax StaticClass, MethodDeclarationSyntax ExtensionMethod) tuple)
+        {
+            var namespaceName = tuple.Namespace.Name.ToString();
+            var typeName = tuple.StaticClass.Identifier.ToString();
+            var namespacedTypeName = Instances.NamespacedTypeName.GetNamespacedName(
+                namespaceName,
+                typeName);
+
+            var methodName = tuple.ExtensionMethod.Identifier.ToString();
+            var typeParameters = tuple.ExtensionMethod.TypeParameterList
+
+            var typeParameterNames = tuple.ExtensionMethod.ParameterList.Parameters
+                .Select(xParameter => xParameter.ToStringStandard())
+                ;
+
+            var typeParametersArray = $"{Strings.OpenParenthesis}{String.Join(Strings.CommaSeparatedListSpacedSeparator, typeParameterNames)}{Strings.CloseParenthesis}";
+
+            var namespacedTypedParameterizedMethodName = $"{namespacedTypeName}.{methodName}{typeParametersArray}";
+            return namespacedTypedParameterizedMethodName;
+        }
+
+        public static string GetTypeParameterListedMethodName(this IMethodNameOperator _,
+            MethodDeclarationSyntax method)
+        {
+
+            var methodName = method.Identifier.ToString();
+
+            var hasTypeParameterList
+        }
     }
 }
