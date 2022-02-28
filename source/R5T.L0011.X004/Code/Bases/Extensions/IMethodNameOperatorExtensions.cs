@@ -14,6 +14,41 @@ namespace System
 {
     public static class IMethodNameOperatorExtensions
     {
+        public static string GetFullName(this IMethodNameOperator _,
+            MethodDeclarationSyntax methodDeclaration)
+        {
+            // Remove the body of the method declaration, then ask for the text of the method declaration, and remove any multiple spacings.
+            var methodWithoutBody = methodDeclaration.WithoutAnyBody();
+
+            // Replace tab and new lines with space.
+            var output = methodWithoutBody.ToStringWithSingleSpacing();
+            return output;
+        }
+
+        /// <summary>
+        /// Can handle extension parameters.
+        /// </summary>
+        public static string GetNamespacedTypedParameterizedMethodName(this IMethodNameOperator _,
+            (NamespaceDeclarationSyntax Namespace, ClassDeclarationSyntax StaticClass, MethodDeclarationSyntax ExtensionMethod) tuple)
+        {
+            var namespaceName = tuple.Namespace.Name.ToString();
+            var typeName = tuple.StaticClass.Identifier.ToString();
+            var namespacedTypeName = Instances.NamespacedTypeName.GetNamespacedName(
+                namespaceName,
+                typeName);
+
+            var methodName = tuple.ExtensionMethod.Identifier.ToString();
+
+            var typeParameterNames = tuple.ExtensionMethod.ParameterList.Parameters
+                .Select(xParameter => xParameter.ToStringStandard())
+                ;
+
+            var typeParametersArray = $"{Strings.OpenParenthesis}{String.Join(Strings.CommaSeparatedListSpacedSeparator, typeParameterNames)}{Strings.CloseParenthesis}";
+
+            var namespacedTypedParameterizedMethodName = $"{namespacedTypeName}.{methodName}{typeParametersArray}";
+            return namespacedTypedParameterizedMethodName;
+        }
+
         /// <summary>
         /// Does not include the extension parameter.
         /// </summary>
@@ -42,30 +77,6 @@ namespace System
         /// <summary>
         /// Can handle extension parameters.
         /// </summary>
-        public static string GetNamespacedTypedParameterizedMethodName(this IMethodNameOperator _,
-            (NamespaceDeclarationSyntax Namespace, ClassDeclarationSyntax StaticClass, MethodDeclarationSyntax ExtensionMethod) tuple)
-        {
-            var namespaceName = tuple.Namespace.Name.ToString();
-            var typeName = tuple.StaticClass.Identifier.ToString();
-            var namespacedTypeName = Instances.NamespacedTypeName.GetNamespacedName(
-                namespaceName,
-                typeName);
-
-            var methodName = tuple.ExtensionMethod.Identifier.ToString();
-
-            var typeParameterNames = tuple.ExtensionMethod.ParameterList.Parameters
-                .Select(xParameter => xParameter.ToStringStandard())
-                ;
-
-            var typeParametersArray = $"{Strings.OpenParenthesis}{String.Join(Strings.CommaSeparatedListSpacedSeparator, typeParameterNames)}{Strings.CloseParenthesis}";
-
-            var namespacedTypedParameterizedMethodName = $"{namespacedTypeName}.{methodName}{typeParametersArray}";
-            return namespacedTypedParameterizedMethodName;
-        }
-
-        /// <summary>
-        /// Can handle extension parameters.
-        /// </summary>
         public static string GetNamespacedTypedParameterizedMethodNameWithTypeParameters(this IMethodNameOperator _,
             (NamespaceDeclarationSyntax Namespace, ClassDeclarationSyntax StaticClass, MethodDeclarationSyntax ExtensionMethod) tuple)
         {
@@ -75,26 +86,43 @@ namespace System
                 namespaceName,
                 typeName);
 
-            var methodName = tuple.ExtensionMethod.Identifier.ToString();
-            var typeParameters = tuple.ExtensionMethod.TypeParameterList
+            var methodName = _.GetTypeParameterListedMethodName(
+                tuple.ExtensionMethod);
 
-            var typeParameterNames = tuple.ExtensionMethod.ParameterList.Parameters
-                .Select(xParameter => xParameter.ToStringStandard())
-                ;
-
-            var typeParametersArray = $"{Strings.OpenParenthesis}{String.Join(Strings.CommaSeparatedListSpacedSeparator, typeParameterNames)}{Strings.CloseParenthesis}";
-
-            var namespacedTypedParameterizedMethodName = $"{namespacedTypeName}.{methodName}{typeParametersArray}";
+            var namespacedTypedParameterizedMethodName = $"{namespacedTypeName}.{methodName}";
             return namespacedTypedParameterizedMethodName;
         }
 
         public static string GetTypeParameterListedMethodName(this IMethodNameOperator _,
             MethodDeclarationSyntax method)
         {
-
             var methodName = method.Identifier.ToString();
 
-            var hasTypeParameterList
+            var hasParameters = method.HasParameters();
+            var parametersSegment = hasParameters
+                ? method.ParameterList.ToTextStandard()
+                : Strings.Empty
+                ;
+
+            var hasTypeParameterList = method.HasTypeParameterList();
+            var typeParametersSegment = hasTypeParameterList
+                ? method.TypeParameterList.ToTextStandard()
+                : Strings.Empty
+                ;
+
+            var hasConstraints = method.HasConstraints();
+            var constraintsText = hasConstraints
+                ? method.GetConstraintsText()
+                : String.Empty;
+                ;
+
+            var constraintsSegment = hasConstraints
+                ? $"{Strings.Space}{constraintsText}"
+                : String.Empty
+                ;
+
+            var output = $"{methodName}{typeParametersSegment}{parametersSegment}{constraintsSegment}";
+            return output;
         }
     }
 }

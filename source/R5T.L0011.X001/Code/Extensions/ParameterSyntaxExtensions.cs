@@ -24,5 +24,11 @@ namespace System
 
             return output;
         }
+
+        public static string ToTextStandard(this ParameterSyntax parameter)
+        {
+            var output = parameter.ToStringWithSingleSpacing();
+            return output;
+        }
     }
 }

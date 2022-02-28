@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
@@ -17,6 +18,16 @@ namespace System
 {
     public static class SyntaxNodeExtensions
     {
+        public static string ToStringWithSingleSpacing(this SyntaxNode syntaxNode)
+        {
+            var stringWithUnknownSpacing = syntaxNode.ToString();
+
+            var stringWithMultipleSpaces = Regex.Replace(stringWithUnknownSpacing, "[\n\r\t]", Strings.Space);
+
+            var stringWithSingleSpaces = Regex.Replace(stringWithMultipleSpaces, " +", Strings.Space);
+            return stringWithSingleSpaces;
+        }
+
         public static SyntaxList<TNode> ToSyntaxList<TNode>(this IEnumerable<TNode> nodes)
             where TNode : SyntaxNode
         {

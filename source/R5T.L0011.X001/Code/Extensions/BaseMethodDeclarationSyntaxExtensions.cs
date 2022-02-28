@@ -52,11 +52,28 @@ namespace System
             return output;
         }
 
+        public static bool HasAnyBody(this BaseMethodDeclarationSyntax method)
+        {
+            var hasBody = method.HasBody();
+            var hasExpressionBody = method.HasExpressionBody();
+
+            var output = hasBody || hasExpressionBody;
+            return output;
+        }
+
         public static WasFound<BlockSyntax> HasBody(this BaseMethodDeclarationSyntax method)
         {
             var methodBody = method.Body;
 
             var output = WasFound.From(methodBody);
+            return output;
+        }
+
+        public static WasFound<ArrowExpressionClauseSyntax> HasExpressionBody(this BaseMethodDeclarationSyntax method)
+        {
+            var expressionBody = method.ExpressionBody;
+
+            var output = WasFound.From(expressionBody);
             return output;
         }
 
@@ -148,6 +165,34 @@ namespace System
 
             var output = method.WithBody(newBody);
             return output as T;
+        }
+
+        public static T WithoutBody<T>(this T method)
+            where T : BaseMethodDeclarationSyntax
+        {
+            var output = method.WithBody(null) as T;
+            return output;
+        }
+
+        public static T WithoutExpressionBody<T>(this T method)
+            where T : BaseMethodDeclarationSyntax
+        {
+            var output = method.WithExpressionBody(null) as T;
+            return output;
+        }
+
+        /// <summary>
+        /// Removes both expression body and regular body.
+        /// </summary>
+        public static T WithoutAnyBody<T>(this T method)
+            where T : BaseMethodDeclarationSyntax
+        {
+            var output = method
+                .WithoutBody()
+                .WithoutExpressionBody()
+                ;
+
+            return output;
         }
     }
 }

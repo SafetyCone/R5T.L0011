@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -14,6 +15,22 @@ namespace System
     /// </summary>
     public static class MethodDeclarationSyntaxExtensions
     {
+        public static string GetConstraintsText(this MethodDeclarationSyntax method)
+        {
+            var hasConstraints = method.HasConstraints();
+            if(!hasConstraints)
+            {
+                return Strings.Empty;
+            }
+
+            var constraintStandardTexts = method.ConstraintClauses
+                .Select(xConstraint => xConstraint.ToTextStandard())
+                ;
+
+            var output = String.Join(Strings.Space, constraintStandardTexts);
+            return output;
+        }
+
         public static ParameterSyntax GetExtensionParameter(this MethodDeclarationSyntax method)
         {
             var hasExtensionParameter = method.HasExtensionParameter();
@@ -38,6 +55,18 @@ namespace System
                 ;
 
             var output = WasFound.From(result);
+            return output;
+        }
+
+        public static bool HasConstraints(this MethodDeclarationSyntax method)
+        {
+            var output = method.ConstraintClauses.Any();
+            return output;
+        }
+
+        public static bool HasParameters(this MethodDeclarationSyntax method)
+        {
+            var output = method.ParameterList.Parameters.Any();
             return output;
         }
 

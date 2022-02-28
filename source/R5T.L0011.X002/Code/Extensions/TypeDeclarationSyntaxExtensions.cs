@@ -40,9 +40,16 @@ namespace System
         //    return output;
         //}
 
+        /// <summary>
+        /// Adds members with blank lines separating members.
+        /// Allows control over how the first member is spaced: either with a new line for the first member in a member container for members that do not have their own new lines, or with a blank line for members that are not the first member in their member container, and should thus be spaced like any other.
+        /// </summary>
+        /// <param name="addNewLineBeforeFirstMember">Controls whether a new line is prepended to the first member (useful for members without their own new lines).</param>
+        /// <param name="addBlankLineBeforeFirstMember">Controls whether a blank line is prepended to the first member (for when members exist already and the first member to be added is not the first member of member container).</param>
         public static T AddMembersWithBlankLineSeparation<T>(this T typeDeclaration,
             MemberDeclarationSyntax[] members,
-            bool addLineBeforeFirstMember)
+            bool addNewLineBeforeFirstMember,
+            bool addBlankLineBeforeFirstMember)
             where T : TypeDeclarationSyntax
         {
             // Only do work if there's work to do.
@@ -51,9 +58,14 @@ namespace System
                 return typeDeclaration;
             }
 
-            var actualFirstMember = addLineBeforeFirstMember
-                ? members.First().PrependBlankLine()
+            var actualFirstMember = addNewLineBeforeFirstMember
+                ? members.First().PrependNewLine()
                 : members.First()
+                ;
+
+            actualFirstMember = addBlankLineBeforeFirstMember
+                ? actualFirstMember.PrependBlankLine()
+                : actualFirstMember
                 ;
 
             // Add lines between each member.
@@ -77,14 +89,16 @@ namespace System
                 return typeDeclaration;
             }
 
-            // If members already exist, we will want to separate the first new member with a blank line.
+            // If members already exist, we will want to separate the first new member with a new (*not* blank) line.
             // If members don't already exists, we will not want to separate the first member with a blank line.
             // This is because the standard open brace has no trailing trivia and so cannot provide the new line.
-            var addSpaceBeforeFirstMember = typeDeclaration.HasMembers();
+            var addBlankLineBeforeFirstMember = typeDeclaration.HasMembers();
+            var addNewLineBeforeFirstMember = !typeDeclaration.HasMembers();
 
             var output = typeDeclaration.AddMembersWithBlankLineSeparation(
                 members,
-                addSpaceBeforeFirstMember);
+                addNewLineBeforeFirstMember,
+                addBlankLineBeforeFirstMember);
 
             return output;
         }
