@@ -9,6 +9,8 @@ using R5T.Magyar;
 
 using R5T.L0011.X000;
 
+using Glossary = R5T.L0011.X000.Glossary;
+
 
 namespace System
 {

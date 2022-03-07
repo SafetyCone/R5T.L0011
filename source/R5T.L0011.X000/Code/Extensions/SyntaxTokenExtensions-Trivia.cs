@@ -4,9 +4,10 @@ using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.L0011.X000;
+
+using Glossary = R5T.L0011.X000.Glossary;
 
 
 namespace System
@@ -100,6 +101,18 @@ namespace System
                 token);
 
             return output;
+        }
+
+        /// <summary>
+        /// Get the beginning blank trivia of the leading trivia of a token.
+        /// <inheritdoc cref="Glossary.ForTrivia.BlankTrivia" path="/definition"/>
+        /// </summary>
+        public static SyntaxTriviaList GetSeparatingBeginningBlankLeadingTrivia(this SyntaxToken token)
+        {
+            var separatingLeadingTrivia = token.GetSeparatingLeadingTrivia();
+
+            var beginningBlankTrivia = separatingLeadingTrivia.GetBeginningBlankTrivia();
+            return beginningBlankTrivia;
         }
 
         public static SyntaxTriviaList GetSeparatingTrailingTrivia(this SyntaxToken token)

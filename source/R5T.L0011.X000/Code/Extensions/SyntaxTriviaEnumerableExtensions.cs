@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using Microsoft.CodeAnalysis;
 
+using R5T.L0011.X000;
+
 using Glossary = R5T.L0011.X000.Glossary;
 
 
@@ -10,6 +12,33 @@ namespace System
 {
     public static class SyntaxTriviaEnumerableExtensions
     {
+        public static IEnumerable<SyntaxTrivia> GetBeginningWithSingleNewLineTrivias(this IEnumerable<SyntaxTrivia> syntaxTrivias)
+        {
+            // Start with a single new line.
+            yield return SyntaxTriviaHelper.NewLine();
+
+            var noNonNewLinesFoundYet = true;
+            foreach (var syntaxTrivia in syntaxTrivias)
+            {
+                if(noNonNewLinesFoundYet && SyntaxTriviaHelper.IsNewLine(syntaxTrivia))
+                {
+                    continue;
+                }
+
+                noNonNewLinesFoundYet = true;
+
+                yield return syntaxTrivia;
+            }
+        }
+
+        public static SyntaxTriviaList GetBeginningWithSingleNewLineTrivia(this IEnumerable<SyntaxTrivia> syntaxTrivias)
+        {
+            var output = new SyntaxTriviaList(
+                syntaxTrivias.GetBeginningWithSingleNewLineTrivias());
+
+            return output;
+        }
+
         /// <inheritdoc cref="GetBeginningBlankTrivias(SyntaxTriviaList)"/>
         public static SyntaxTriviaList GetBeginningBlankTrivia(this IEnumerable<SyntaxTrivia> trivias)
         {
@@ -59,6 +88,62 @@ namespace System
                 ;
 
             return output;
+        }
+
+        public static SyntaxTriviaList SetBeginningBlankTrivia(this IEnumerable<SyntaxTrivia> syntaxTrivias,
+            IEnumerable<SyntaxTrivia> beginningBlankTrivias)
+        {
+            var output = new SyntaxTriviaList(
+                syntaxTrivias.SetBeginningBlankTrivias(
+                    beginningBlankTrivias));
+
+            return output;
+        }
+
+        public static IEnumerable<SyntaxTrivia> SetBeginningBlankTrivias(this IEnumerable<SyntaxTrivia> syntaxTrivias,
+            IEnumerable<SyntaxTrivia> beginningBlankTrivias)
+        {
+            foreach (var syntaxTrivia in beginningBlankTrivias)
+            {
+                yield return syntaxTrivia;
+            }
+
+            var trimmedBeginningBlankTrivias = syntaxTrivias.TrimBeginningBlankTrivias();
+            foreach (var syntaxTrivia in trimmedBeginningBlankTrivias)
+            {
+                yield return syntaxTrivia;
+            }
+        }
+
+        public static SyntaxTriviaList TrimBeginningBlankTrivia(this IEnumerable<SyntaxTrivia> syntaxTrivias)
+        {
+            var output = new SyntaxTriviaList(
+                syntaxTrivias.TrimBeginningBlankTrivias());
+            
+            return output;
+        }
+
+        public static IEnumerable<SyntaxTrivia> TrimBeginningBlankTrivias(this IEnumerable<SyntaxTrivia> syntaxTrivias)
+        {
+            var nonBlankTriviaFound = false;
+            foreach (var syntaxTrivia in syntaxTrivias)
+            {
+                if(nonBlankTriviaFound)
+                {
+                    yield return syntaxTrivia;
+
+                    continue;
+                }
+
+                if(!SyntaxTriviaHelper.IsBlank(syntaxTrivia))
+                {
+                    nonBlankTriviaFound = true;
+
+                    yield return syntaxTrivia;
+
+                    continue;
+                }
+            }
         }
     }
 }

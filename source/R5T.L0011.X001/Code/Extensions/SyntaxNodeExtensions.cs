@@ -28,13 +28,6 @@ namespace System
             return stringWithSingleSpaces;
         }
 
-        public static SyntaxList<TNode> ToSyntaxList<TNode>(this IEnumerable<TNode> nodes)
-            where TNode : SyntaxNode
-        {
-            var output = new SyntaxList<TNode>(nodes);
-            return output;
-        }
-
         public static bool BeginsWithNewLine(this SyntaxNode syntaxNode)
         {
             var output = syntaxNode.GetLeadingTrivia().BeginsWithNewLine();
@@ -143,10 +136,11 @@ namespace System
             return output;
         }
 
-        public static SyntaxNode SetLeadingIndentationOfDescendent(this SyntaxNode parentSyntaxNode,
+        public static TNode SetLeadingIndentationOfDescendent<TNode>(this TNode parentSyntaxNode,
             SyntaxNode childSyntaxNode,
             SyntaxTriviaList indentation,
             bool includeDocumentationComments = false)
+            where TNode : SyntaxNode
         {
             var childFirstSyntaxToken = childSyntaxNode.GetFirstToken(includeDocumentationComments: includeDocumentationComments);
 
@@ -161,10 +155,11 @@ namespace System
         /// <summary>
         /// Returns the parent node, with the leading trivia of the child set to the input indentation.
         /// </summary>
-        public static SyntaxNode SetLeadingIndentationOfDescendent(this SyntaxNode syntaxNode,
+        public static TNode SetLeadingIndentationOfDescendent<TNode>(this TNode syntaxNode,
             SyntaxToken childSyntaxToken,
             SyntaxTriviaList indentation,
             bool includeDocumentationComments = false)
+            where TNode : SyntaxNode
         {
             var previousSyntaxToken = childSyntaxToken.GetPreviousToken(includeDocumentationComments: includeDocumentationComments);
 
@@ -186,6 +181,7 @@ namespace System
             }
         }
 
+        /// <inheritdoc cref="SyntaxTokenExtensions.SetSeparatingWhitespace_Leading(SyntaxToken, SyntaxToken, SyntaxTriviaList)"/>
         public static TNode SetSeparatingWhitespaceBetweenDescendentTokens_Leading<TNode>(this TNode syntaxNode,
             SyntaxToken firstDescendent,
             SyntaxToken secondDescendent,
@@ -198,6 +194,70 @@ namespace System
             var (modifiedFirst, modifiedSecond) = firstDescendent.SetSeparatingWhitespace_Leading(
                 secondDescendent,
                 indentation);
+
+            var outputSyntaxNode = syntaxNode.ReplaceTokens(
+                EnumerableHelper.From(firstDescendent, secondDescendent),
+                (originalToken, _) =>
+                {
+                    if (originalToken == firstDescendent)
+                    {
+                        return modifiedFirst;
+                    }
+
+                    if (originalToken == secondDescendent)
+                    {
+                        return modifiedSecond;
+                    }
+
+                    throw new Exception();
+                });
+
+            return outputSyntaxNode;
+        }
+
+        public static TNode SetLeadingSeparatingTrivia<TNode>(this TNode syntaxNode,
+            SyntaxToken token,
+            SyntaxTriviaList separatingTrivia)
+            where TNode : SyntaxNode
+        {
+            var previousToken = token.GetPreviousToken();
+
+            var output = syntaxNode.SetSeparatingTrivaBetweenDescendents(
+                previousToken,
+                token,
+                separatingTrivia);
+
+            return output;
+        }
+
+        public static TNode SetTrailingSeparatingTrivia<TNode>(this TNode syntaxNode,
+            SyntaxToken token,
+            SyntaxTriviaList separatingTrivia)
+            where TNode : SyntaxNode
+        {
+            var nextToken = token.GetNextToken();
+
+            var output = syntaxNode.SetSeparatingTrivaBetweenDescendents(
+                token,
+                nextToken,
+                separatingTrivia);
+
+            return output;
+        }
+
+        /// <inheritdoc cref="SyntaxTokenExtensions.SetSeparatingWhitespace_Leading(SyntaxToken, SyntaxToken, SyntaxTriviaList)"/>
+        public static TNode SetSeparatingTrivaBetweenDescendents<TNode>(this TNode syntaxNode,
+            SyntaxToken firstDescendent,
+            SyntaxToken secondDescendent,
+            SyntaxTriviaList separatingTrivia)
+            where TNode : SyntaxNode
+        {
+            syntaxNode.VerifyContainsToken(firstDescendent);
+            syntaxNode.VerifyContainsToken(secondDescendent);
+
+            var (modifiedFirst, modifiedSecond) = firstDescendent.SetSeparatingTrivia_Leading(
+                secondDescendent,
+                separatingTrivia);
 
             var outputSyntaxNode = syntaxNode.ReplaceTokens(
                 EnumerableHelper.From(firstDescendent, secondDescendent),
@@ -460,6 +520,7 @@ namespace System
         public static TNode ModifyIf<TNode>(this TNode node,
             bool condition,
             Func<TNode, TNode> modifier)
+            where TNode : SyntaxNode
         {
             var output = condition
                 ? modifier(node)

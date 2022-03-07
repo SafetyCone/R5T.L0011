@@ -26,6 +26,7 @@ namespace System
         public static TNode ModifyIf_Synchronous<TNode>(this TNode node,
             bool condition,
             Func<TNode, TNode> ifTrueModificationAction)
+            where TNode : SyntaxNode
         {
             var output = condition
                 ? ifTrueModificationAction(node)
@@ -38,12 +39,20 @@ namespace System
         public static async Task<TNode> ModifyIf<TNode>(this TNode node,
             bool condition,
             Func<TNode, Task<TNode>> ifTrueModificationAction)
+            where TNode : SyntaxNode
         {
             var output = condition
                 ? await ifTrueModificationAction(node)
                 : node
                 ;
 
+            return output;
+        }
+
+        public static SyntaxList<TNode> ToSyntaxList<TNode>(this IEnumerable<TNode> nodes)
+            where TNode : SyntaxNode
+        {
+            var output = new SyntaxList<TNode>(nodes);
             return output;
         }
 

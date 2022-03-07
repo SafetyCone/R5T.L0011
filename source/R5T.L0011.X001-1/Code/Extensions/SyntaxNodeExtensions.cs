@@ -28,5 +28,16 @@ namespace System
             var output = token.SetLeadingSeparatingTrivia(desiredIndentation);
             return output;
         }
+
+        /// <inheritdoc cref="SetLeadingSeparatingTrivia{TNode}(TNode, SyntaxTriviaList)"/>.
+        public static TNode SetIndentation2<TNode>(this TNode token,
+            params SyntaxTrivia[] desiredIndentation)
+            where TNode : SyntaxNode
+        {
+            var desiredIndentationList = new SyntaxTriviaList(desiredIndentation);
+
+            var output = token.SetLeadingSeparatingTrivia(desiredIndentationList);
+            return output;
+        }
     }
 }

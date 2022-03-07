@@ -8,6 +8,8 @@ using Microsoft.CodeAnalysis.CSharp;
 
 using R5T.Magyar;
 
+using Glossary = R5T.L0011.X000.Glossary;
+
 
 namespace System
 {
@@ -85,6 +87,22 @@ namespace System
 
             // Use the leading trivia for the second.
             var modifiedSecond = second.WithLeadingTrivia(leadingTrivia);
+
+            return (modifiedFirst, modifiedSecond);
+        }
+
+        /// <summary>
+        /// Modifies whitespace on first and second nodes such that the separating whitespace of the indentation is leading trivia on the second token.
+        /// </summary>
+        public static (SyntaxToken modifiedFirst, SyntaxToken modifiedSecond) SetSeparatingTrivia_Leading(this SyntaxToken first,
+            SyntaxToken second,
+            SyntaxTriviaList separatingTrivia)
+        {
+            // Erase trailing trivia from the first token.
+            var modifiedFirst = first.WithTrailingTrivia();
+
+            // Use the leading trivia for the second.
+            var modifiedSecond = second.WithLeadingTrivia(separatingTrivia);
 
             return (modifiedFirst, modifiedSecond);
         }
@@ -185,6 +203,10 @@ namespace System
             }
         }
 
+        /// <summary>
+        /// Gets the separating trivia ahead of the token (between the token and previous token).
+        /// <inheritdoc cref="Glossary.ForTrivia.SeparatingTrivia"/>
+        /// </summary>
         private static SyntaxTriviaList GetLeadingSeparatingTrivia_Unchecked(this SyntaxToken syntaxToken,
             SyntaxToken previousToken)
         {
@@ -192,6 +214,10 @@ namespace System
             return separatingTrivia;
         }
 
+        /// <summary>
+        /// Gets the separating trivia ahead of the token (between the token and previous token).
+        /// <inheritdoc cref="Glossary.ForTrivia.SeparatingTrivia"/>
+        /// </summary>
         public static SyntaxTriviaList GetLeadingSeparatingTrivia(this SyntaxToken syntaxToken,
             SyntaxToken previousToken,
             bool includeDocumentationComments = false)
@@ -203,6 +229,25 @@ namespace System
             return output;
         }
 
+        /// <summary>
+        /// Gets the separating trivia ahead of the token (between the token and previous token).
+        /// <inheritdoc cref="Glossary.ForTrivia.SeparatingTrivia"/>
+        /// </summary>
+        public static SyntaxTriviaList GetLeadingSeparatingTrivia(this SyntaxToken syntaxToken,
+           bool includeDocumentationComments = false)
+        {
+            var previousToken = syntaxToken.GetPreviousToken();
+
+            var output = syntaxToken.GetLeadingSeparatingTrivia(
+                previousToken,
+                includeDocumentationComments);
+            return output;
+        }
+
+        /// <summary>
+        /// Gets the separating trivia after the token (between the token and next token).
+        /// <inheritdoc cref="Glossary.ForTrivia.SeparatingTrivia"/>
+        /// </summary>
         private static SyntaxTriviaList GetTrailingSeparatingTrivia_Unchecked(this SyntaxToken syntaxToken,
             SyntaxToken nextToken)
         {
@@ -232,6 +277,10 @@ namespace System
             return output;
         }
 
+        /// <summary>
+        /// Gets the separating trivia after the token (between the token and next token).
+        /// <inheritdoc cref="Glossary.ForTrivia.SeparatingTrivia"/>
+        /// </summary>
         public static SyntaxTriviaList GetTrailingSeparatingTrivia(this SyntaxToken syntaxToken,
             SyntaxToken nextToken,
             bool includeDocumentationComments = false)
@@ -240,6 +289,21 @@ namespace System
 
             // Now that we know these two tokens are contiguous, get any leading and trailing syntax.
             var output = syntaxToken.GetTrailingSeparatingTrivia_Unchecked(nextToken);
+            return output;
+        }
+
+        /// <summary>
+        /// Gets the separating trivia ahead of the token (between the token and previous token).
+        /// <inheritdoc cref="Glossary.ForTrivia.SeparatingTrivia"/>
+        /// </summary>
+        public static SyntaxTriviaList GetTrailingSeparatingTrivia(this SyntaxToken syntaxToken,
+           bool includeDocumentationComments = false)
+        {
+            var nextToken = syntaxToken.GetNextToken();
+
+            var output = syntaxToken.GetTrailingSeparatingTrivia(
+                nextToken,
+                includeDocumentationComments);
             return output;
         }
 
