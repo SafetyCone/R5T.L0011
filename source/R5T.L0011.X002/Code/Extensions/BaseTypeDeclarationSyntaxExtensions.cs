@@ -58,6 +58,35 @@ namespace System
             return outputNode;
         }
 
+        public static bool HasBaseTypesList(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
+        {
+            var output = baseTypeDeclarationSyntax.BaseList is object;
+            return output;
+        }
+
+        public static bool HasBaseTypeWithName<T>(this T baseTypeDeclarationSyntax,
+            string typeName)
+            where T : BaseTypeDeclarationSyntax
+        {
+            var hasBaseTypesList = baseTypeDeclarationSyntax.HasBaseTypesList();
+            if(!hasBaseTypesList)
+            {
+                return false;
+            }
+
+            // Ok, now we know there is a base list.
+            foreach (var baseTypeSyntax in baseTypeDeclarationSyntax.BaseList.Types)
+            {
+                var hasTypeName = baseTypeSyntax.Type.IsNamed(typeName);
+                if(hasTypeName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static T WithBraces<T>(this T baseTypeDeclarationSyntax,
             SyntaxTriviaList indentation)
             where T : BaseTypeDeclarationSyntax

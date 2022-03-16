@@ -74,6 +74,15 @@ namespace System
             return output;
         }
 
+        public static NameAlias[] GetUsingNameAliases(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.GetUsingNameAliasDirectives()
+                .Select(x => x.GetNameAlias())
+                .Now();
+
+            return output;
+        }
+
         public static IEnumerable<UsingDirectiveSyntax> GetUsingNameAliasDirectiveSyntaxes(this CompilationUnitSyntax compilationUnit)
         {
             var output = compilationUnit.GetUsings().GetUsingNameAliasDirectiveSyntaxes();

@@ -5,6 +5,12 @@ namespace Microsoft.CodeAnalysis.CSharp
 {
     public static class SyntaxFactoryHelper
     {
+        public static SyntaxToken None()
+        {
+            var output = SyntaxFactory.Token(SyntaxKind.None);
+            return output;
+        }
+
         public static SyntaxTrivia EndOfLine_Environment()
         {
             var output = SyntaxFactory.EndOfLine(Environment.NewLine);

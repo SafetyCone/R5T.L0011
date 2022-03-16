@@ -59,6 +59,14 @@ namespace System
             return output;
         }
 
+        public static TDescendantSyntaxNodeType GetChildOfType<TDescendantSyntaxNodeType>(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.GetChildrenOfType<TDescendantSyntaxNodeType>()
+                .Single();
+
+            return output;
+        }
+
         public static SyntaxToken GetChildSemicolonToken<TNode>(this TNode node)
             where TNode : SyntaxNode
         {

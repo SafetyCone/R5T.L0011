@@ -201,6 +201,56 @@ namespace System
             return output;
         }
 
+        public static string GetNamespacedTypeName(this TypeDeclarationSyntax type)
+        {
+            var namespaceName = type.GetNamespaceName();
+            var typeName = type.GetTypeName();
+
+            var output = Instances.NamespaceName.CombineTokens(
+                namespaceName,
+                typeName);
+
+            return output;
+        }
+
+        //public static string GetNamespacedTypeParameterizedWithConstraintsTypeName(this TypeDeclarationSyntax type)
+        //{
+        //}
+
+        public static string GetNamespacedTypeParameterizedWithConstraintsTypeName(this TypeDeclarationSyntax type)
+        {
+            var namespacedTypeName = type.GetNamespacedTypeName();
+
+            var hasTypeParameters = type.HasTypeParameters();
+            if (!hasTypeParameters)
+            {
+                return namespacedTypeName;
+            }
+            // Else, now we know the type has type parameters.
+
+            var typeParameters = type.GetTypeParametersCommaSeparatedListText();
+
+            var hasConstraintClauses = type.HasConstraintClauses();
+            if(!hasConstraintClauses)
+            {
+                return $"{namespacedTypeName}{typeParameters}";
+            }
+            // Else, now we know the type has type constraint clauses.
+
+            var constraintClauses = type.GetConstraintClausesText();
+
+            return $"{namespacedTypeName}{typeParameters}{Strings.Space}{constraintClauses}";
+        }
+
+        public static IEnumerable<string> GetNamespacedTypeParameterizedWithConstraintsTypeNames(this IEnumerable<TypeDeclarationSyntax> types)
+        {
+            var output = types
+                .Select(xType => xType.GetNamespacedTypeParameterizedWithConstraintsTypeName())
+                ;
+
+            return output;
+        }
+
         /// <summary>
         /// Gets the name of the namespace containing the type.
         /// <there-might-be-nested-namespaces>There might be nested namespaces, meaning that the full namespace for a type might not be just the name of the containing namespace.</there-might-be-nested-namespaces>
