@@ -3,6 +3,9 @@
 
 namespace Microsoft.CodeAnalysis.CSharp.Syntax
 {
+    /// <summary>
+    /// A type for using directives that are using namespace directives.
+    /// </summary>
     public class UsingNameAliasDirectiveSyntax : TypedSyntaxNode<UsingDirectiveSyntax>
     {
         #region Static

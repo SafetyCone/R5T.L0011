@@ -6,8 +6,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.L0011.T004;
 
-using NameAlias = R5T.L0011.T004.NameAlias;
-
 
 namespace System
 {
@@ -32,11 +30,8 @@ namespace System
                 {
                     var (destinationName, sourceNameExpression) = xNameAlias.GetNameAliasValues();
 
-                    return new NameAlias
-                    {
-                        DestinationName = destinationName,
-                        SourceNameExpression = sourceNameExpression,
-                    };
+                    var output = NameAlias.From(destinationName, sourceNameExpression);
+                    return output;
                 });
 
             output.NameAliases.AddRange(nameAliases);

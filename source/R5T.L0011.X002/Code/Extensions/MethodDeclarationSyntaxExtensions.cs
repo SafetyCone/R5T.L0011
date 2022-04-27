@@ -11,6 +11,22 @@ namespace System
 {
     public static class MethodDeclarationSyntaxExtensions
     {
-        
+        /// <summary>
+        /// Example: X.Y.X.Method(string, string, int).
+        /// </summary>
+        public static string GetNamespacedTypeNamedParameterTypedMethodName(this MethodDeclarationSyntax method)
+        {
+            var containingType = method.GetContainingType();
+
+            var containingTypeNamespacedTypeName = containingType.GetNamespacedTypeName();
+
+            var parameterTypedMethodName = method.GetParameterTypedMethodName();
+
+            var output = Instances.NamespaceName.CombineTokens(
+                containingTypeNamespacedTypeName,
+                parameterTypedMethodName);
+
+            return output;
+        }
     }
 }

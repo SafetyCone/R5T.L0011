@@ -52,6 +52,11 @@ namespace System
             return output;
         }
 
+        public static string GenericTypeIndicator(this ISyntax _)
+        {
+            return Strings.Tick;
+        }
+
         public static string Internal(this ISyntax _)
         {
             return SyntaxValues.Internal;

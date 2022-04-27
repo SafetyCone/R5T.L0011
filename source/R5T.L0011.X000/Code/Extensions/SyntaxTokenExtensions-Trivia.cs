@@ -139,7 +139,7 @@ namespace System
 
             var leadingTrivia = token.LeadingTrivia;
 
-            var beginningSequenceEqual = leadingTrivia.Take(triviasCount).SequenceEqual(trivias, SyntaxTriviaValueEqualityComparer.Instance);
+            var beginningSequenceEqual = leadingTrivia.Take(triviasCount).SequenceEqual(trivias, SyntaxTriviaTextEqualityComparer.Instance);
             if(!beginningSequenceEqual)
             {
                 throw new Exception("The two sequences did not start with the same elements.");
@@ -169,6 +169,28 @@ namespace System
             IReadOnlyList<SyntaxTrivia> trivias)
         {
             var output = token.RemoveFromLeadingLeadingTrivia_Checked(trivias);
+            return output;
+        }
+
+        public static SyntaxToken RemoveTrailingEndingBlankTrivia(this SyntaxToken token)
+        {
+            var newTrailingTrivia = token.TrailingTrivia.RemoveEndingBlankTrivia();
+
+            var output = token.WithTrailingTrivia(newTrailingTrivia);
+            return output;
+        }
+
+        public static SyntaxToken RemoveLeadingBeginningBlankTrivia(this SyntaxToken token)
+        {
+            var newLeadingTrivia = token.LeadingTrivia.RemoveBeginningBlankTrivia();
+
+            var output = token.WithLeadingTrivia(newLeadingTrivia);
+            return output;
+        }
+
+        public static SyntaxToken WithoutTrailingTrivia(this SyntaxToken token)
+        {
+            var output = token.WithTrailingTrivia();
             return output;
         }
     }

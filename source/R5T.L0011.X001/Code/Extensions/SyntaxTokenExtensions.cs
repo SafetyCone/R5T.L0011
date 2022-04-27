@@ -27,6 +27,12 @@ namespace System
             return output;
         }
 
+        public static bool IsAbstract(this SyntaxToken syntaxToken)
+        {
+            var output = syntaxToken.IsKind(SyntaxKind.AbstractKeyword);
+            return output;
+        }
+
         public static bool IsIdentifierToken(this SyntaxToken syntaxToken)
         {
             var output = syntaxToken.IsKind(SyntaxKind.IdentifierToken);
@@ -140,13 +146,6 @@ namespace System
             return output;
         }
 
-        public static SyntaxToken Indent(this SyntaxToken syntaxToken,
-            SyntaxTriviaList indentation)
-        {
-            var output = syntaxToken.AddLeadingLeadingTrivia(indentation.ToArray());
-            return output;
-        }
-
         /// <summary>
         /// For use in the obnoxious cases where an open brace or something already includes a new line.
         /// </summary>
@@ -159,16 +158,12 @@ namespace System
             return output;
         }
 
-        
-
         public static SyntaxToken AddLeadingWhitespace(this SyntaxToken syntaxToken,
             SyntaxTriviaList leadingWhitespace)
         {
             var output = syntaxToken.AddLeadingLeadingTrivia(leadingWhitespace.ToArray());
             return output;
         }
-
-        
 
         public static WasFound<SyntaxNode> GetParent(this SyntaxToken syntaxToken)
         {
@@ -317,7 +312,7 @@ namespace System
                 var childNodesAndTokens = parent.ChildNodesAndTokens();
 
                 var indexOfSyntaxToken = childNodesAndTokens.IndexOfChildInNodesAndTokens(syntaxToken);
-                if (indexOfSyntaxToken == childNodesAndTokens.LastIndex())
+                if (indexOfSyntaxToken == childNodesAndTokens.LastIndex_ForReadOnlyList())
                 {
                     return WasFound.NotFound<SyntaxNodeOrToken>();
                 }
@@ -354,12 +349,6 @@ namespace System
             {
                 throw new Exception("Verification of token as previous token failed.");
             }
-        }
-
-        public static SyntaxToken WithoutTrailingTrivia(this SyntaxToken token)
-        {
-            var output = token.WithTrailingTrivia();
-            return output;
         }
 
         public static void WriteTo(this SyntaxToken syntaxToken, string filePath)

@@ -27,6 +27,18 @@ namespace System
             return output;
         }
 
+        public static T AddInitialBody<T>(this T method)
+            where T : BaseMethodDeclarationSyntax
+        {
+            var output = method
+                .WithBody(SyntaxFactory.Body()
+                    .WithOpenBraceToken(SyntaxFactory.OpenBrace())
+                    .WithCloseBraceToken(SyntaxFactory.CloseBrace()))
+                as T;
+
+            return output;
+        }
+
         public static T AddInitialBody<T>(this T method,
             SyntaxTriviaList leadingWhitespace)
             where T : BaseMethodDeclarationSyntax

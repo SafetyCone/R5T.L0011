@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using R5T.Magyar;
+
 using R5T.L0011.T004;
 
 using Instances = R5T.L0011.X002.Instances;
@@ -64,6 +66,90 @@ namespace System
 
             var output = compilationUnit.AddUsings(usingDirectives);
             return output;
+        }
+
+        public static WasFound<ClassDeclarationSyntax> HasClassByNamespacedTypeName(this CompilationUnitSyntax compilationUnit,
+            string namespacedTypeName)
+        {
+            var singleOrDefault = compilationUnit.GetClasses()
+                .Where(xClass =>
+                {
+                    var classNamespacedTypeName = xClass.GetNamespacedTypeName_HandlingTypeParameters();
+
+                    var output = classNamespacedTypeName == namespacedTypeName;
+                    return output;
+                })
+                .SingleOrDefault();
+
+            var output = WasFound.From(singleOrDefault);
+            return output;
+        }
+
+        public static WasFound<InterfaceDeclarationSyntax> HasInterfaceByNamespacedTypeName(this CompilationUnitSyntax compilationUnit,
+            string namespacedTypeName)
+        {
+            var interfaceOrDefault = compilationUnit.GetInterfaces()
+                .Where(xInterface =>
+                {
+                    var interfaceNamespacedTypeName = xInterface.GetNamespacedTypeName_HandlingTypeParameters();
+
+                    var output = interfaceNamespacedTypeName == namespacedTypeName;
+                    return output;
+                })
+                .SingleOrDefault();
+
+            var output = WasFound.From(interfaceOrDefault);
+            return output;
+        }
+
+        /// <summary>
+        /// Matches the full namespace name instead of just the simple namespace name.
+        /// </summary>
+        public static WasFound<NamespaceDeclarationSyntax> HasNamespace_HandleNested(this CompilationUnitSyntax compilationUnit,
+            string namespaceName)
+        {
+            // Get all descendent namespaces (which includes nested namespaces).
+            var descendentNamespaces = compilationUnit.GetNamespaces_Descendents();
+
+            // Get the full namespace name of each namespace, and test against the desired namespace name.
+            foreach (var descendentNamespace in descendentNamespaces)
+            {
+                var fullName = descendentNamespace.GetFullName();
+
+                var namespaceNameFound = Instances.NamespaceName.Equal(fullName, namespaceName);
+                if(namespaceNameFound)
+                {
+                    return WasFound.Found(descendentNamespace);
+                }
+            }
+
+            return WasFound.NotFound<NamespaceDeclarationSyntax>();
+        }
+
+        public static ClassDeclarationSyntax GetClassByNamespacedTypeName(this CompilationUnitSyntax compilationUnit,
+            string namespacedTypeName)
+        {
+            var hasClass = compilationUnit.HasClassByNamespacedTypeName(namespacedTypeName);
+
+            if (!hasClass)
+            {
+                throw new Exception($"Class '{namespacedTypeName}' not found in compilation unit.");
+            }
+
+            return hasClass.Result;
+        }
+
+        public static InterfaceDeclarationSyntax GetInterfaceByNamespacedTypeName(this CompilationUnitSyntax compilationUnit,
+            string namespacedTypeName)
+        {
+            var hasInterface = compilationUnit.HasInterfaceByNamespacedTypeName(namespacedTypeName);
+
+            if(!hasInterface)
+            {
+                throw new Exception($"Interface '{namespacedTypeName}' not found in compilation unit.");
+            }
+
+            return hasInterface.Result;
         }
 
         public static NamespaceNameSet GetNamespaceNameSet(this CompilationUnitSyntax compilationUnit)

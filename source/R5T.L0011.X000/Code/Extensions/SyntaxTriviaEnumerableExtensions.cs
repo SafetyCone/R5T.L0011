@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 
 using Microsoft.CodeAnalysis;
-
-using R5T.L0011.X000;
+using Microsoft.CodeAnalysis.CSharp;
 
 using Glossary = R5T.L0011.X000.Glossary;
 
@@ -37,6 +36,25 @@ namespace System
                 syntaxTrivias.GetBeginningWithSingleNewLineTrivias());
 
             return output;
+        }
+
+        public static int GetBeginningBlankTriviaCount(this IEnumerable<SyntaxTrivia> trivias)
+        {
+            // Count elements until something is non-blank.
+            var counter = 0;
+
+            foreach (var trivia in trivias)
+            {
+                if (trivia.IsNonBlank())
+                {
+                    break;
+                }
+                // Else
+
+                counter++;
+            }
+
+            return counter;
         }
 
         /// <inheritdoc cref="GetBeginningBlankTrivias(SyntaxTriviaList)"/>
@@ -152,6 +170,9 @@ namespace System.Linq
 {
     public static class SyntaxTriviaEnumerableExtensions
     {
+        /// <summary>
+        /// Note: already exists at <see cref="Microsoft.CodeAnalysis.CSharp.SyntaxExtensions.ToSyntaxTriviaList(IEnumerable{SyntaxTrivia})"/>, but that is an annoying namespace.
+        /// </summary>
         public static SyntaxTriviaList ToSyntaxTriviaList(this IEnumerable<SyntaxTrivia> trivias)
         {
             var output = new SyntaxTriviaList(trivias);

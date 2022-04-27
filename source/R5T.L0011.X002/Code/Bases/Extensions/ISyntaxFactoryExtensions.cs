@@ -12,8 +12,6 @@ using R5T.L0011.T001;
 using R5T.L0011.T002;
 using R5T.L0011.T004;
 
-using NameAlias = R5T.L0011.T004.NameAlias;
-
 using CSharpSyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 

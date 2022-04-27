@@ -59,11 +59,21 @@ namespace System
         }
 
         /// <summary>
-        /// Selects <see cref="HasAttributeOfTypeSuffixedOrUnsuffixed(InterfaceDeclarationSyntax, string)"/> as the default.
+        /// Selects <see cref="HasAttributeOfTypeSuffixedOrUnsuffixed(ClassDeclarationSyntax, string)"/> as the default.
         /// </summary>
         public static bool HasAttributeOfType(this ClassDeclarationSyntax @class,
             string attributeTypeName)
         {
+            var output = @class.HasAttributeOfTypeSuffixedOrUnsuffixed(attributeTypeName);
+            return output;
+        }
+
+        public static bool HasAttributeOfType<T>(this ClassDeclarationSyntax @class)
+            where T : Attribute
+        {
+            // The type name could be -Attribute or not without worry, since the -SuffixedOrUnsuffixed handles that.
+            var attributeTypeName = typeof(T).Name;
+
             var output = @class.HasAttributeOfTypeSuffixedOrUnsuffixed(attributeTypeName);
             return output;
         }

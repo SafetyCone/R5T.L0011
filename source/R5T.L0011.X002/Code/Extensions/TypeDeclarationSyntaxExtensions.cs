@@ -217,6 +217,41 @@ namespace System
         //{
         //}
 
+        /// <summary>
+        /// Determines the namespaced type name for a type.
+        /// Includes the generic type parameters specification.
+        /// Examples:
+        /// <para>List&lt;T&gt; => System.Collections.Generic.List`1</para>
+        /// <para>List&lt;string&gt; => System.Collections.Generic.List`1</para>
+        /// <para>Dictionary&lt;TKey, TValue&gt; => System.Collections.Generic.Dictionary`2</para>
+        /// </summary>
+        public static string GetNamespacedTypeName_HandlingTypeParameters(this TypeDeclarationSyntax typeDeclaration)
+        {
+            var namespacedTypeName = typeDeclaration.GetNamespacedTypeName();
+
+            var hasTypeParameters = typeDeclaration.HasTypeParameters();
+            if (!hasTypeParameters)
+            {
+                return namespacedTypeName;
+            }
+            // Else, now we know the type has type parameters.
+
+            var genericTypeToken = $"{Instances.Syntax.GenericTypeIndicator()}{typeDeclaration.TypeParameterList.Parameters.Count}";
+
+            var output = $"{namespacedTypeName}{genericTypeToken}";
+            return output;
+        }
+
+        /// <inheritdoc cref="GetNamespacedTypeName_HandlingTypeParameters(TypeDeclarationSyntax)"/>
+        public static IEnumerable<string> GetNamespacedTypeNames_HandlingTypeParameters(this IEnumerable<TypeDeclarationSyntax> typeDeclarations)
+        {
+            var output = typeDeclarations
+                .Select(xType => xType.GetNamespacedTypeName_HandlingTypeParameters())
+                ;
+
+            return output;
+        }
+
         public static string GetNamespacedTypeParameterizedWithConstraintsTypeName(this TypeDeclarationSyntax type)
         {
             var namespacedTypeName = type.GetNamespacedTypeName();

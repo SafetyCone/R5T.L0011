@@ -76,16 +76,6 @@ namespace System
             return output;
         }
 
-        public static bool IsExtensionMethod(this MethodDeclarationSyntax method)
-        {
-            // Where the first parameter has a "this" keyword modifier.
-            var output = method.ParameterList.Parameters
-                .FirstOrDefault()?.IsExtensionParameter()
-                ?? false;
-
-            return output;
-        }
-
         public static bool IsName(this MethodDeclarationSyntax method,
             string methodName)
         {
@@ -111,12 +101,6 @@ namespace System
 
             var outputMethod = method.WithBody(outputMethodBody);
             return outputMethod;
-        }
-
-        public static string Name(this MethodDeclarationSyntax method)
-        {
-            var output = method.Identifier.Text;
-            return output;
         }
     }
 }

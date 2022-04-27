@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using R5T.Magyar;
 
 using Instances = R5T.L0011.X002.Instances;
 
@@ -10,52 +13,18 @@ namespace System
 {
     public static class BaseTypeDeclarationSyntaxExtensions
     {
-        public static TNode EnsureHasBraces<TNode>(this TNode node,
-            SyntaxTriviaList indentation)
-            where TNode : BaseTypeDeclarationSyntax
+        public static WasFound<BaseTypeSyntax[]> HasBaseTypes(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
         {
-            var outputNode = node;
-
-            outputNode = outputNode.EnsureHasCloseBrace(indentation);
-            outputNode = outputNode.EnsureHasOpenBrace(indentation);
-
-            return outputNode;
-        }
-
-        public static TNode EnsureHasCloseBrace<TNode>(this TNode node,
-            SyntaxTriviaList indentation)
-            where TNode : BaseTypeDeclarationSyntax
-        {
-            var outputNode = node;
-
-            var hasCloseBrace = node.HasCloseBrace();
-            if (!hasCloseBrace)
+            var hasBaseTypesList = baseTypeDeclarationSyntax.HasBaseTypesList();
+            if(!hasBaseTypesList)
             {
-                var closeBrace = Instances.SyntaxFactory.CloseBrace(
-                    indentation);
-
-                outputNode = outputNode.WithCloseBraceToken(closeBrace) as TNode;
+                return WasFound.NotFound<BaseTypeSyntax[]>();
             }
 
-            return outputNode;
-        }
+            var output = WasFound.Found(
+                baseTypeDeclarationSyntax.BaseList.Types.ToArray());
 
-        public static TNode EnsureHasOpenBrace<TNode>(this TNode node,
-            SyntaxTriviaList indentation)
-            where TNode : BaseTypeDeclarationSyntax
-        {
-            var outputNode = node;
-
-            var hasOpenBrace = node.HasOpenBrace();
-            if (!hasOpenBrace)
-            {
-                var openBrace = Instances.SyntaxFactory.OpenBrace(
-                    indentation);
-
-                outputNode = outputNode.WithOpenBraceToken(openBrace) as TNode;
-            }
-
-            return outputNode;
+            return output;
         }
 
         public static bool HasBaseTypesList(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
@@ -64,9 +33,54 @@ namespace System
             return output;
         }
 
-        public static bool HasBaseTypeWithName<T>(this T baseTypeDeclarationSyntax,
+        public static bool HasBaseTypeWithNamespacedTypeName(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax,
+            string namespacedTypeName)
+        {
+            var containingNamespaceName = baseTypeDeclarationSyntax.GetContainingNamespaceName();
+
+            var output = baseTypeDeclarationSyntax.HasBaseTypeWithNamespacedTypeName(
+                containingNamespaceName,
+                namespacedTypeName);
+
+            return output;
+        }
+
+        public static bool HasBaseTypeWithNamespacedTypeName(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax,
+            string baseTypeContainingNamespaceName,
+            string namespacedTypeName)
+        {
+            // Perform initial check: are there any base types to begin with?
+            var hasBaseTypesList = baseTypeDeclarationSyntax.HasBaseTypesList();
+            if (!hasBaseTypesList)
+            {
+                return false;
+            }
+            // Else, now we know there is a base list.
+
+            // Get all possible containing namespaces.
+            var containingNamespaceNames = Instances.NamespaceName.EnumerateNamespaceAndSubNamespaces(baseTypeContainingNamespaceName);
+
+            foreach (var baseTypeSyntax in baseTypeDeclarationSyntax.BaseList.Types)
+            {
+                var baseTypeTypeNameFragment = baseTypeSyntax.Type.GetTypeName_HandlingTypeParameters();
+
+                // Foreach possible containing namespace, test the base type syntax type name fragment.
+                foreach (var containingNamespaceName in containingNamespaceNames)
+                {
+                    var baseTypeNamespacedTypeName = Instances.NamespaceName.CombineTokens(containingNamespaceName, baseTypeTypeNameFragment);
+                    
+                    if(baseTypeNamespacedTypeName == namespacedTypeName)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public static bool HasBaseTypeWithName_NoContainingNamespace(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax,
             string typeName)
-            where T : BaseTypeDeclarationSyntax
         {
             var hasBaseTypesList = baseTypeDeclarationSyntax.HasBaseTypesList();
             if(!hasBaseTypesList)

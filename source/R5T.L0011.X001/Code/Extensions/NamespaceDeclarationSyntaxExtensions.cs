@@ -40,12 +40,6 @@ namespace System
             return classes;
         }
 
-        public static string GetName(this NamespaceDeclarationSyntax @namespace)
-        {
-            var output = @namespace.Name.ToString();
-            return output;
-        }
-
         public static WasFound<ClassDeclarationSyntax> HasClass_SingleOrDefault(this NamespaceDeclarationSyntax @namespace,
             string className)
         {

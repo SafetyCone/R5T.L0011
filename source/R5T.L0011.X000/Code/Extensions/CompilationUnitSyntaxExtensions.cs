@@ -51,6 +51,33 @@ namespace System
             return output;
         }
 
+        public static IEnumerable<ClassDeclarationSyntax> GetClasses(this CompilationUnitSyntax compilationUnit)
+        {
+            var classes = compilationUnit.DescendantNodes()
+                .OfType<ClassDeclarationSyntax>()
+                ;
+
+            return classes;
+        }
+
+        public static IEnumerable<InterfaceDeclarationSyntax> GetInterfaces(this CompilationUnitSyntax compilationUnit)
+        {
+            var intefaces = compilationUnit.DescendantNodes()
+                .OfType<InterfaceDeclarationSyntax>()
+                ;
+
+            return intefaces;
+        }
+
+        public static IEnumerable<TypeDeclarationSyntax> GetTypes(this CompilationUnitSyntax compilationUnit)
+        {
+            var classes = compilationUnit.DescendantNodes()
+                .OfType<TypeDeclarationSyntax>()
+                ;
+
+            return classes;
+        }
+
         public static UsingDirectiveSyntax GetUsing(this CompilationUnitSyntax compilationUnit,
             string destinationName,
             string sourceNameExpression)

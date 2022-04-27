@@ -5,6 +5,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using Instances = R5T.L0011.X001.Instances;
+
 
 namespace System
 {
@@ -23,6 +25,15 @@ namespace System
                 .Where(xAttribute => xAttribute.Name.ToString() == attributeTypeName)
                 .Any()
                 ;
+
+            return output;
+        }
+
+        public static bool IsAbstract(this MemberDeclarationSyntax member)
+        {
+            var output = member.Modifiers
+                .Where(xModifer => xModifer.IsAbstract())
+                .Any();
 
             return output;
         }

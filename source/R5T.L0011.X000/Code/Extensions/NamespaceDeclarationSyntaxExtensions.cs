@@ -22,23 +22,6 @@ namespace System
             return output;
         }
 
-        /// <summary>
-        /// Chooses <see cref="GetChildUsingDirectives(CompilationUnitSyntax)"/> as the default.
-        /// Only child using directives are returned (as opposed to descendant using directives, which may exist in descendant namespaces).
-        /// </summary>
-        public static UsingDirectiveSyntax[] GetUsings(this NamespaceDeclarationSyntax @namespace)
-        {
-            var output = @namespace.GetChildUsingDirectives();
-            return output;
-        }
-
-        public static UsingDirectiveSyntax GetUsing(this NamespaceDeclarationSyntax @namespace,
-            string namespaceName)
-        {
-            var output = @namespace.GetUsings().GetUsing(namespaceName);
-            return output;
-        }
-
         public static IEnumerable<string> GetMissingUsingNamespaceNames(this NamespaceDeclarationSyntax @namespace,
             IEnumerable<string> namespaceNames)
         {
@@ -46,11 +29,38 @@ namespace System
             return output;
         }
 
-        public static UsingDirectiveSyntax GetUsing(this NamespaceDeclarationSyntax @namespace,
+        /// <summary>
+        /// Get the simple name for a namespace (regardless of namespace nesting).
+        /// For example, if namespace "Z" was nested inside "X.Y", this method would just return "Z".
+        /// </summary>
+        public static string GetName(this NamespaceDeclarationSyntax @namespace)
+        {
+            var output = @namespace.Name.ToString();
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="GetChildUsingDirectives(CompilationUnitSyntax)"/> as the default.
+        /// Only child using directives are returned (as opposed to descendant using directives, which may exist in descendant namespaces).
+        /// </summary>
+        public static UsingDirectiveSyntax[] GetUsingDirectives(this NamespaceDeclarationSyntax @namespace)
+        {
+            var output = @namespace.GetChildUsingDirectives();
+            return output;
+        }
+
+        public static UsingDirectiveSyntax GetUsingDirective(this NamespaceDeclarationSyntax @namespace,
+            string namespaceName)
+        {
+            var output = @namespace.GetUsingDirectives().GetUsing(namespaceName);
+            return output;
+        }
+
+        public static UsingDirectiveSyntax GetUsingDirective(this NamespaceDeclarationSyntax @namespace,
             string destinationName,
             string sourceNameExpression)
         {
-            var output = @namespace.GetUsings().GetUsing(destinationName, sourceNameExpression);
+            var output = @namespace.GetUsingDirectives().GetUsing(destinationName, sourceNameExpression);
             return output;
         }
 
@@ -59,44 +69,44 @@ namespace System
         /// </summary>
         public static UsingDirectiveSyntax[][] GetUsingBlocks(this NamespaceDeclarationSyntax @namespace)
         {
-            var output = @namespace.GetUsings().GetUsingBlocks();
+            var output = @namespace.GetUsingDirectives().GetUsingBlocks();
             return output;
         }
 
         public static UsingNameAliasDirectiveSyntax[] GetUsingNameAliasDirectives(this NamespaceDeclarationSyntax @namespace)
         {
-            var output = @namespace.GetUsings().GetUsingNameAliasDirectives().Now();
+            var output = @namespace.GetUsingDirectives().GetUsingNameAliasDirectives().Now();
             return output;
         }
 
         public static IEnumerable<UsingDirectiveSyntax> GetUsingNameAliasDirectiveSyntaxes(this NamespaceDeclarationSyntax @namespace)
         {
-            var output = @namespace.GetUsings().GetUsingNameAliasDirectiveSyntaxes();
+            var output = @namespace.GetUsingDirectives().GetUsingNameAliasDirectiveSyntaxes();
             return output;
         }
 
         public static UsingNamespaceDirectiveSyntax[] GetUsingNamespaceDirectives(this NamespaceDeclarationSyntax @namespace)
         {
-            var output = @namespace.GetUsings().GetUsingNamespaceDirectives().Now();
+            var output = @namespace.GetUsingDirectives().GetUsingNamespaceDirectives().Now();
             return output;
         }
 
         public static IEnumerable<UsingDirectiveSyntax> GetUsingNamespaceDirectiveSyntaxes(this NamespaceDeclarationSyntax @namespace)
         {
-            var output = @namespace.GetUsings().GetUsingNamespaceDirectiveSyntaxes();
+            var output = @namespace.GetUsingDirectives().GetUsingNamespaceDirectiveSyntaxes();
             return output;
         }
 
         public static IEnumerable<string> GetUsingNamespaceNames(this NamespaceDeclarationSyntax @namespace)
         {
-            var output = @namespace.GetUsings().GetUsingNamespaceNames();
+            var output = @namespace.GetUsingDirectives().GetUsingNamespaceNames();
             return output;
         }
 
         public static WasFound<UsingDirectiveSyntax> HasUsing(this NamespaceDeclarationSyntax @namespace,
             string namespaceName)
         {
-            var output = @namespace.GetUsings().HasUsing(namespaceName);
+            var output = @namespace.GetUsingDirectives().HasUsing(namespaceName);
             return output;
         }
 
@@ -104,7 +114,7 @@ namespace System
             string destinationName,
             string sourceNameExpression)
         {
-            var output = @namespace.GetUsings().HasUsing(destinationName, sourceNameExpression);
+            var output = @namespace.GetUsingDirectives().HasUsing(destinationName, sourceNameExpression);
             return output;
         }
     }

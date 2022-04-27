@@ -41,6 +41,21 @@ namespace System
             return output;
         }
 
+        public static IEnumerable<MethodDeclarationSyntax> GetMethods(this TypeDeclarationSyntax typeDeclaration)
+        {
+            var output = typeDeclaration.GetMembers()
+                .Where(x => x is MethodDeclarationSyntax)
+                .Cast<MethodDeclarationSyntax>()
+                ;
+
+            return output;
+        }
+
+        public static IEnumerable<MemberDeclarationSyntax> GetMembers(this TypeDeclarationSyntax typeDeclaration)
+        {
+            return typeDeclaration.Members.AsEnumerable();
+        }
+
         public static IEnumerable<MemberDeclarationSyntax> GetMembers(this TypeDeclarationSyntax typeDeclaration,
             Func<MemberDeclarationSyntax, bool> memberSelector)
         {
@@ -91,6 +106,18 @@ namespace System
             return output;
         }
 
+        public static bool IsClass(this TypeDeclarationSyntax typeDeclaration)
+        {
+            var output = typeDeclaration is ClassDeclarationSyntax;
+            return output;
+        }
+
+        public static bool IsInterface(this TypeDeclarationSyntax typeDeclaration)
+        {
+            var output = typeDeclaration is InterfaceDeclarationSyntax;
+            return output;
+        }
+
         public static T RemoveMembers<T>(this T typeDeclaration,
             Func<MemberDeclarationSyntax, bool> membersToRemoveSelector)
             where T : TypeDeclarationSyntax
@@ -100,6 +127,18 @@ namespace System
                 .ToSyntaxList();
 
             var output = typeDeclaration.WithMembers(membersToKeep) as T;
+            return output;
+        }
+
+        public static T RemoveMembers<T>(this T typeDeclaration,
+            IEnumerable<MemberDeclarationSyntax> members)
+            where T : TypeDeclarationSyntax
+        {
+            var membersHash = new HashSet<MemberDeclarationSyntax>(members);
+
+            var output = typeDeclaration.RemoveMembers(
+                x => membersHash.Contains(x));
+
             return output;
         }
 
@@ -124,6 +163,63 @@ namespace System
 
             var output = typeDeclaration.WithProperties(orderedProperties);
             return output;
+        }
+
+        public static T SortMethods<T>(this T @class)
+            where T : TypeDeclarationSyntax
+        {
+            // Get a list of all siblings.
+            var members = @class.Members.ToList();
+
+            // Get a list of siblings interest.
+            var methods = members
+                .Where(x => x is MethodDeclarationSyntax)
+                .Cast<MethodDeclarationSyntax>()
+                .Now();
+
+            // Remove the nodes of interest from the list of all siblings.
+            var newMembers = members.Except(methods).ToList();
+
+            // Sort the nodes.
+            var sortedMembers = methods
+                .OrderBy(x => x.GetName_Simple())
+                .Now();
+
+            // Identify a location within the parent, after which, the sorted nodes will be inserted.
+            // For now, insert at end.
+            var insertionIndex = newMembers.LastIndexForInsertion();
+
+            // Insert the sorted nodes.
+            newMembers.InsertRange(
+                insertionIndex,
+                sortedMembers);
+
+            @class = @class.WithMembers(newMembers.ToSyntaxList()) as T;
+
+            return @class;
+        }
+
+        /// <summary>
+        /// Set the leading separting spacing between methods.
+        /// </summary>
+        public static T SetMethodSpacing<T>(this T @class,
+            SyntaxTriviaList leadingSeparatingSpacing)
+            where T : TypeDeclarationSyntax
+        {
+            var methods = @class.GetMethods();
+
+            @class = @class.AnnotateNodes(
+                methods,
+                out var annotationsByMethod);
+
+            foreach (var annotation in annotationsByMethod.Values)
+            {
+                @class = @class.SetLeadingSeparatingSpacing(
+                    annotation.GetNode(@class),
+                    leadingSeparatingSpacing);
+            }
+
+            return @class;
         }
 
         public static T WithoutConstraintClauses<T>(this T typeDeclaration)

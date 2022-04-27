@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.L0011.T001;
 using R5T.L0011.T003;
+
+using Instances = R5T.L0011.X002.Instances;
 
 
 namespace System
@@ -73,6 +76,24 @@ namespace System
 
             var output = namespaceDeclarationSyntax.AddInterfaceV01(interfaceName, signatureModel, leadingWhitespace, modifier);
             return output;
+        }
+
+        /// <summary>
+        /// Get the fule name for a namespace (handling namespace nesting).
+        /// For example, if namespace "Z" was nested inside "X.Y", this method would return the ful "X.Y.Z".
+        /// </summary>
+        public static string GetFullName(this NamespaceDeclarationSyntax namespaceDeclaration)
+        {
+            var namespaceLineage = namespaceDeclaration.GetContainingNamespacesOutsideToInside()
+                .Append(namespaceDeclaration)
+                ;
+
+            var namespaceNameFragments = namespaceLineage
+                .Select(x => x.GetName())
+                ;
+
+            var fullNamespaceName = Instances.NamespaceName.CombineTokens(namespaceNameFragments);
+            return fullNamespaceName;
         }
 
         public static NamespaceDeclarationSyntax WithCloseBrace(this NamespaceDeclarationSyntax namespaceDeclarationSyntax,

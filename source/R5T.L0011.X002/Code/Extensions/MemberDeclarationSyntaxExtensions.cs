@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -53,11 +54,41 @@ namespace System
         /// <summary>
         /// Selects <see cref="HasAttributeOfTypeSuffixedOrUnsuffixed{TMemberDeclarationSyntax}(TMemberDeclarationSyntax, string)"/> as the default.
         /// </summary>
-        public static bool HasAttributeOfType<TMemberDeclarationSyntax>(this TMemberDeclarationSyntax @interface,
+        public static bool HasAttributeOfType(this MemberDeclarationSyntax member,
             string attributeTypeName)
-            where TMemberDeclarationSyntax : MemberDeclarationSyntax
         {
-            var output = @interface.HasAttributeOfTypeSuffixedOrUnsuffixed(attributeTypeName);
+            var output = member.HasAttributeOfTypeSuffixedOrUnsuffixed(attributeTypeName);
+            return output;
+        }
+
+        /// <summary>
+        /// Selects <see cref="HasAttributeOfTypeSuffixedOrUnsuffixed{TMemberDeclarationSyntax}(TMemberDeclarationSyntax, string)"/> as the default.
+        /// </summary>
+        public static bool HasAttributeOfType<TAttribute>(this MemberDeclarationSyntax member)
+            where TAttribute : Attribute
+        {
+            var attributeTypeName = typeof(TAttribute).Name;
+
+            var output = member.HasAttributeOfTypeSuffixedOrUnsuffixed(attributeTypeName);
+            return output;
+        }
+
+        public static AttributeSyntax GetAttributeOfTypeSingle<T>(this MemberDeclarationSyntax member)
+            where T : Attribute
+        {
+            var attributeTypeName = typeof(T).Name;
+
+            var attributeSuffixedTypeName = Instances.AttributeTypeName.GetEnsuredAttributeSuffixedTypeName(attributeTypeName);
+            var nonAttributeSuffixedTypeName = Instances.AttributeTypeName.GetEnsuredNonAttributeSuffixedTypeName(attributeTypeName);
+
+            var output = member.AttributeLists
+                .SelectMany(xAttributeList => xAttributeList.Attributes) // Get all attributes across all attribute lists.
+                .Where(xAttribute => false
+                    || xAttribute.Name.ToString() == attributeSuffixedTypeName
+                    || xAttribute.Name.ToString() == nonAttributeSuffixedTypeName)
+                .Single()
+                ;
+
             return output;
         }
     }

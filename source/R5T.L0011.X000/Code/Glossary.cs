@@ -49,6 +49,12 @@ namespace R5T.L0011.X000
             /// <name><i>separating trivia</i></name>
             public static readonly object SeparatingTrivia;
             /// <summary>
+            /// <inheritdoc cref="StartLine" path="/definition"/>
+            /// </summary>
+            /// <definition>The start line of the node may not be the first line of the node (for example, if the node contains one more blank lines in its leading trivia).</definition>
+            /// <name><i>start line</i></name>
+            public static readonly object StartLine;
+            /// <summary>
             /// <inheritdoc cref="Tabination" path="/definition"/>
             /// </summary>
             /// <definition>Tabination is leading trivia composed only of <inheritdoc cref="WhitespaceTrivia" path="/name"/> with no <inheritdoc cref="NewLineTrivia" path="/name"/>.</definition>

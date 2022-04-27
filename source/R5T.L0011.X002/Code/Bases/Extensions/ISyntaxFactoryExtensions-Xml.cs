@@ -10,6 +10,15 @@ namespace System
 {
     public static partial class ISyntaxFactoryExtensions
     {
+        public static XmlElementSyntax XmlSummary(this ISyntaxFactory syntaxFactory)
+        {
+            var output = syntaxFactory.XmlSummaryElementOnly()
+                .AddTagLineStarts()
+                ;
+
+            return output;
+        }
+
         public static XmlElementSyntax XmlSummary(this ISyntaxFactory syntaxFactory,
             SyntaxTriviaList indentation)
         {

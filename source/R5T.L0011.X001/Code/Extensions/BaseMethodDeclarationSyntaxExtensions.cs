@@ -17,6 +17,32 @@ namespace System
 {
     public static class BaseMethodDeclarationSyntaxExtensions
     {
+        public static T AddDocumentation_20220422<T>(this T baseMethod,
+            DocumentationCommentTriviaSyntax documentation)
+            where T : BaseMethodDeclarationSyntax
+        {
+            // Get the node's leading separating trivia.
+            var unadjustedLeadingSeparatingTrivia = baseMethod.GetSeparatingLeadingTrivia();
+
+            // Ensure there is at least a new line between 
+            var leadingSeparatingTrivia = unadjustedLeadingSeparatingTrivia.EnsureAtLeastNewLine();
+
+            var output = baseMethod
+                .SetLeadingSeparatingTrivia(leadingSeparatingTrivia)
+                .AddLeadingLeadingTrivia(
+                    SyntaxFactory.Trivia(documentation));
+
+            return output;
+        }
+
+        public static T AddDocumentation_Latest<T>(this T baseMethod,
+            DocumentationCommentTriviaSyntax documentation)
+            where T : BaseMethodDeclarationSyntax
+        {
+            var output = baseMethod.AddDocumentation_20220422(documentation);
+            return output;
+        }
+
         public static T AddDocumentation<T>(this T baseMethod,
             DocumentationCommentTriviaSyntax documentationComment)
             where T : BaseMethodDeclarationSyntax
@@ -34,18 +60,9 @@ namespace System
 
         //}
 
-        public static IEnumerable<ParameterSyntax> GetParameters(this BaseMethodDeclarationSyntax method)
-        {
-            var output = method.ParameterList.Parameters
-                .Select(parameter => parameter)
-                ;
-
-            return output;
-        }
-
         public static IEnumerable<string> GetParameterNames(this BaseMethodDeclarationSyntax method)
         {
-            var output = method.GetParameters()
+            var output = method.GetParameters_Enumerable()
                 .Select(parameter => parameter.Identifier.ToString())
                 ;
 
@@ -58,22 +75,6 @@ namespace System
             var hasExpressionBody = method.HasExpressionBody();
 
             var output = hasBody || hasExpressionBody;
-            return output;
-        }
-
-        public static WasFound<BlockSyntax> HasBody(this BaseMethodDeclarationSyntax method)
-        {
-            var methodBody = method.Body;
-
-            var output = WasFound.From(methodBody);
-            return output;
-        }
-
-        public static WasFound<ArrowExpressionClauseSyntax> HasExpressionBody(this BaseMethodDeclarationSyntax method)
-        {
-            var expressionBody = method.ExpressionBody;
-
-            var output = WasFound.From(expressionBody);
             return output;
         }
 

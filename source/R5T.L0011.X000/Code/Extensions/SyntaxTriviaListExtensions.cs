@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+
+using SyntaxFactoryHelper = Microsoft.CodeAnalysis.CSharp.SyntaxFactoryHelper;
 
 using Glossary = R5T.L0011.X000.Glossary;
 
@@ -51,6 +52,13 @@ namespace System
             IEnumerable<SyntaxTrivia> trivias)
         {
             var output = trivia.AddRange(trivias);
+            return output;
+        }
+
+        public static SyntaxTriviaList Append(this SyntaxTriviaList trivia,
+            SyntaxTriviaList appendix)
+        {
+            var output = trivia.Append(appendix.AsEnumerable());
             return output;
         }
 
@@ -107,6 +115,31 @@ namespace System
             return output;
         }
 
+        public static int GetEndingBlankTriviaCount(this SyntaxTriviaList triviaList)
+        {
+            // Reverse, and get the beginning blank trivia count.
+            var output = triviaList
+                .Reverse()
+                .GetBeginningBlankTriviaCount();
+
+            return output;
+        }
+
+        public static IEnumerable<SyntaxTrivia> GetNewLines(this SyntaxTriviaList trivias)
+        {
+            var output = trivias
+                .Where(x => x.IsNewLine())
+                ;
+
+            return output;
+        }
+
+        public static bool HasAnyNewLines(this SyntaxTriviaList trivias)
+        {
+            var output = trivias.GetNewLines().Any();
+            return output;
+        }
+
         /// <summary>
         /// <para>Determines whether the syntax trivia list is indentation.</para>
         /// <inheritdoc cref="Glossary.Indentation" path="/definition"/>
@@ -128,9 +161,43 @@ namespace System
             return output;
         }
 
+        public static SyntaxTriviaList Prepend(this SyntaxTriviaList trivias,
+            SyntaxTriviaList beginningTrivia)
+        {
+            var output = new SyntaxTriviaList(
+                beginningTrivia.AsEnumerable()
+                    .Concat(trivias));
+
+            return output;
+        }
+
         public static SyntaxTriviaList PrependNewLine(this SyntaxTriviaList trivia)
         {
             var output = trivia.AddLeadingTrivia(SyntaxFactoryHelper.NewLine());
+            return output;
+        }
+
+        public static SyntaxTriviaList RemoveBeginningBlankTrivia(this SyntaxTriviaList trivia)
+        {
+            // Get a count of how many beginning trivia there are, then skip that number of elements and take the rest.
+            var beginningBlankTriviaCount = trivia.GetBeginningBlankTriviaCount();
+
+            var output = trivia
+                .Skip(beginningBlankTriviaCount)
+                .ToSyntaxTriviaList();
+
+            return output;
+        }
+
+        public static SyntaxTriviaList RemoveEndingBlankTrivia(this SyntaxTriviaList trivia)
+        {
+            // Get a count of how many ending blank trivia there are, then take everything except those last N elements.
+            var endingBlankTriviaCount = trivia.GetEndingBlankTriviaCount();
+
+            var output = trivia
+                .ExceptLast(endingBlankTriviaCount)
+                .ToSyntaxTriviaList();
+
             return output;
         }
 

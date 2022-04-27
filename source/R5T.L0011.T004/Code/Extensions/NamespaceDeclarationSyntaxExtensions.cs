@@ -12,7 +12,7 @@ namespace System
     {
         public static UsingDirectivesSpecification GetUsingDirectivesSpecification(this NamespaceDeclarationSyntax @namespace)
         {
-            var usings = @namespace.GetUsings();
+            var usings = @namespace.GetUsingDirectives();
 
             var output = usings.GetUsingDirectivesSpecification();
             return output;
@@ -22,7 +22,7 @@ namespace System
             CompilationUnitSyntax compilationUnit)  
         {
             var compilationUsings = compilationUnit.GetUsings();
-            var namespaceUsings = @namespace.GetUsings();
+            var namespaceUsings = @namespace.GetUsingDirectives();
 
             var combinedUsings = compilationUsings.AppendRange(namespaceUsings);
 

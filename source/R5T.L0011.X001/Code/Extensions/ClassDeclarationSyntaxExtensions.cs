@@ -119,16 +119,14 @@ namespace System
             var output = @class.AttributeLists
                 .SelectMany(xAttributeList => xAttributeList.Attributes) // Get all attributes across all attribute lists.
                 .Where(xAttribute => xAttribute.Name.ToString() == attributeTypeName)
-                .Any()
-                ;
+                .Any();
 
             return output;
         }
 
         public static WasFound<ConstructorDeclarationSyntax> HasConstructor(this ClassDeclarationSyntax @class)
         {
-            var constructorOrDefault = @class.Members
-                .OfType<ConstructorDeclarationSyntax>()
+            var constructorOrDefault = @class.GetConstructors()
                 .SingleOrDefault();
 
             var wasFound = WasFound.From(constructorOrDefault);
@@ -185,6 +183,43 @@ namespace System
             return output;
         }
 
+
+        /// <summary>
+        /// Gets all constructors (both static and non-static <see cref="ConstructorDeclarationSyntax"/> methods).
+        /// </summary>
+        public static IEnumerable<ConstructorDeclarationSyntax> GetAllConstructors(this ClassDeclarationSyntax @class)
+        {
+            var output = @class.Members
+                .OfType<ConstructorDeclarationSyntax>()
+                ;
+
+            return output;
+        }
+
+        /// <summary>
+        /// Gets non-static constructors (non-static <see cref="ConstructorDeclarationSyntax"/> methods).
+        /// </summary>
+        public static IEnumerable<ConstructorDeclarationSyntax> GetConstructors(this ClassDeclarationSyntax @class)
+        {
+            var output = @class.GetAllConstructors()
+                .Where(xConstructor => !xConstructor.IsStatic())
+                ;
+
+            return output;
+        }
+
+        /// <summary>
+        /// Gets static constructors (static <see cref="ConstructorDeclarationSyntax"/> methods).
+        /// </summary>
+        public static IEnumerable<ConstructorDeclarationSyntax> GetStaticConstructors(this ClassDeclarationSyntax @class)
+        {
+            var output = @class.GetAllConstructors()
+                .Where(xConstructor => xConstructor.IsStatic())
+                ;
+
+            return output;
+        }
+
         /// <summary>
         /// Gets all <see cref="BaseMethodDeclarationSyntax"/> methods, including <see cref="MethodDeclarationSyntax"/>, <see cref="OperatorDeclarationSyntax"/>, etc.
         /// NOTE: does not include constructors?
@@ -195,26 +230,6 @@ namespace System
                 .OfType<MethodDeclarationSyntax>();
 
             return output;
-        }
-
-        /// <summary>
-        /// Gets only <see cref="MethodDeclarationSyntax"/> methods (not including other <see cref="BaseMethodDeclarationSyntax"/> method types like <see cref="OperatorDeclarationSyntax"/>, etc.).
-        /// </summary>
-        public static IEnumerable<MethodDeclarationSyntax> GetMethods(this ClassDeclarationSyntax @class)
-        {
-            var output = @class.Members
-                .OfType<MethodDeclarationSyntax>();
-
-            return output;
-        }
-
-        public static bool IsStatic(this ClassDeclarationSyntax @class)
-        {
-            var isStatic = @class.Modifiers
-                .Where(xToken => xToken.IsKind(SyntaxKind.StaticKeyword))
-                .Any();
-
-            return isStatic;
         }
 
         public static bool IsClassName(this ClassDeclarationSyntax @class,

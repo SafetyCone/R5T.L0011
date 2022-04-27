@@ -3,6 +3,9 @@
 
 namespace Microsoft.CodeAnalysis.CSharp.Syntax
 {
+    /// <summary>
+    /// A type for using directives that are using name alias directives.
+    /// </summary>
     public class UsingNamespaceDirectiveSyntax : TypedSyntaxNode<UsingDirectiveSyntax>
     {
         #region Static

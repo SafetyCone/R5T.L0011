@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 using R5T.Magyar;
 
 using R5T.L0011.T004;
@@ -15,11 +17,8 @@ namespace System
             params (string DestinationName, string SourceNameExpression)[] nameAliasPairs)
         {
             var nameAliases = nameAliasPairs
-                .Select(x => new NameAlias
-                {
-                    DestinationName = x.DestinationName,
-                    SourceNameExpression = x.SourceNameExpression,
-                });
+                .Select(x => NameAlias.From(x.DestinationName, x.SourceNameExpression))
+                ;
 
             usingDirectivesSpecification.AddAliases(nameAliases);
 
@@ -48,7 +47,11 @@ namespace System
                     var sourceExpressionsAreTheSame = existingNameAlias.SourceNameExpression == nameAlias.SourceNameExpression;
                     if (!sourceExpressionsAreTheSame)
                     {
-                        existingNameAlias.SourceNameExpression = nameAlias.SourceNameExpression;
+                        usingDirectivesSpecification.NameAliases.Remove(existingNameAlias);
+
+                        var newNameAlias = NameAlias.From(existingNameAlias.DestinationName, nameAlias.SourceNameExpression);
+
+                        usingDirectivesSpecification.NameAliases.Add(newNameAlias);
                     }
                 }
                 else

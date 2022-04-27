@@ -1,18 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
+using R5T.Magyar;
+
 using Glossary = R5T.L0011.X000.Glossary;
 
 
 namespace System
 {
-    public static class SyntaxTriviaExtensions
+    public static partial class SyntaxTriviaExtensions
     {
+        /// <summary>
+        /// Text is the value of <see cref="SyntaxTrivia.ToFullString"/>.
+        /// </summary>
+        public static string GetText(this SyntaxTrivia trivia)
+        {
+            var output = trivia.ToFullString();
+            return output;
+        }
+
+        public static WasFound<SyntaxNode> HasStructuredTrivia(this SyntaxTrivia trivia)
+        {
+            var exists = trivia.HasStructure;
+
+            var result = trivia.GetStructure();
+
+            var output = WasFound.From(exists, result);
+            return output;
+        }
+
         /// <summary>
         /// <inheritdoc cref="Glossary.BlankTrivia" path="/definition"/>
         /// </summary>
@@ -92,6 +112,19 @@ namespace System
             using var fileWriter = new StreamWriter(filePath);
 
             trivia.WriteTo(fileWriter);
+        }
+    }
+}
+
+
+namespace R5T.L0011.X000.N8
+{
+    public static class SyntaxTriviaExtensions
+    {
+        public static SyntaxTriviaList ToSyntaxTriviaList(this SyntaxTrivia trivia)
+        {
+            var output = new SyntaxTriviaList(trivia);
+            return output;
         }
     }
 }

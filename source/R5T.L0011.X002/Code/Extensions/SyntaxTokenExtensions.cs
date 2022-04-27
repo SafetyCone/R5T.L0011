@@ -12,14 +12,6 @@ namespace System
 {
     public static class SyntaxTokenExtensions
     {
-        public static SyntaxToken Annotate(this SyntaxToken syntaxToken, out SyntaxAnnotation annotation)
-        {
-            annotation = Instances.SyntaxFactory.Annotation();
-
-            var output = syntaxToken.WithAdditionalAnnotations(annotation);
-            return output;
-        }
-
         public static SyntaxToken AppendComment(this SyntaxToken syntaxToken, string text)
         {
             var comment = Instances.SyntaxFactory.Comment(text);

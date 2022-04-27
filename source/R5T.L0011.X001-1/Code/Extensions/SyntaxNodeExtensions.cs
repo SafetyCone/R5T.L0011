@@ -21,22 +21,22 @@ namespace System
         }
 
         /// <inheritdoc cref="SetLeadingSeparatingTrivia{TNode}(TNode, SyntaxTriviaList)"/>.
-        public static TNode SetIndentation2<TNode>(this TNode token,
+        public static TNode SetIndentation2<TNode>(this TNode node,
             SyntaxTriviaList desiredIndentation)
             where TNode : SyntaxNode
         {
-            var output = token.SetLeadingSeparatingTrivia(desiredIndentation);
+            var output = node.SetLeadingSeparatingTrivia(desiredIndentation);
             return output;
         }
 
         /// <inheritdoc cref="SetLeadingSeparatingTrivia{TNode}(TNode, SyntaxTriviaList)"/>.
-        public static TNode SetIndentation2<TNode>(this TNode token,
+        public static TNode SetIndentation2<TNode>(this TNode node,
             params SyntaxTrivia[] desiredIndentation)
             where TNode : SyntaxNode
         {
             var desiredIndentationList = new SyntaxTriviaList(desiredIndentation);
 
-            var output = token.SetLeadingSeparatingTrivia(desiredIndentationList);
+            var output = node.SetLeadingSeparatingTrivia(desiredIndentationList);
             return output;
         }
     }

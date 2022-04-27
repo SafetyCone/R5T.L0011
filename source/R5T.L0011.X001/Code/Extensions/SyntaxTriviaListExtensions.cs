@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.CodeAnalysis;
@@ -14,6 +13,21 @@ namespace System
 {
     public static class SyntaxTriviaListExtensions
     {
+        /// <summary>
+        /// If the trivia is empty, returns a new line. Else, returns the trivia.
+        /// </summary>
+        public static SyntaxTriviaList EnsureAtLeastNewLine(this SyntaxTriviaList trivia)
+        {
+            var isEmpty = trivia.IsEmpty();
+            if(isEmpty)
+            {
+                var output = SyntaxTriviaList.Create(SyntaxTriviaHelper.NewLine());
+                return output;
+            }
+
+            return trivia;
+        }
+
         /// <summary>
         /// Determines if line separator trivia was found.
         /// <inheritdoc cref="Documentation.LineSeparatorTrivia" path="/definition"/>

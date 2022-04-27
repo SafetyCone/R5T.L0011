@@ -5,9 +5,27 @@ namespace Microsoft.CodeAnalysis.CSharp
 {
     public static class SyntaxFactoryHelper
     {
+        public static SyntaxAnnotation Annotation()
+        {
+            var output = new SyntaxAnnotation();
+            return output;
+        }
+
+        public static SyntaxToken CloseBrace()
+        {
+            var output = SyntaxFactory.Token(SyntaxKind.CloseBraceToken);
+            return output;
+        }
+
         public static SyntaxToken None()
         {
             var output = SyntaxFactory.Token(SyntaxKind.None);
+            return output;
+        }
+
+        public static SyntaxTrivia EndOfLine(string endOfLineText)
+        {
+            var output = SyntaxFactory.EndOfLine(endOfLineText);
             return output;
         }
 
@@ -23,9 +41,27 @@ namespace Microsoft.CodeAnalysis.CSharp
             return output;
         }
 
+        public static SyntaxTrivia NewLine(string newLineText)
+        {
+            var output = SyntaxFactoryHelper.EndOfLine(newLineText);
+            return output;
+        }
+
         public static SyntaxTrivia NewLine()
         {
-            var output = SyntaxFactoryHelper.EndOfLine_Environment();
+            var output = SyntaxFactoryHelper.EndOfLine();
+            return output;
+        }
+
+        public static SyntaxToken OpenBrace()
+        {
+            var output = SyntaxFactory.Token(SyntaxKind.OpenBraceToken);
+            return output;
+        }
+
+        public static SyntaxTrivia Tab()
+        {
+            var output = SyntaxFactory.Tab;
             return output;
         }
     }

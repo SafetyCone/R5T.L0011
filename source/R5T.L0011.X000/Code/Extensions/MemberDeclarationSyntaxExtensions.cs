@@ -1,13 +1,26 @@
 ﻿using System;
+using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using R5T.Magyar;
 
 
 namespace System
 {
     public static class MemberDeclarationSyntaxExtensions
     {
+        public static WasFound<AttributeSyntax[]> HasAttributes(this MemberDeclarationSyntax member)
+        {
+            var attributes = member.AttributeLists
+                .SelectMany(x => x.Attributes)
+                .Now();
+
+            var output = WasFound.FromArray(attributes);
+            return output;
+        }
+
         public static T WithoutAttributeLists<T>(this T memberDeclaration)
             where T : MemberDeclarationSyntax
         {

@@ -92,7 +92,7 @@ namespace System
             SyntaxTriviaList indentation)
         {
             var output = syntaxFactory.CloseBrace()
-                .Indent(indentation)
+                .IndentStartLine(indentation)
                 ;
 
             return output;
@@ -310,7 +310,7 @@ namespace System
             SyntaxTriviaList indentation)
         {
             var output = syntaxFactory.OpenBrace()
-                .Indent(indentation)
+                .IndentStartLine(indentation)
                 ;
 
             return output;
@@ -324,6 +324,15 @@ namespace System
 
             var output = SyntaxFactory.Token(SyntaxKind.OpenBraceToken)
                 .WithLeadingTrivia(lineLeadingWhitespace);
+
+            return output;
+        }
+
+        public static ParameterSyntax Parameter(this ISyntaxFactory _,
+            string name)
+        {
+            var output = SyntaxFactory.Parameter(
+                SyntaxFactory.Identifier(name));
 
             return output;
         }
@@ -351,6 +360,17 @@ namespace System
             var typeName = syntaxFactory.Type<T>();
 
             return syntaxFactory.Parameter(name, typeName);
+        }
+
+        public static SimpleLambdaExpressionSyntax SimpleLambda(this ISyntaxFactory _,
+            ParameterSyntax parameter,
+            CSharpSyntaxNode body)
+        {
+            var output = SyntaxFactory.SimpleLambdaExpression(
+                parameter,
+                body);
+
+            return output;
         }
 
         public static ParenthesizedLambdaExpressionSyntax ParenthesizedLambda(this ISyntaxFactory _)

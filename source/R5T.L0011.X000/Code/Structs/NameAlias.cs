@@ -3,6 +3,16 @@
 
 namespace Microsoft.CodeAnalysis.CSharp.Syntax
 {
+    /// <summary>
+    /// Represents the alias from a source name expression to a destination name.
+    /// The destination name is assumed to be unique among aliases (i.e. there will not be multiple source name expressions aliased to the same destination name in any context).
+    /// </summary>
+    /// <remarks>
+    /// * Struct may not have been the best choice vs. class, but this is a simple type.
+    /// * Ummutable.
+    /// Also see:
+    /// * R5T.T0129.NameAlias (more general name alias).
+    /// </remarks>
     public struct NameAlias : IEquatable<NameAlias>, IComparable<NameAlias>
     {
         #region Static

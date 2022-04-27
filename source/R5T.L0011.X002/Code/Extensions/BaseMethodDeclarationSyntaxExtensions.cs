@@ -20,7 +20,7 @@ namespace System
         {
             var output = baseMethod
                 .AddInitialBody(indentation)
-                .Indent(indentation)
+                .IndentStartLine(indentation)
                 ;
 
             return output;
@@ -33,7 +33,7 @@ namespace System
         {
             var output = baseMethod
                 .AddInitialBody(indentation)
-                .Indent(indentation)
+                .IndentStartLine(indentation)
                 .PrependBlankLine(indentation, prependBlankLine);
 
             return output;

@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Linq;
 
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace System
 {
+    using N8;
+
+
     public static class BaseTypeDeclarationSyntaxExtensions
     {
         public static T AddDocumentation<T>(this T baseType,
@@ -17,6 +22,34 @@ namespace System
                     SyntaxFactory.Trivia(documentationComment));
             
             return output;
+        }
+
+        public static T SetBracesLineIndentation<T>(this T typeDeclaration,
+            SyntaxTriviaList indentation)
+            where T : BaseTypeDeclarationSyntax
+        {
+            typeDeclaration.VerifyHasBraces();
+
+            typeDeclaration = typeDeclaration.SetBracesLineIndentation(
+                typeDeclaration.OpenBraceToken,
+                typeDeclaration.CloseBraceToken,
+                indentation);
+
+            return typeDeclaration;
+        }
+
+        public static T SetBracesLineIndentation<T>(this T typeDeclaration,
+            SyntaxToken openBraceToken,
+            SyntaxToken closeBraceToken,
+            SyntaxTriviaList indentation)
+            where T : BaseTypeDeclarationSyntax
+        {
+            typeDeclaration = typeDeclaration.SetDescendantBracesLineIndentation(
+                openBraceToken,
+                closeBraceToken,
+                indentation);
+
+            return typeDeclaration;
         }
 
         public static T EnsureBraceSpacing<T>(this T typeDeclaration)

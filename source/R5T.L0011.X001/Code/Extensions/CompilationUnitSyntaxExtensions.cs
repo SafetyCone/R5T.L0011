@@ -13,15 +13,6 @@ namespace System
 {
     public static class CompilationUnitSyntaxExtensions
     {
-        public static IEnumerable<ClassDeclarationSyntax> GetClasses(this CompilationUnitSyntax compilationUnit)
-        {
-            var classes = compilationUnit.DescendantNodes()
-                .OfType<ClassDeclarationSyntax>()
-                ;
-
-            return classes;
-        }
-
         public static ClassDeclarationSyntax GetClass(this CompilationUnitSyntax compilationUnit,
             string className)
         {
@@ -73,15 +64,6 @@ namespace System
             return output;
         }
 
-        public static IEnumerable<InterfaceDeclarationSyntax> GetInterfaces(this CompilationUnitSyntax compilationUnit)
-        {
-            var intefaces = compilationUnit.DescendantNodes()
-                .OfType<InterfaceDeclarationSyntax>()
-                ;
-
-            return intefaces;
-        }
-
         public static InterfaceDeclarationSyntax GetInterfaceSingle(this CompilationUnitSyntax compilationUnit)
         {
             var output = compilationUnit.GetInterfaces()
@@ -99,7 +81,31 @@ namespace System
             return output;
         }
 
-        public static IEnumerable<NamespaceDeclarationSyntax> GetNamespaces(this CompilationUnitSyntax compilationUnit)
+        /// <summary>
+        /// Returns the name of the first namespace in the compilation unit, else <see cref="R5T.L0011.X001.NamespaceNames.NoNamespaceNamespaceName"/> if there are no namespaces in the compilation unit.
+        /// </summary>
+        public static string GetFirstNamespaceName(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.GetNamespaces().FirstOrDefault()?.GetName() ?? R5T.L0011.X001.NamespaceNames.NoNamespaceNamespaceName;
+            return output;
+        }
+
+        /// <summary>
+        /// Gets all namespaces that are direct children of the compilation unit.
+        /// </summary>
+        public static IEnumerable<NamespaceDeclarationSyntax> GetNamespaces_Children(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.ChildNodes()
+                .OfType<NamespaceDeclarationSyntax>()
+                ;
+
+            return output;
+        }
+
+        /// <summary>
+        /// Gets all namespaces that are descendants of the compilation unit, including nested namespaces nested within direct child interfaces.
+        /// </summary>
+        public static IEnumerable<NamespaceDeclarationSyntax> GetNamespaces_Descendents(this CompilationUnitSyntax compilationUnit)
         {
             var output = compilationUnit.DescendantNodes()
                 .OfType<NamespaceDeclarationSyntax>()
@@ -108,6 +114,16 @@ namespace System
             return output;
         }
 
+        /// <summary>
+        /// Chooses <see cref="GetNamespaces_Descendents(CompilationUnitSyntax)"/> as the default.
+        /// </summary>
+        public static IEnumerable<NamespaceDeclarationSyntax> GetNamespaces(this CompilationUnitSyntax compilationUnit)
+        {
+            var output = compilationUnit.GetNamespaces_Descendents();
+            return output;
+        }
+
+        /// <inheritdoc cref="GetNamespaces(CompilationUnitSyntax)"/>
         public static IEnumerable<NamespaceDeclarationSyntax> GetNamespaces(this CompilationUnitSyntax compilationUnit,
             Func<NamespaceDeclarationSyntax, bool> namespaceSelector)
         {
@@ -156,6 +172,9 @@ namespace System
             return output;
         }
 
+        /// <summary>
+        /// Determines whether the compilation unit has a direct child namespace with the given name.
+        /// </summary>
         public static WasFound<NamespaceDeclarationSyntax> HasNamespace(this CompilationUnitSyntax compilationUnit,
             string namespaceName)
         {
@@ -221,15 +240,6 @@ namespace System
         public static WasFound<InterfaceDeclarationSyntax> HasInterface(this CompilationUnitSyntax compilationUnit)
         {
             return compilationUnit.HasInterfaceSingle();
-        }
-
-        public static IEnumerable<TypeDeclarationSyntax> GetTypes(this CompilationUnitSyntax compilationUnit)
-        {
-            var intefaces = compilationUnit.DescendantNodes()
-                .OfType<TypeDeclarationSyntax>()
-                ;
-
-            return intefaces;
         }
 
         public static async Task<CompilationUnitSyntax> ModifyClass(this CompilationUnitSyntax compilationUnit,

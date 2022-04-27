@@ -1,12 +1,11 @@
 ﻿using System;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 
 using Glossary = R5T.L0011.X000.Glossary;
 
 
-namespace R5T.L0011.X000
+namespace Microsoft.CodeAnalysis.CSharp
 {
     public static class SyntaxTriviaHelper
     {
@@ -47,13 +46,19 @@ namespace R5T.L0011.X000
 
         public static SyntaxTrivia NewLine(string newLineText)
         {
-            var output = SyntaxFactory.EndOfLine(newLineText);
+            var output = SyntaxFactoryHelper.NewLine(newLineText);
             return output;
         }
 
         public static SyntaxTrivia NewLine()
         {
-            var output = SyntaxTriviaHelper.NewLine(Environment.NewLine);
+            var output = SyntaxFactoryHelper.NewLine();
+            return output;
+        }
+
+        public static SyntaxTrivia Tab()
+        {
+            var output = SyntaxFactoryHelper.Tab();
             return output;
         }
     }

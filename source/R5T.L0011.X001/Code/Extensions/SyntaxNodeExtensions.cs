@@ -330,25 +330,6 @@ namespace System
             return output;
         }
 
-        public static IEnumerable<TNode> Indent<TNode>(this IEnumerable<TNode> syntaxNodes,
-            SyntaxTriviaList indentation)
-            where TNode : SyntaxNode
-        {
-            var output = syntaxNodes
-                .Select(xSyntaxNode => xSyntaxNode.Indent(indentation))
-                ;
-
-            return output;
-        }
-
-        public static TNode Indent<TNode>(this TNode syntaxNode,
-            SyntaxTriviaList indentation)
-            where TNode : SyntaxNode
-        {
-            var output = syntaxNode.AddLeadingLeadingTrivia(indentation.ToArray());
-            return output;
-        }
-
         public static TNode IndentWithoutNewLine<TNode>(this TNode syntaxNode,
             SyntaxTriviaList indentation)
             where TNode : SyntaxNode
@@ -401,50 +382,6 @@ namespace System
             return output;
         }
 
-        public static WasFound<SyntaxNode> GetParent(this SyntaxNode syntaxNode)
-        {
-            var output = WasFound.From(syntaxNode.Parent);
-            return output;
-        }
-
-        private static void GetParentsInsideToOutside_Internal(this SyntaxNode syntaxNode, List<SyntaxNode> parentAccumulator)
-        {
-            if(syntaxNode.HasParent())
-            {
-                parentAccumulator.Add(syntaxNode.Parent);
-
-                syntaxNode.Parent.GetParentsInsideToOutside_Internal(parentAccumulator);
-            }
-            // Else, return.
-        }
-
-        public static IEnumerable<SyntaxNode> GetParentsInsideToOutside(this SyntaxNode syntaxNode)
-        {
-            var parentAccumulator = new List<SyntaxNode>();
-
-            syntaxNode.GetParentsInsideToOutside_Internal(parentAccumulator);
-
-            return parentAccumulator;
-        }
-
-        public static IEnumerable<SyntaxNode> GetParentsOutsideToInside(this SyntaxNode syntaxNode)
-        {
-            var output = syntaxNode.GetParentsInsideToOutside()
-                .Reverse()
-                ;
-
-            return output;
-        }
-
-        /// <summary>
-        /// Chooses <see cref="GetParentsInsideToOutside(SyntaxNode)"/> as the default.
-        /// </summary>
-        public static SyntaxNode[] GetParents(this SyntaxNode syntaxNode)
-        {
-            var output = syntaxNode.GetParentsInsideToOutside().Now();
-            return output;
-        }
-
         public static WasFound<SyntaxNodeOrToken> GetPriorSiblingNodeOrToken(this SyntaxNode syntaxNode)
         {
             var parentWasFound = syntaxNode.GetParent();
@@ -482,7 +419,7 @@ namespace System
                 var childNodesAndTokens = parent.ChildNodesAndTokens();
 
                 var indexOfSyntaxToken = childNodesAndTokens.IndexOfChildInNodesAndTokens(syntaxNode);
-                if (indexOfSyntaxToken == childNodesAndTokens.LastIndex())
+                if (indexOfSyntaxToken == childNodesAndTokens.LastIndex_ForReadOnlyList())
                 {
                     return WasFound.NotFound<SyntaxNodeOrToken>();
                 }
@@ -683,7 +620,7 @@ namespace System
         {
             var oldSemicolonToken = node.GetSemicolonToken();
 
-            var newSemicolonToken = oldSemicolonToken.Indent(indentation);
+            var newSemicolonToken = oldSemicolonToken.IndentStartLine(indentation);
 
             var output = node.ReplaceToken(oldSemicolonToken, newSemicolonToken);
             return output;

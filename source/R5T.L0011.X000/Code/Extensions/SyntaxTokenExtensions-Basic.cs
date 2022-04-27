@@ -11,6 +11,15 @@ namespace System
 {
     public static partial class SyntaxTokenExtensions
     {
+        /// <summary>
+        /// Calls <see cref="GetLeadingBeginningBlankTrivia(SyntaxToken)"/>.
+        /// </summary>
+        public static SyntaxTriviaList GetLineIndentation(this SyntaxToken token)
+        {
+            var output = token.GetLeadingBeginningBlankTrivia();
+            return output;
+        }
+
         public static SyntaxTriviaList GetLeadingBeginningBlankTrivia(this SyntaxToken token)
         {
             var output = token.LeadingTrivia.GetBeginningBlankTrivia();
@@ -33,6 +42,15 @@ namespace System
             return output;
         }
 
+        /// <summary>
+        /// Gets the actual text of the token.
+        /// </summary>
+        public static string GetText(this SyntaxToken token)
+        {
+            var output = token.ValueText;
+            return output;
+        }
+
         public static bool IsFirstTokenInCompilationUnit(this SyntaxToken token)
         {
             var previousToken = token.GetPreviousToken();
@@ -44,6 +62,14 @@ namespace System
         public static bool IsNone(this SyntaxToken token)
         {
             var output = token.IsKind(SyntaxKind.None);
+            return output;
+        }
+
+        public static bool IsNotNone(this SyntaxToken token)
+        {
+            var isNone = token.IsNone();
+
+            var output = !isNone;
             return output;
         }
     }

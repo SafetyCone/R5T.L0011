@@ -4,11 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
-using R5T.Magyar;
-
-using R5T.L0011.X000;
 
 
 namespace System
@@ -71,6 +66,12 @@ namespace System
         public static TChild GetChild<TChild>(this SyntaxNode syntaxNode)
         {
             var output = syntaxNode.GetChild_SingleOrDefault<TChild>();
+            return output;
+        }
+
+        public static SyntaxToken GetFirstToken_HandleDocumentationComments(this SyntaxNode syntaxNode)
+        {
+            var output = syntaxNode.GetFirstToken(includeDocumentationComments: true);
             return output;
         }
 

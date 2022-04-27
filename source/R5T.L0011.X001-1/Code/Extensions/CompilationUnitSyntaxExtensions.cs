@@ -11,7 +11,7 @@ using Instances = R5T.L0011.X001_1.Instances;
 
 namespace System
 {
-    public static class CompilationUnitSyntaxExtensions
+    public static partial class CompilationUnitSyntaxExtensions
     {
         /// <summary>
         /// Selects <see cref="AddUsing_Idempotent(CompilationUnitSyntax, string)"/> as the default.

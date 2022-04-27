@@ -22,7 +22,7 @@ namespace System
             NamespaceDeclarationSyntax @namespace)
         {
             var compilationUsings = compilationUnit.GetUsings();
-            var namespaceUsings = @namespace.GetUsings();
+            var namespaceUsings = @namespace.GetUsingDirectives();
 
             var combinedUsings = compilationUsings.AppendRange(namespaceUsings);
 

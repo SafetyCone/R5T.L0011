@@ -20,8 +20,8 @@ namespace System
             SyntaxTriviaList indentation)
         {
             var blockOutput = block
-                .WithOpenBraceToken(block.OpenBraceToken.Indent(indentation))
-                .WithCloseBraceToken(block.CloseBraceToken.Indent(indentation))
+                .WithOpenBraceToken(block.OpenBraceToken.IndentStartLine(indentation))
+                .WithCloseBraceToken(block.CloseBraceToken.IndentStartLine(indentation))
                 ;
 
             return blockOutput;
