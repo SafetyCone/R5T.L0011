@@ -57,7 +57,7 @@ namespace System
             return counter;
         }
 
-        /// <inheritdoc cref="GetBeginningBlankTrivias(SyntaxTriviaList)"/>
+        /// <inheritdoc cref="GetBeginningBlankTrivias(IEnumerable{SyntaxTrivia})"/>
         public static SyntaxTriviaList GetBeginningBlankTrivia(this IEnumerable<SyntaxTrivia> trivias)
         {
             var output = new SyntaxTriviaList(

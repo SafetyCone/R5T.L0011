@@ -13,26 +13,6 @@ namespace System
 {
     public static class BaseTypeDeclarationSyntaxExtensions
     {
-        public static WasFound<BaseTypeSyntax[]> HasBaseTypes(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
-        {
-            var hasBaseTypesList = baseTypeDeclarationSyntax.HasBaseTypesList();
-            if(!hasBaseTypesList)
-            {
-                return WasFound.NotFound<BaseTypeSyntax[]>();
-            }
-
-            var output = WasFound.Found(
-                baseTypeDeclarationSyntax.BaseList.Types.ToArray());
-
-            return output;
-        }
-
-        public static bool HasBaseTypesList(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
-        {
-            var output = baseTypeDeclarationSyntax.BaseList is object;
-            return output;
-        }
-
         public static bool HasBaseTypeWithNamespacedTypeName(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax,
             string namespacedTypeName)
         {

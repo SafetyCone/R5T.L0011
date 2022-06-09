@@ -13,6 +13,14 @@ namespace System
 {
     public static class TypeDeclarationSyntaxExtensions
     {
+        public static T AddProperty_Simple<T>(this T typedeclaration,
+            PropertyDeclarationSyntax property)
+            where T : TypeDeclarationSyntax
+        {
+            var output = typedeclaration.AddMembers(property) as T;
+            return output;
+        }
+
         public static T AddProperties<T>(this T typedeclaration,
             params PropertyDeclarationSyntax[] properties)
             where T : TypeDeclarationSyntax

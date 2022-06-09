@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 
 namespace Microsoft.CodeAnalysis.CSharp
 {
@@ -8,6 +10,12 @@ namespace Microsoft.CodeAnalysis.CSharp
         public static SyntaxAnnotation Annotation()
         {
             var output = new SyntaxAnnotation();
+            return output;
+        }
+
+        public static BaseListSyntax BaseList()
+        {
+            var output = SyntaxFactory.BaseList();
             return output;
         }
 
@@ -56,6 +64,12 @@ namespace Microsoft.CodeAnalysis.CSharp
         public static SyntaxToken OpenBrace()
         {
             var output = SyntaxFactory.Token(SyntaxKind.OpenBraceToken);
+            return output;
+        }
+
+        public static SyntaxTrivia Space()
+        {
+            var output = SyntaxFactory.Space;
             return output;
         }
 

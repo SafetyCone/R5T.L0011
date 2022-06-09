@@ -78,24 +78,6 @@ namespace System
             return output;
         }
 
-        /// <summary>
-        /// Get the fule name for a namespace (handling namespace nesting).
-        /// For example, if namespace "Z" was nested inside "X.Y", this method would return the ful "X.Y.Z".
-        /// </summary>
-        public static string GetFullName(this NamespaceDeclarationSyntax namespaceDeclaration)
-        {
-            var namespaceLineage = namespaceDeclaration.GetContainingNamespacesOutsideToInside()
-                .Append(namespaceDeclaration)
-                ;
-
-            var namespaceNameFragments = namespaceLineage
-                .Select(x => x.GetName())
-                ;
-
-            var fullNamespaceName = Instances.NamespaceName.CombineTokens(namespaceNameFragments);
-            return fullNamespaceName;
-        }
-
         public static NamespaceDeclarationSyntax WithCloseBrace(this NamespaceDeclarationSyntax namespaceDeclarationSyntax,
             SyntaxTriviaList indentation)
         {

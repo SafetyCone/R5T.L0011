@@ -5,6 +5,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using R5T.Magyar;
+
 
 namespace System
 {
@@ -95,6 +97,26 @@ namespace System
         public static string GetTypeName(this BaseTypeDeclarationSyntax baseType)
         {
             var output = baseType.Identifier.Text;
+            return output;
+        }
+
+        public static WasFound<BaseTypeSyntax[]> HasBaseTypes(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
+        {
+            var hasBaseTypesList = baseTypeDeclarationSyntax.HasBaseTypesList();
+            if (!hasBaseTypesList)
+            {
+                return WasFound.NotFound<BaseTypeSyntax[]>();
+            }
+
+            var output = WasFound.Found(
+                baseTypeDeclarationSyntax.BaseList.Types.ToArray());
+
+            return output;
+        }
+
+        public static WasFound<BaseListSyntax> HasBaseTypesList(this BaseTypeDeclarationSyntax baseTypeDeclarationSyntax)
+        {
+            var output = WasFound.From(baseTypeDeclarationSyntax.BaseList);
             return output;
         }
 

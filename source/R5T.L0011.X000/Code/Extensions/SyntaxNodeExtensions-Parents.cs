@@ -62,7 +62,7 @@ namespace System
         }
 
         /// <summary>
-        /// Chooses <see cref="GetContainingNamespacesInsideToOutside(TypeDeclarationSyntax)"/> as the default.
+        /// Chooses <see cref="GetContainingNamespacesInsideToOutside(SyntaxNode)"/> as the default.
         /// </summary>
         public static IEnumerable<NamespaceDeclarationSyntax> GetContainingNamespaces(this SyntaxNode syntaxNode)
         {

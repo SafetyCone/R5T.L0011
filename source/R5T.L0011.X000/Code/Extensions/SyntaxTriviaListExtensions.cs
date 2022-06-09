@@ -142,7 +142,7 @@ namespace System
 
         /// <summary>
         /// <para>Determines whether the syntax trivia list is indentation.</para>
-        /// <inheritdoc cref="Glossary.Indentation" path="/definition"/>
+        /// <inheritdoc cref="Glossary.ForTrivia.Indentation" path="/definition"/>
         /// </summary>
         public static bool IsIndentation(this SyntaxTriviaList trivias)
         {

@@ -40,7 +40,7 @@ namespace System
         }
 
         /// <summary>
-        /// Chooses <see cref="GetChildUsingDirectives(CompilationUnitSyntax)"/> as the default.
+        /// Chooses <see cref="GetChildUsingDirectives(NamespaceDeclarationSyntax)"/> as the default.
         /// Only child using directives are returned (as opposed to descendant using directives, which may exist in descendant namespaces).
         /// </summary>
         public static UsingDirectiveSyntax[] GetUsingDirectives(this NamespaceDeclarationSyntax @namespace)
@@ -115,6 +115,66 @@ namespace System
             string sourceNameExpression)
         {
             var output = @namespace.GetUsingDirectives().HasUsing(destinationName, sourceNameExpression);
+            return output;
+        }
+
+        public static IEnumerable<ClassDeclarationSyntax> GetClasses(this NamespaceDeclarationSyntax @namespace)
+        {
+            var classes = @namespace.DescendantNodes()
+                .OfType<ClassDeclarationSyntax>()
+                ;
+
+            return classes;
+        }
+
+        public static WasFound<ClassDeclarationSyntax> HasClass_SingleOrDefault(this NamespaceDeclarationSyntax @namespace,
+            string className)
+        {
+            var @class = @namespace.GetClasses()
+                .Where(x => x.Identifier.Text == className)
+                .SingleOrDefault();
+
+            var output = WasFound.From(@class);
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="HasClass_SingleOrDefault(NamespaceDeclarationSyntax, string)"/> as the default.
+        /// </summary>
+        public static WasFound<ClassDeclarationSyntax> HasClass(this NamespaceDeclarationSyntax @namespace,
+            string className)
+        {
+            var output = @namespace.HasClass_SingleOrDefault(className);
+            return output;
+        }
+
+        public static IEnumerable<InterfaceDeclarationSyntax> GetInterfaces(this NamespaceDeclarationSyntax @namespace)
+        {
+            var output = @namespace.DescendantNodes()
+                .OfType<InterfaceDeclarationSyntax>()
+                ;
+
+            return output;
+        }
+
+        public static WasFound<InterfaceDeclarationSyntax> HasInterface_SingleOrDefault(this NamespaceDeclarationSyntax @namespace,
+            string interfaceName)
+        {
+            var @interface = @namespace.GetInterfaces()
+                .Where(x => x.Identifier.Text == interfaceName)
+                .SingleOrDefault();
+
+            var output = WasFound.From(@interface);
+            return output;
+        }
+
+        /// <summary>
+        /// Chooses <see cref="HasInterface_SingleOrDefault(NamespaceDeclarationSyntax, string)"/> as the default.
+        /// </summary>
+        public static WasFound<InterfaceDeclarationSyntax> HasInterface(this NamespaceDeclarationSyntax @namespace,
+            string className)
+        {
+            var output = @namespace.HasInterface_SingleOrDefault(className);
             return output;
         }
     }

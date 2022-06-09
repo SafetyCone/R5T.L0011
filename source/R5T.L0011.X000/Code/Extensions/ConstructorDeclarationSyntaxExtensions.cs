@@ -17,7 +17,7 @@ namespace System
         }
 
         /// <summary>
-        /// Chooses <see cref="GetName_Simple(MethodDeclarationSyntax)"/> as the default.
+        /// Chooses <see cref="GetName_Simple(ConstructorDeclarationSyntax)"/> as the default.
         /// </summary>
         public static string GetName(this ConstructorDeclarationSyntax constructor)
         {

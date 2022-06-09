@@ -1,3 +1,9 @@
 R5T.L0011.X000 - Basic extensions with no dependencies other than the standard library, and extensions to the standard library.
 
-GOALS:
+
+### Restricted Dependencies ###
+
+Allowed:
+
+* R5T.L0011
+* R5T.Magyar

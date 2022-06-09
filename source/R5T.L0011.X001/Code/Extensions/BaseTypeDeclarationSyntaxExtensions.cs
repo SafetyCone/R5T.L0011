@@ -18,7 +18,7 @@ namespace System
             where T : BaseTypeDeclarationSyntax
         {
             var output = baseType
-                .AddLeadingLeadingTrivia(
+                .AddLeadingLeadingTrivia_Old(
                     SyntaxFactory.Trivia(documentationComment));
             
             return output;

@@ -288,7 +288,7 @@ namespace System
         }
 
         /// <summary>
-        /// Chooses <see cref="SetSeparatingWhitespaceBetweenDescendentTokens_Leading(SyntaxNode, SyntaxToken, SyntaxToken, SyntaxTriviaList)"/> as the default.
+        /// Chooses <see cref="SetSeparatingWhitespaceBetweenDescendentTokens_Leading{TNode}(TNode, SyntaxToken, SyntaxToken, SyntaxTriviaList)"/> as the default.
         /// </summary>
         public static TNode SetSeparatingWhitespaceBetweenDescendentTokens<TNode>(this TNode syntaxNode,
             SyntaxToken firstDescendent,
@@ -336,7 +336,7 @@ namespace System
         {
             var actualIndentation = indentation.RemoveAt(0);
 
-            var output = syntaxNode.AddLeadingLeadingTrivia(actualIndentation.ToArray());
+            var output = syntaxNode.AddLeadingLeadingTrivia_Old(actualIndentation.ToArray());
             return output;
         }
 
@@ -358,7 +358,7 @@ namespace System
             SyntaxTriviaList leadingWhitespace)
             where TNode : SyntaxNode
         {
-            var output = syntaxNode.AddLeadingLeadingTrivia(leadingWhitespace.ToArray());
+            var output = syntaxNode.AddLeadingLeadingTrivia_Old(leadingWhitespace.ToArray());
             return output;
         }
 
@@ -367,16 +367,6 @@ namespace System
         {
             var output = syntaxNode.DescendantNodes()
                 .OfType<TDescendantSyntaxNodeType>()
-                ;
-
-            return output;
-        }
-
-        public static IEnumerable<InterfaceDeclarationSyntax> GetInterfaces<TNode>(this TNode syntaxNode)
-            where TNode : SyntaxNode
-        {
-            var output = syntaxNode.DescendantNodes()
-                .OfType<InterfaceDeclarationSyntax>()
                 ;
 
             return output;
@@ -436,16 +426,6 @@ namespace System
             }
         }
 
-        public static TNode ModifyWith<TNode>(this TNode syntaxNode, ModifierSynchronous<TNode> modifier)
-            where TNode : SyntaxNode
-        {
-            var output = modifier is object
-                ? modifier(syntaxNode)
-                : syntaxNode;
-
-            return output;
-        }
-
         public static WasFound<int> IndexOfChildInNodesAndTokens(this SyntaxNode syntaxNode, SyntaxNode childSyntaxNode)
         {
             var childNodesAndTokens = syntaxNode.ChildNodesAndTokens();
@@ -459,19 +439,6 @@ namespace System
             var childNodesAndTokens = syntaxNode.ChildNodesAndTokens();
 
             var output = childNodesAndTokens.IndexOfChildInNodesAndTokens(childSyntaxToken);
-            return output;
-        }
-
-        public static TNode ModifyIf<TNode>(this TNode node,
-            bool condition,
-            Func<TNode, TNode> modifier)
-            where TNode : SyntaxNode
-        {
-            var output = condition
-                ? modifier(node)
-                : node
-                ;
-
             return output;
         }
 

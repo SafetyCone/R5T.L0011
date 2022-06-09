@@ -21,7 +21,7 @@ namespace System
         {
             var parameter = SyntaxFactory.Parameter(name, typeName)
                 .NormalizeWhitespace()
-                .AddLeadingLeadingTrivia(leadingWhitespace.ToArray());
+                .AddLeadingLeadingTrivia_Old(leadingWhitespace.ToArray());
 
             var output = method.AddParameterListParameters(parameter) as T;
             return output;

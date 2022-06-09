@@ -33,7 +33,7 @@ namespace System
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {
-            var output = node.AddLeadingLeadingTrivia(leadingWhitespace.ToArray());
+            var output = node.AddLeadingLeadingTrivia_Old(leadingWhitespace.ToArray());
             return output;
         }
 
@@ -41,7 +41,7 @@ namespace System
             SyntaxTriviaList leadingWhitespace)
             where TSyntaxNode : SyntaxNode
         {
-            var output = node.AddLeadingLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
+            var output = node.AddLeadingLeadingTrivia_Old(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
             return output;
         }
 
@@ -97,7 +97,7 @@ namespace System
                 return node;
             }
 
-            var output = node.AddLeadingLeadingTrivia(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
+            var output = node.AddLeadingLeadingTrivia_Old(leadingWhitespace.GetNewLineLeadingWhitespace().ToArray());
             return output;
         }
 
@@ -214,7 +214,7 @@ namespace System
             var endRegion = Instances.SyntaxFactory.EndRegion(indentation);
 
             var output = node
-                .AddLeadingLeadingTrivia(region)
+                .AddLeadingLeadingTrivia_Old(region)
                 .AddTrailingTrailingTrivia(endRegion)
                 ;
 
@@ -231,7 +231,7 @@ namespace System
         /// <summary>
         /// Gets the name of the namespace containing the type.
         /// <there-might-be-nested-namespaces>There might be nested namespaces, meaning that the full namespace for a type might not be just the name of the containing namespace.</there-might-be-nested-namespaces>
-        /// This returns the full name of the namespace.  See also: <seealso cref="GetContainingNamespaceName(TypeDeclarationSyntax)"/>
+        /// This returns the full name of the namespace.  See also: <seealso cref="GetContainingNamespaceName(SyntaxNode)"/>
         /// </summary>
         public static string GetContainingNamespaceName(this SyntaxNode node)
         {

@@ -18,7 +18,9 @@ namespace System
     {
         public static SyntaxTrivia DocumentationCommentExteriorOnly(this ISyntaxFactory syntaxFactory)
         {
-            var output = syntaxFactory.DocumentationCommentExterior(Syntax.DocumentationCommentExterior());
+            var output = syntaxFactory.DocumentationCommentExterior(
+                Syntax.DocumentationCommentExterior());
+
             return output;
         }
 

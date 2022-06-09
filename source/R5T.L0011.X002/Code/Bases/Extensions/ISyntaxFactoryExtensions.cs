@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using R5T.Magyar;
+using R5T.Magyar.Extensions;
 
 using R5T.L0011.T001;
 using R5T.L0011.T002;
@@ -85,7 +86,7 @@ namespace System
             {
                 // Modify the first using and add it.
                 var modifiedFirstUsingInSet = set.First()
-                    .AddLeadingLeadingTrivia(syntaxFactory.NewLine());
+                    .AddLeadingLeadingTrivia_Old(syntaxFactory.NewLine());
 
                 usingDirectives.Add(modifiedFirstUsingInSet);
 

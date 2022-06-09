@@ -74,7 +74,7 @@ namespace System
             if(documentationLineElements.Any())
             {
                 documentationLineElements[0] = documentationLineElements[0]
-                .AddLineStart(indentation);
+                    .AddLineStart(indentation);
             }
 
             var output = xmlElement.AddContent(documentationLineElements);

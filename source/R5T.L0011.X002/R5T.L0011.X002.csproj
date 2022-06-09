@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591;1573</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\R5T.T0034\source\R5T.T0034.X001\R5T.T0034.X001.csproj" />
     <ProjectReference Include="..\..\..\R5T.T0060\source\R5T.T0060\R5T.T0060.csproj" />
@@ -12,6 +12,6 @@
     <ProjectReference Include="..\R5T.L0011.T003\R5T.L0011.T003.csproj" />
     <ProjectReference Include="..\R5T.L0011.T004\R5T.L0011.T004.csproj" />
     <ProjectReference Include="..\R5T.L0011.X001\R5T.L0011.X001.csproj" />
+    <ProjectReference Include="..\R5T.L0011.X005\R5T.L0011.X005.csproj" />
   </ItemGroup>
-
 </Project>

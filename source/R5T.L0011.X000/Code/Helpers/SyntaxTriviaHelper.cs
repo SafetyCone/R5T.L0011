@@ -56,6 +56,12 @@ namespace Microsoft.CodeAnalysis.CSharp
             return output;
         }
 
+        public static SyntaxTrivia Space()
+        {
+            var output = SyntaxFactoryHelper.Space();
+            return output;
+        }
+
         public static SyntaxTrivia Tab()
         {
             var output = SyntaxFactoryHelper.Tab();

@@ -29,7 +29,7 @@ namespace System
 
             var output = baseMethod
                 .SetLeadingSeparatingTrivia(leadingSeparatingTrivia)
-                .AddLeadingLeadingTrivia(
+                .AddLeadingLeadingTrivia_Old(
                     SyntaxFactory.Trivia(documentation));
 
             return output;
@@ -48,7 +48,7 @@ namespace System
             where T : BaseMethodDeclarationSyntax
         {
             var output = baseMethod
-                .AddLeadingLeadingTrivia(
+                .AddLeadingLeadingTrivia_Old(
                     SyntaxFactory.Trivia(documentationComment));
 
             return output;

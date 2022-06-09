@@ -1,0 +1,7 @@
+R5T.L0011.X005 - Restricted dependency extensions to Roslyn functionality.
+
+Allowed dependencies:
+
+* R5T.L0011.X000
+* INamespace base extensions
+	* R5T.T0035.X003

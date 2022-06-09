@@ -34,7 +34,7 @@ namespace System
         }
 
         /// <summary>
-        /// Selects <see cref="HasAttributeOfTypeSuffixedOrUnsuffixed(ClassDeclarationSyntax, string)"/> as the default.
+        /// Selects <see cref="HasAttributeOfTypeSuffixedOrUnsuffixed(ParameterSyntax, string)"/> as the default.
         /// </summary>
         public static bool HasAttributeOfType(this ParameterSyntax parameter,
             string attributeTypeName)

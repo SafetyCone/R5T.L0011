@@ -28,7 +28,7 @@ namespace System
                 as T;
         }
 
-        public static T MakeStatic<T>(this T member)
+        public static T MakeStatic_Simple<T>(this T member)
             where T : MemberDeclarationSyntax
         {
             return member.AddModifiers(SyntaxFactory.Static()) as T;

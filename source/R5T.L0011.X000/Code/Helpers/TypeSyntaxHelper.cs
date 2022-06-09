@@ -11,7 +11,7 @@ namespace R5T.L0011.X000
         public static PredefinedTypeSyntax GetVoid()
         {
             var output = SyntaxFactory.PredefinedType(
-                SyntaxTokenHelper.GetVoid());
+                SyntaxTokens.Void());
 
             return output;
         }

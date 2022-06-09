@@ -28,23 +28,5 @@ namespace System
 
             return output;
         }
-
-        public static bool IsAbstract(this MemberDeclarationSyntax member)
-        {
-            var output = member.Modifiers
-                .Where(xModifer => xModifer.IsAbstract())
-                .Any();
-
-            return output;
-        }
-
-        public static bool IsStatic(this MemberDeclarationSyntax member)
-        {
-            var output = member.Modifiers
-                .Where(xModifer => xModifer.IsStatic())
-                .Any();
-
-            return output;
-        }
     }
 }

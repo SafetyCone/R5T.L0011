@@ -27,12 +27,6 @@ namespace System
             return output;
         }
 
-        public static bool IsAbstract(this SyntaxToken syntaxToken)
-        {
-            var output = syntaxToken.IsKind(SyntaxKind.AbstractKeyword);
-            return output;
-        }
-
         public static bool IsIdentifierToken(this SyntaxToken syntaxToken)
         {
             var output = syntaxToken.IsKind(SyntaxKind.IdentifierToken);
@@ -58,12 +52,6 @@ namespace System
                 includeDocumentationComments);
 
             var output = previousToken == actualPreviousToken;
-            return output;
-        }
-
-        public static bool IsStatic(this SyntaxToken syntaxToken)
-        {
-            var output = syntaxToken.IsKind(SyntaxKind.StaticKeyword);
             return output;
         }
 

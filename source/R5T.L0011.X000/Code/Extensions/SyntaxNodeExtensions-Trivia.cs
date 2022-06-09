@@ -15,7 +15,7 @@ namespace System
 {
     public static partial class SyntaxNodeExtensions
     {
-        public static TNode AddLeadingLeadingTrivia<TNode>(this TNode node,
+        public static TNode AddLeadingLeadingTrivia_Old<TNode>(this TNode node,
             IEnumerable<SyntaxTrivia> trivias)
             where TNode : SyntaxNode
         {
@@ -27,26 +27,26 @@ namespace System
             return output;
         }
 
-        public static TNode AddLeadingLeadingTrivia<TNode>(this TNode node,
+        public static TNode AddLeadingLeadingTrivia_Old<TNode>(this TNode node,
             params SyntaxTrivia[] trivias)
             where TNode : SyntaxNode
         {
-            var output = node.AddLeadingLeadingTrivia(trivias.AsEnumerable());
+            var output = node.AddLeadingLeadingTrivia_Old(trivias.AsEnumerable());
             return output;
         }
 
-        public static TNode AddLeadingLeadingTrivia<TNode>(this TNode node,
+        public static TNode AddLeadingLeadingTrivia_Old<TNode>(this TNode node,
             SyntaxTriviaList trivia)
             where TNode : SyntaxNode
         {
-            var output = node.AddLeadingLeadingTrivia(trivia.AsEnumerable());
+            var output = node.AddLeadingLeadingTrivia_Old(trivia.AsEnumerable());
             return output;
         }
 
         public static TNode AddLeadingTrivia<TNode>(this TNode syntaxNode, params SyntaxTrivia[] trivia)
             where TNode : SyntaxNode
         {
-            var output = syntaxNode.AddLeadingLeadingTrivia(trivia);
+            var output = syntaxNode.AddLeadingLeadingTrivia_Old(trivia);
             return output;
         }
 
@@ -136,6 +136,14 @@ namespace System
             return output;
         }
 
+        public static SyntaxTriviaList GetLineIndentation(this SyntaxNode node)
+        {
+            var firstToken = node.GetFirstToken(includeDocumentationComments: true);
+
+            var output = firstToken.GetSeparatingLeadingTrivia();
+            return output;
+        }
+
         public static SyntaxTriviaList GetSeparatingLeadingTrivia(this SyntaxNode node)
         {
             var firstToken = node.GetFirstToken();
@@ -219,7 +227,7 @@ namespace System
         public static TNode PrependBlankLine<TNode>(this TNode node)
             where TNode : SyntaxNode
         {
-            var output = node.AddLeadingLeadingTrivia(
+            var output = node.AddLeadingLeadingTrivia_Old(
                 SyntaxFactoryHelper.NewLine(),
                 SyntaxFactoryHelper.NewLine());
 
@@ -229,7 +237,7 @@ namespace System
         public static TNode PrependNewLine<TNode>(this TNode node)
             where TNode : SyntaxNode
         {
-            var output = node.AddLeadingLeadingTrivia(SyntaxFactoryHelper.NewLine());
+            var output = node.AddLeadingLeadingTrivia_Old(SyntaxFactoryHelper.NewLine());
             return output;
         }
 
@@ -242,6 +250,13 @@ namespace System
                 : node
                 ;
 
+            return output;
+        }
+
+        public static TNode PrependSpace<TNode>(this TNode node)
+            where TNode : SyntaxNode
+        {
+            var output = node.AddLeadingLeadingTrivia_Old(SyntaxFactoryHelper.Space());
             return output;
         }
 

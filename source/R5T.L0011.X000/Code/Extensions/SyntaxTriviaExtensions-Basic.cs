@@ -34,7 +34,7 @@ namespace System
         }
 
         /// <summary>
-        /// <inheritdoc cref="Glossary.BlankTrivia" path="/definition"/>
+        /// <inheritdoc cref="Glossary.ForTrivia.BlankTrivia" path="/definition"/>
         /// </summary>
         public static bool IsBlank(this SyntaxTrivia trivia)
         {
@@ -67,7 +67,7 @@ namespace System
         }
 
         /// <summary>
-        /// <inheritdoc cref="Glossary.BlankTrivia" path="/definition"/>
+        /// <inheritdoc cref="Glossary.ForTrivia.BlankTrivia" path="/definition"/>
         /// </summary>
         public static bool IsNonBlank(this SyntaxTrivia trivia)
         {

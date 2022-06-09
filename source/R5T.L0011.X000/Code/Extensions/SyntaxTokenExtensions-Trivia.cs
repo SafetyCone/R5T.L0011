@@ -132,6 +132,12 @@ namespace System
             return output;
         }
 
+        public static SyntaxToken PrependSpace(this SyntaxToken token)
+        {
+            var output = token.AddLeadingLeadingTrivia(SyntaxFactoryHelper.Space());
+            return output;
+        }
+
         public static SyntaxToken RemoveFromLeadingLeadingTrivia_Checked(this SyntaxToken token,
             IReadOnlyList<SyntaxTrivia> trivias)
         {
@@ -163,7 +169,7 @@ namespace System
         }
 
         /// <summary>
-        /// Chooses <see cref="RemoveLeadingLeadingTrivia_Checked(SyntaxToken, IEnumerable{SyntaxTrivia})"/> as the default.
+        /// Chooses <see cref="RemoveFromLeadingLeadingTrivia_Checked(SyntaxToken, IReadOnlyList{SyntaxTrivia})"/> as the default.
         /// </summary>
         public static SyntaxToken RemoveFromLeadingLeadingTrivia(this SyntaxToken token,
             IReadOnlyList<SyntaxTrivia> trivias)

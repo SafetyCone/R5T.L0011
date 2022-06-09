@@ -60,7 +60,7 @@ namespace System
                         var hasAnyNewLine = leadingTrivia.HasAnyNewLines();
                         if(!hasAnyNewLine)
                         {
-                            var newFirstStatement = firstStatement.AddLeadingLeadingTrivia(
+                            var newFirstStatement = firstStatement.AddLeadingLeadingTrivia_Old(
                                 SyntaxTriviaHelper.NewLine());
 
                             method = method.ReplaceNode_Better(

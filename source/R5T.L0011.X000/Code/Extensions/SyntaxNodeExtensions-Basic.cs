@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 
 namespace System
@@ -31,6 +32,19 @@ namespace System
             return output;
         }
 
+        public static TNode ModifyIf<TNode>(this TNode node,
+            bool condition,
+            Func<TNode, TNode> ifTrueModificationAction)
+            where TNode : SyntaxNode
+        {
+            var output = condition
+                ? ifTrueModificationAction(node)
+                : node
+                ;
+
+            return output;
+        }
+
         public static async Task<TNode> ModifyIf<TNode>(this TNode node,
             bool condition,
             Func<TNode, Task<TNode>> ifTrueModificationAction)
@@ -40,6 +54,17 @@ namespace System
                 ? await ifTrueModificationAction(node)
                 : node
                 ;
+
+            return output;
+        }
+
+        public static TNode ModifyWith<TNode>(this TNode syntaxNode,
+            ModifierSynchronous<TNode> modifier)
+            where TNode : SyntaxNode
+        {
+            var output = modifier is object
+                ? modifier(syntaxNode)
+                : syntaxNode;
 
             return output;
         }

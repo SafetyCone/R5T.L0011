@@ -15,6 +15,5 @@ namespace System
             var output = syntaxTrivia.WithAdditionalAnnotations(annotation);
             return output;
         }
-
     }
 }
