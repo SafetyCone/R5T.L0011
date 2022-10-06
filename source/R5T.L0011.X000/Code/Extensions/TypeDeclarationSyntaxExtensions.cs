@@ -33,7 +33,7 @@ namespace System
             IEnumerable<PropertyDeclarationSyntax> properties)
             where T : TypeDeclarationSyntax
         {
-            var propertiesArray = properties.Now();
+            var propertiesArray = properties.ToArray();
 
             var output = typedeclaration.AddProperties(propertiesArray);
             return output;
@@ -183,7 +183,7 @@ namespace System
             var methods = members
                 .Where(x => x is MethodDeclarationSyntax)
                 .Cast<MethodDeclarationSyntax>()
-                .Now();
+                .ToArray();
 
             // Remove the nodes of interest from the list of all siblings.
             var newMembers = members.Except(methods).ToList();
@@ -191,7 +191,7 @@ namespace System
             // Sort the nodes.
             var sortedMembers = methods
                 .OrderBy(x => x.GetName_Simple())
-                .Now();
+                .Now_OLD();
 
             // Identify a location within the parent, after which, the sorted nodes will be inserted.
             // For now, insert at end.
@@ -282,7 +282,7 @@ namespace System
             IEnumerable<PropertyDeclarationSyntax> properties)
             where T : TypeDeclarationSyntax
         {
-            var propertiesArray = properties.Now();
+            var propertiesArray = properties.ToArray();
 
             var output = typeDeclaration.WithProperties(propertiesArray);
             return output;

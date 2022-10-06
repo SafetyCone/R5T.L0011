@@ -22,7 +22,7 @@ namespace System
                 .SelectMany(x => x.GetChildUsingDirectives())
                 .Concat(compilationUnit
                     .GetChildUsingDirectives())
-                .Now();
+                .Now_OLD();
 
             return availableUsingDirectives;
         }
@@ -89,7 +89,7 @@ namespace System
         /// </summary>
         public static SyntaxNode[] GetParents(this SyntaxNode syntaxNode)
         {
-            var output = syntaxNode.GetParentsInsideToOutside().Now();
+            var output = syntaxNode.GetParentsInsideToOutside().ToArray();
             return output;
         }
 

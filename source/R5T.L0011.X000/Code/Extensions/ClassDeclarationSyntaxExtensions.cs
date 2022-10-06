@@ -24,7 +24,7 @@ namespace System
         /// </summary>
         public static MethodDeclarationSyntax[] GetExtensionMethods(this ClassDeclarationSyntax @class)
         {
-            var output = @class.GetExtensionMethods_Enumerable().Now();
+            var output = @class.GetExtensionMethods_Enumerable().ToArray();
             return output;
         }
     }

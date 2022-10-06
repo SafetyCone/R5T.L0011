@@ -97,7 +97,7 @@ namespace System
 
         public static UsingNameAliasDirectiveSyntax[] GetUsingNameAliasDirectives(this CompilationUnitSyntax compilationUnit)
         {
-            var output = compilationUnit.GetUsings().GetUsingNameAliasDirectives().Now();
+            var output = compilationUnit.GetUsings().GetUsingNameAliasDirectives().Now_OLD();
             return output;
         }
 
@@ -105,7 +105,7 @@ namespace System
         {
             var output = compilationUnit.GetUsingNameAliasDirectives()
                 .Select(x => x.GetNameAlias())
-                .Now();
+                .ToArray();
 
             return output;
         }
@@ -118,7 +118,7 @@ namespace System
 
         public static UsingNamespaceDirectiveSyntax[] GetUsingNamespaceDirectives(this CompilationUnitSyntax compilationUnit)
         {
-            var output = compilationUnit.GetUsings().GetUsingNamespaceDirectives().Now();
+            var output = compilationUnit.GetUsings().GetUsingNamespaceDirectives().Now_OLD();
             return output;
         }
 

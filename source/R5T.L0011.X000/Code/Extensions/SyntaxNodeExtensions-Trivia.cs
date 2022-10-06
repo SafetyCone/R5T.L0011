@@ -179,7 +179,7 @@ namespace System
             var descendantTokensWithTrailingTrivia = node.DescendantTokens()
                 .Where(xToken => xToken.HasTrailingTrivia)
                 // Make sure to evaluate now, so that tokens are not found as they are being annotated.
-                .Now();
+                .ToArray();
 
             node = node.AnnotateTokens(
                 descendantTokensWithTrailingTrivia,

@@ -132,7 +132,7 @@ namespace System
         /// </summary>
         public static UsingDirectiveSyntax[][] GetUsingBlocks(this IEnumerable<UsingDirectiveSyntax> usingDirectives)
         {
-            if (usingDirectives.None())
+            if (usingDirectives.None_OLD())
             {
                 return Array.Empty<UsingDirectiveSyntax[]>();
             }

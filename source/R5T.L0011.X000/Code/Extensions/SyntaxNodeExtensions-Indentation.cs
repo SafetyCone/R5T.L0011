@@ -38,7 +38,7 @@ namespace System
                 .Where(xToken => xToken.IsNotNone())
                 // Add the first token to the list, since we will want to indent that too.
                 .Append(node.GetFirstToken_HandleDocumentationComments())
-                .Now();
+                .ToArray();
 
             // Annotate tokens.
             node = node.AnnotateTokens(

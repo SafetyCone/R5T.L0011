@@ -139,7 +139,7 @@ namespace System
         {
             var attributes = member.AttributeLists
                 .SelectMany(x => x.Attributes)
-                .Now();
+                .ToArray();
 
             var output = WasFound.FromArray(attributes);
             return output;
@@ -177,7 +177,7 @@ namespace System
             // If none of the input modifiers remain after removing all modifiers on the member, then the member has all the input modifiers.
             var output = modifiers.Except(
                     member.GetModifiers_Enumerable())
-                .None();    
+                .None_OLD();    
 
             return output;
         }

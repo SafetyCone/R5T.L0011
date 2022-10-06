@@ -20,7 +20,7 @@ namespace System
         {
             var indentedStatements = statements
                 .IndentStartLine(indentation)
-                .Now();
+                .ToArray();
 
             var output = method.AddBodyStatements_Latest(indentedStatements);
             return output;
@@ -146,7 +146,7 @@ namespace System
 
             var output = parameters
                 .Select(xParameter => xParameter.Type.GetTypeNameFragment())
-                .Now();
+                .Now_OLD();
 
             return output;
         }

@@ -66,7 +66,7 @@ namespace System
                 .Take(indexOfInsertBeforeStatement)
                 .Append(statement)
                 .Concat(existingStatements.Skip(indexOfInsertBeforeStatement))
-                .Now();
+                .ToArray();
 
             var outputBlock = block.WithStatements(newStatements.ToSyntaxList());
             return outputBlock;
@@ -103,7 +103,7 @@ namespace System
                 .Take(indexOfInsertBeforeStatement)
                 .Concat(statements)
                 .Concat(existingStatements.Skip(indexOfInsertBeforeStatement))
-                .Now();
+                .ToArray();
 
             // Now set new statements.
             outputBlock = outputBlock.WithStatements(newStatements.ToSyntaxList());
@@ -125,7 +125,7 @@ namespace System
                 .Take(indexOfInsertBeforeStatement)
                 .Concat(statements)
                 .Concat(existingStatements.Skip(indexOfInsertBeforeStatement))
-                .Now();
+                .ToArray();
 
             var output = block.WithStatementsEnsuringAfterOpenAndBeforeCloseBraceIndentation(
                 newStatements,

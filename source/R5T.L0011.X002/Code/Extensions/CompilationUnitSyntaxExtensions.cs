@@ -32,7 +32,7 @@ namespace System
 
             var modifiedNameAliases = EnumerableHelper.From(firstAlias).Concat(
                 nameAliases.SkipFirst())
-                .Now();
+                .Now_OLD();
 
             var output = compilationUnit
                 .AddUsings(modifiedNameAliases)

@@ -75,7 +75,7 @@ namespace System
 
         public static UsingNameAliasDirectiveSyntax[] GetUsingNameAliasDirectives(this NamespaceDeclarationSyntax @namespace)
         {
-            var output = @namespace.GetUsingDirectives().GetUsingNameAliasDirectives().Now();
+            var output = @namespace.GetUsingDirectives().GetUsingNameAliasDirectives().Now_OLD();
             return output;
         }
 
@@ -87,7 +87,7 @@ namespace System
 
         public static UsingNamespaceDirectiveSyntax[] GetUsingNamespaceDirectives(this NamespaceDeclarationSyntax @namespace)
         {
-            var output = @namespace.GetUsingDirectives().GetUsingNamespaceDirectives().Now();
+            var output = @namespace.GetUsingDirectives().GetUsingNamespaceDirectives().Now_OLD();
             return output;
         }
 

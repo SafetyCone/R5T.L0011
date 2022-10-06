@@ -59,7 +59,7 @@ namespace System
 
         public static WasFound<AttributeSyntax[]> HasAttributes(this ParameterSyntax parameter)
         {
-            var output = parameter.GetAttributes().Now();
+            var output = parameter.GetAttributes().ToArray();
 
             return WasFound.FromArray(output);
         }
