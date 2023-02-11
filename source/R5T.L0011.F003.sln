@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R5T.L0011", "R5T.L0011\R5T.L0011.csproj", "{12105543-5989-4434-BEEE-DD526AD9084C}"
 EndProject
@@ -16,6 +16,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R5T.T0126", "..\..\R5T.T0126\source\R5T.T0126\R5T.T0126.csproj", "{A10C7740-8C5C-47D1-99DF-5A191E902C1D}"
 EndProject
 Global
+	GlobalSection(NestedProjects) = preSolution
+		{2BD5615C-D444-4969-AC96-5B7E779B00E7} = {BBD8E786-C328-4932-920F-4D520242E80F}
+		{A10C7740-8C5C-47D1-99DF-5A191E902C1D} = {BBD8E786-C328-4932-920F-4D520242E80F}
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -88,10 +92,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{2BD5615C-D444-4969-AC96-5B7E779B00E7} = {BBD8E786-C328-4932-920F-4D520242E80F}
-		{A10C7740-8C5C-47D1-99DF-5A191E902C1D} = {BBD8E786-C328-4932-920F-4D520242E80F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45396D7C-CE81-4AD5-AE22-DF34BABAEA5F}

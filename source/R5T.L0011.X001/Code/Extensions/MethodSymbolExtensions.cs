@@ -4,6 +4,8 @@ using System.Linq;
 
 using Microsoft.CodeAnalysis;
 
+using R5T.Magyar;
+
 using R5T.L0011.X001;
 
 
