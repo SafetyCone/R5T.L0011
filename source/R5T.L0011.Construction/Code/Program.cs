@@ -34,7 +34,7 @@ public static string {extensionMethodBaseFunctionalityName}(this {iExtensionMeth
 
             var method = Instances.SyntaxFactory.ParseMethodDeclaration(
                 text.Trim())
-                .IndentBlock(
+                .IndentBlock_Old(
                     Instances.Indentation.Method(),
                     false);
 
