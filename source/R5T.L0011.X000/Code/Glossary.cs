@@ -45,7 +45,7 @@ namespace R5T.L0011.X000
             /// <summary>
             /// <inheritdoc cref="SeparatingTrivia" path="/definition"/>
             /// </summary>
-            /// <definition>Separating trivia is the trivia between two consecutive token.</definition>
+            /// <definition>Separating trivia is the trivia between two consecutive tokens.</definition>
             /// <name><i>separating trivia</i></name>
             public static readonly object SeparatingTrivia;
             /// <summary>
